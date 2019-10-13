@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^sensor/', views.sensor, name='sensor'),
     # url(r'^admin/', admin.site.urls),
+    url(r'^client/', views.client, name='client'),
 
 ]

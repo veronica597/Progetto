@@ -42,3 +42,24 @@ def sensor(request):  # processa i dati da inserire nel database
     return HttpResponseForbidden
 
 
+@csrf_exempt
+def client(request):  # processa i dati inviati a seguito del click dell'utente
+
+    if request.method == 'POST':
+        print('post')
+        print(request.body)
+        body_unicode = request.body.decode('utf-8')
+        body_data = json.loads(body_unicode)  # e' un oggetto python
+
+        sensor_data = DatiRaccolti()
+        sensor_data.userMod = body_data['userMod']
+
+        sensor_data.save()
+
+        return HttpResponse()
+
+    if request.method == 'GET':
+        print('get')
+        return render(request, 'get_post.html')
+
+    return HttpResponseForbidden
