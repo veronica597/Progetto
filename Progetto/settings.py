@@ -25,7 +25,11 @@ SECRET_KEY = '0_83)b(%0pzmo^)!=1b784wq50n07&hb8#--(zg(r+uyjxc01b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*',
+                 '192.168.0.137',  # micc
+                 '192.168.1.105',  # casa chiara
+                 '192.168.43.37',  # HIGHWAY 4G
+                ]
 
 
 # Application definition
@@ -55,7 +59,7 @@ ROOT_URLCONF = 'Progetto.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'templates/Dispenser')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -105,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-us'  # per mettere italiano 'it-IT'
 
 TIME_ZONE = 'UTC'
 
