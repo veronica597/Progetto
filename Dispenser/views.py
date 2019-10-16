@@ -9,7 +9,7 @@ import json
 
 
 def index(request):
-    return HttpResponse("<p> Hello </p>")
+    return HttpResponse("<p> Food Dispenser Application </p>")
 
 
 def profile(request):
