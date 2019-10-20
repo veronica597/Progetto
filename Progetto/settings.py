@@ -27,8 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*',
                  '192.168.0.137',  # micc
+                 '192.168.1.35',
                  '192.168.1.105',  # casa chiara
-                 '192.168.43.37',  # HIGHWAY 4G
+                 '192.168.43.37',  # HIGHWAY 4G - HUAWEI P30 lite
                 ]
 
 

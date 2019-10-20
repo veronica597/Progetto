@@ -13,24 +13,25 @@
         $(document).ready(function (){
             console.log("pronti alla get");
 
+            var INDIRIZZO_IP = "192.168.1.105"; // indirizzo IP del computer
+
             // Casa Chiara
-
             var DEVICE_IP = '192.168.1.128'; // indirizzo IP della scheda ESP8266
-            var url = "http://192.168.1.105:8000/dispenser/client/";
-
-            // HIGHWAY 4G
-
-            //var DEVICE_IP = '192.168.43.128';
-            //var url = "http://192.168.43.37:8000/dispenser/client/";
+            var url = "http://INDIRIZZO_IP:8000/dispenser/client/";
 
             // MICC
-            //var DEVICE_IP = '192.168.0.134';
-            //var url = "http://192.168.0.137:8000/dispenser/client/";
+            //var DEVICE_IP = '192.168.1.134';
+            //var url = "http://INDIRIZZO_IP:8000/dispenser/client/";
+
+            // HUAWEI P30 lite -- 192.168.43.37
+            //var DEVICE_IP = '192.168.43.128';
+            //var url = "http://INDIRIZZO_IP:8000/dispenser/client/";
 
             var data = {
                 erogation : 0, // no erogazione
                 userMod : 0, // modalita' automatica
             };
+
 
             var dataJson = JSON.stringify(data); // converto l'oggetto JS in una stringa JSON
 
@@ -47,33 +48,19 @@
                     data.erogation = 1; // erogazione effettuata
                     data.userMod = 1; // modalita' utente
                     dataJson = JSON.stringify(data);
-                    $.post(url, dataJson, success(buttonON));
+                    //$.post(url, dataJson, success(buttonON));
                     $("#stampa").html("Il servo ha ruotato");
                 });
             }
 
-            function disattivaServo(){
-                console.log("click sul bottone 'Disattiva il servo'");
-                var requestUrl = "http://" + DEVICE_IP + "/servoClose";
-                $.get(requestUrl, function(){
-                    alert("sto facendo la get all'ESP8266");
-                    var buttonOFF = $("#off");
-                    data.erogation = 0;
-                    data.userMod = 0;
-                    dataJson = JSON.stringify(data);
-                    $.post(url, dataJson, success(buttonOFF));
-                    $("#stampa").html("Il servo e' stato disattivato");
-                });
-            }
 
             $("#on").click(attivaServo);
-            $("#off").click(disattivaServo);
 
         });
 
 
     </script>
-    <! --controllare con la cartella static -->
+    <!-- controllare con la cartella static -->
 
 </head>
 
@@ -85,7 +72,6 @@
     <div id="arduino">
 
         <button id="on"> Ruota il servo </button> <!--onclick="attivaServo()"-->
-        <button id="off"> Disattiva il servo </button> <!--onclick="disattivaServo()" -->
 
     </div>
 
