@@ -15,11 +15,17 @@ def index(request):
 def profile(request):
     return HttpResponse("<p>Profile page of user </p>")
 
-
+@csrf_exempt
 def home(request):  # renderizza i dati del database
-    return render(request, 'index.html', {
-        'righe': DatiRaccolti.objects.all(),
-    })
+    if request.method == 'GET':
+        return render(request, 'index.html', {
+            'righe': DatiRaccolti.objects.all(),
+        })
+
+    if request.method == 'GET' and request.is_ajax():
+        return render(request, 'index.html', {
+            'righe': DatiRaccolti.objects.all(),
+        })
 
 
 @csrf_exempt
@@ -31,13 +37,26 @@ def sensor(request):  # processa i dati da inserire nel database
         body_data = json.loads(body_unicode)  # e' un dict python
 
         sensor_data = DatiRaccolti()
+
         sensor_data.erogation = body_data['erogation']
+        sensor_data.userMod = body_data['userMod']
+        sensor_data.timeMod = body_data['timeMod']
+
         sensor_data.save()
 
         return HttpResponse()
 
+    if request.method == 'GET' and request.is_ajax():
+        print('get + ajax')
+        return render(request, 'index.html', {
+            'righe': DatiRaccolti.objects.all(),
+        })
+
     if request.method == 'GET':
         print('get')
+        return render(request, 'index.html', {
+            'righe': DatiRaccolti.objects.all(),
+        })
 
     return HttpResponseForbidden
 
@@ -52,7 +71,10 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
         body_data = json.loads(body_unicode)  # e' un oggetto python
 
         sensor_data = DatiRaccolti()
+
+        sensor_data.erogation = body_data['erogation']
         sensor_data.userMod = body_data['userMod']
+        sensor_data.timeMod = body_data['timeMod']
 
         sensor_data.save()
 
