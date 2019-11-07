@@ -13,8 +13,8 @@
         $(document).ready(function (){
             console.log("pronti alla get");
 
-            var INDIRIZZO_IP = "192.168.1.105"; // indirizzo IP del computer
-            var urlHome = "http://192.168.1.105:8000/dispenser/";
+            //var INDIRIZZO_IP = "192.168.1.105"; // indirizzo IP del computer
+            //var urlHome = "http://192.168.1.105:8000/dispenser/";
 
             // Casa Chiara
             var DEVICE_IP = '192.168.1.128'; // indirizzo IP della scheda ESP8266
@@ -26,7 +26,7 @@
 
             // HUAWEI P30 lite -- 192.168.43.37
             //var DEVICE_IP = '192.168.43.128';
-            //var url = "http://INDIRIZZO_IP:8000/dispenser/client/";
+            //var url = "http://192.168.43.37:8000/dispenser/client/";
 
             var data = {
                 erogation : 0, // no erogazione
@@ -70,11 +70,12 @@
 
                     // prova ajax 2
                     var xhr = new XMLHttpRequest();
-                    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                    //xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                     xhr.onreadystatechange = function(){
                         if(this.readyState == 4 && this.status == 200){
                             console.log("ajax ok");
                             document.getElementById("stampa").innerHTML = this.responseText;
+                            // nella pagina stampo la tabella con tutte le righe del database
                         }
                     };
 

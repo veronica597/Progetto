@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Grafico real time forse </title>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+                    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+    </script>
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+</head>
+<body>
+    <div id="container"></div>
+    <script>
+        var chart = Highcharts.chart('container', {{ chart|safe }});
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function (){
+        alert("Ci siamo");
+        console.log("pronti alla get");
+        var x = chart.xAxis[0];
+        var s = chart.series[0].data;
+        var s1= chart.series[1].data;
+        var cat = x.categories;
+        console.log(x);
+        console.log(cat);
+        console.log(s);
+        console.log(s1);
+
+        setInterval(function() { // Call a function repetatively with 2 Second interval
+                    getData();
+                }, 2000); //5000mSeconds update rate
+
+        function getData(){
+
+            $.ajax({
+                type: "GET",
+                url: "http://192.168.1.105:8000/dispenser/aggiornamento/",
+                //url: "http://172.22.36.134:8000/dispenser/aggiornamento/",
+                success: function(data){
+                    console.log("dati ricevuti");
+                    console.log(data);
+                    //Highcharts.chart("container", data);  se ho passato nella JsonResponse tutto il chart --> lo 'ricreo'
+                    // altrimenti devo trovare un modo per aggiornare i parametri del chart -- in particolare categories e series
+                    // per le series abbiamo provato
+
+                    var automatic_series = {
+                     'name': 'Erogazioni automatiche',
+                     'data': data[1],
+                     'color': 'green'
+                    }
+
+                    var user_series = {
+                     'name': 'Erogazioni utente',
+                     'data': data[2],
+                     'color': 'red'
+                    }
+
+                    var new_serie = [ automatic_series, user_series ];
+
+                    for( var i = chart.series.length-1; i >= 0; i--){
+                        chart.series[i].remove();
+                    }
+
+                     for( var y = new_serie.length-1; y >= 0; y--){
+                        chart.addSeries(new_serie[y]);
+                    }
+
+
+                   // per le categories
+
+                   // 1 -- non aggiorna le categories (non mi espando in larghezza)
+                   var new_cat = data[0];
+                   chart.xAxis[0].setCategories([x.categories, new_cat], false);
+                   chart.redraw();
+
+
+                   // 2 -- vedere bene la funzione update da chiamare sul chart -- ha dei parametri da mettere a true e/o false
+
+                   chart.xAxis[0].update({
+                   categories: ['1', '2', '3']
+                   });
+
+
+                 }
+             });
+
+         }
+
+        });
+
+
+
+    </script>
+
+</body>
+</html>

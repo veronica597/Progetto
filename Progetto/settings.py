@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['*',
                  '192.168.1.35',
                  '192.168.1.105',  # casa chiara
                  '192.168.43.37',  # HIGHWAY 4G - HUAWEI P30 lite
+                 '172.22.36.134',  # FirenzeWiFi
                 ]
 
 
