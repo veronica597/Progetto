@@ -101,7 +101,7 @@ def get_ajax(request):  # view che chiamo per avere l'ultimo dato postato per ag
 
     if request.is_ajax() or request.method == "GET":
 
-        elementi = DatiRaccolti.objects.all()
+        elementi = DatiRaccolti.objects.values().filter(date__gte="2019-11-05")
         # for el in elementi:
         #     elem.append(json.dumps(el, default=myConverter))
         #
@@ -124,7 +124,7 @@ def get_ajax(request):  # view che chiamo per avere l'ultimo dato postato per ag
 
         lu = len(elementi)
         print(lu)
-        f = DatiRaccolti.objects.values().get(pk=lu)
+        f = elementi[0]  # lu - 1
         print(f)
 
         # print(data)
@@ -139,7 +139,7 @@ def get_ajax(request):  # view che chiamo per avere l'ultimo dato postato per ag
 @csrf_exempt
 def viewData(request):  # view pagina utente -- dati giorno corrente -- TABELLA
     if request.method == 'GET':
-        context = {'righe': DatiRaccolti.objects.all().filter(date__gte="2019-11-05")}  # dati del giorno corrente
+        context = {'righe': DatiRaccolti.objects.values().filter(date__gte="2019-11-05")}  # dati del giorno corrente
         return render(request, "get_ajax.html", context)
 
 
@@ -241,5 +241,79 @@ def chartData(request):  # view che renderizza il CHART "statico"
     dump = json.dumps(chart)
 
     return render(request, 'chart.html', {'chart': dump})
+
+
+@csrf_exempt
+def grafico(request):
+    context = {'righe': DatiRaccolti.objects.all().filter(date__gte="2019-11-05")}  # dati del giorno corrente
+    return render(request, 'chartInside.html', context)
+
+
+@csrf_exempt
+def sendData(request):  # view che invia i dati per costruire il CHART lato html
+    # print(request.body)
+    # print(request.GET)
+    anno = request.GET.__getitem__('anno')
+    mese = request.GET.__getitem__('mese')
+    giorno = request.GET.__getitem__('giorno')
+    stringa = anno + "-" + mese + "-" + giorno
+    # print(stringa)
+
+    dataset = DatiRaccolti.objects \
+        .values('date') \
+        .filter(date__gte=stringa) \
+        .annotate(erogatedA=Count('date', filter=Q(erogation=True, userMod=False)),
+                  erogatedU=Count('date', filter=Q(erogation=True, userMod=True))) \
+        .order_by('date')
+
+    categories = list()
+    erogAutomatic = list()
+    erogUser = list()
+    dateStringhe = list()
+
+    for entry in dataset:
+        categories.append('%s Class' % entry['date'])  #
+        # print(entry['date'])
+        # print(entry['date'].strftime("%d/%m/%y %H:%M:%S:%f"))
+        dateStringhe.append(entry['date'].strftime("%d/%m/%y %H:%M:%S"))  # :%f per i millisecondi
+        erogAutomatic.append(entry['erogatedA'])
+        erogUser.append(entry['erogatedU'])
+
+    # print(categories)
+    # print(dateStringhe)
+    cat = json.dumps(categories)
+    # print(cat)
+    autoE = json.dumps(erogAutomatic)
+    userE = json.dumps(erogUser)
+
+    macro = list()  # incapsulo gli ultimi dati in una lista
+    macro.append(cat)
+    macro.append(autoE)
+    macro.append(userE)
+    # print(macro)
+    # print(json.dumps(macro))
+
+    return JsonResponse(dateStringhe, safe=False)
+
+
+@csrf_exempt
+def ultimoDato(request):  # per aggiornamento tabella e chart
+    # anno = request.GET.__getitem__('anno')
+    # mese = request.GET.__getitem__('mese')
+    # giorno = request.GET.__getitem__('giorno')
+    # stringa = anno + "-" + mese + "-" + giorno
+    elementi = DatiRaccolti.objects.values().filter(date__gte='2019-11-05')  # stringa
+
+    # .strftime("%b. %d, %Y, %H:%M %p"))  # :%f per i millisecondi
+
+    lu = len(elementi)
+    # print(lu)
+    # f = elementi[lu] # invio sempre l'ultimo elemento
+    f = elementi[0]
+
+    print(f)
+
+    return JsonResponse(f, safe=False)
+
 
 

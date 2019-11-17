@@ -24,26 +24,34 @@
             $.ajax({
                 type: "GET",
 
-                url: "http://192.168.1.105:8000/dispenser/gajax/",
-                //url: "http://172.22.36.134:8000/dispenser/gajax/",
+                url: "http://192.168.1.105:8000/dispenser/giorno/", // gajax
+                //url: "http://172.22.36.134:8000/dispenser/gajax/", 
+                 //url: "http://172.18.167.65:8000/dispenser/gajax/", // eduroam santa marta 
 
                 success: function(data){
                     console.log("dati ricevuti");
-                    $('#messaggio').html(" ");
 
 
                     // prendo tutti i campi della tabella e li salvo in delle singole variabili -- sono gli ultimi dati stampati
-
-                    var lastId = $('#last_insert').find('#id').html();
-                    console.log(lastId);
-                    var lastDate = $('#last_insert').find('#date').html();
-                    console.log(lastDate);
-                    var lastErog = $('#last_insert').find('#erogation').html();
-                    console.log(lastErog);
-                    var lastUser = $('#last_insert').find('#userMod').html();
-                    console.log(lastUser);
-                    var lastTime = $('#last_insert').find('#timeMod').html();
-                    console.log(lastTime);
+                    
+                    var lastId = $('#oggi tr:last').find('#id').html(); 
+                    console.log(lastId); 
+                    var lastDate = $('#oggi tr:last').find('#date').html(); 
+                    console.log(lastDate); 
+                    var lastErog = $('#oggi tr:last').find('#erogation').html(); 
+                    console.log(lastErog); 
+                    var lastUser = $('#oggi tr:last').find('#userMod').html(); 
+                    console.log(lastUser); 
+                    var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
+                    console.log(lastTime); 
+                    
+                    // formattare i dati ricevuti -- prevedere un formato per quando arrivano in blocco e poi applicarlo anche quando richiedo l'ultimo dato 
+                    
+                    var d = new Date(data['date']);
+                    console.log("QUIII: " + d); 
+                    
+                    var s = d.getMonth() + ". " + d.getDay() + ", " + d.getFullYear() + ", " + d.getHours() + ":" + d.getMinutes() + "p.m."; // pm e am come li distinguo a priori ?
+                    
 
                     if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||
                     (lastId != data['id'])){
@@ -52,17 +60,20 @@
                     // oppure i dati precedenti sono diversi dai dati appena ricevuti
                     // allora li renderizzo
 
-                    console.log("i dati sono undefined o sono identici a quelli precedenti");
+                    console.log("i dati sono undefined o sono diversi a quelli precedenti");
 
-                    $('#old').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
+                   /* $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
+                    "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
+                    "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare*/
+                        
+                          $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + s + "</td>" +
                     "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
                     "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
 
                     }
 
                     else{
-                    console.log("dati già stampati");
-                    $('#messaggio').html("Nessun dato aggiornato");
+                        console.log("dati già stampati");
                     }
 
                 },
@@ -82,23 +93,6 @@
 </head>
     
 <body>
-<!--    <div id="render">-->
-<!--        <table id="tabella">-->
-<!--            <tr id="intestazione">-->
-<!--                <th>Id</th>-->
-<!--                <th>Data</th>-->
-<!--                <th>Erogation</th>-->
-<!--                <th>UserMode</th>-->
-<!--                <th>TimeMode</th>-->
-<!--            </tr>-->
-
-
-
-<!--        </table>-->
-
-<!--    </div>-->
-
-
     <table id="oggi">
         <tr id="prova">
             <th>Id</th>
@@ -120,16 +114,9 @@
 
         </tr>
         {% endfor %}
+        
 
     </table>
-
-
-    <ul>
-
-    </ul>
-
-    <div id="messaggio"> </div>
-
 
 
 </body>

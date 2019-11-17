@@ -18,8 +18,14 @@ urlpatterns = [
     url(r'^gajax/', views.get_ajax, name='gajax'),
     url(r'^$', views.viewData, name='viewData'),  # /dispenser --> dati tabella
 
-    url(r'^chart/', views.chartData, name='chart'),
+    # url(r'^chart/', views.chartData, name='chart'),
     url(r'^aggiornamento/', views.LastDate, name='agg'),
+
+    url(r'^chart/', views.grafico, name='grafico'),
+    url(r'^dati/', views.sendData, name='dati'),
+
+    url(r'^giorno/', views.ultimoDato, name='giorno'),
+
 
 
 

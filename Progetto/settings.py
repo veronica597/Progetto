@@ -31,6 +31,9 @@ ALLOWED_HOSTS = ['*',
                  '192.168.1.105',  # casa chiara
                  '192.168.43.37',  # HIGHWAY 4G - HUAWEI P30 lite
                  '172.22.36.134',  # FirenzeWiFi
+                 '172.18.255.7',  # eduroam Santa Mara
+                 '172.18.167.65',
+                 '172.17.196.174',  # eduroam Morgagni
                 ]
 
 

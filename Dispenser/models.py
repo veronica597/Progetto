@@ -7,8 +7,8 @@ from django.db import models
 
 class DatiRaccolti(models.Model):
 
-    # date = models.DateTimeField(auto_now=True)
-    date = models.DateTimeField(default=timezone.now(), blank=True)
+    date = models.DateTimeField(auto_now=True)
+    # date = models.DateTimeField(default=timezone.now(), blank=True)
     erogation = models.BooleanField(default=False)
     userMod = models.BooleanField(default=False)  # flag erogazione utente/automatica
     timeMod = models.BooleanField(default=True)  # flag per distinguere giorno da notte. di default Giorno

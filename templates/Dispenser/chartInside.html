@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Chart in html con dati presi da view Django </title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+                    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+    </script>
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+
+    <script type="text/javascript">
+        
+
+
+        $(document).ready(function (){
+            console.log("pronti alla get");
+        
+//        
+//        $(document).ajaxSuccess(function(){
+//                console.log("dentro ajax success"); // 4
+//                result = categories;
+//                //console.log(result); 
+//                alert(result);
+//             
+//            });
+            
+//      
+//        
+//        function getData(){
+//            console.log("dentro getData"); // 1
+//            
+//            //var saluti = "Ciao";
+//            
+//            $.ajax({
+//                             type: "GET",
+//                             //url: "http://192.168.1.105:8000/dispenser/dati/",
+//                             url: "http://172.18.255.7:8000/dispenser/dati/", // eduroam Santa Mara
+//                             success: function(data){
+//                                 console.log("dati ricevuti erogA"); // 3 
+//                                 //console.log(data);
+//                                 // salvo i dati
+//                                 categories = data[0];
+//                                 autoE = data[1];
+//                                 userE = data[2];
+//
+//                             }
+//
+//                         })
+////            var requestUrl = "http://172.18.255.7:8000/dispenser/dati/";
+////
+////            $.get(requestUrl, function(data){
+////                console.log("prendo i dati");
+////               //console.log(data);
+////                categories = data[0];
+////                autoE = data[1];
+////                userE = data[2];
+////                console.log("CAT: " + categories);
+////            });
+//            console.log("CAT: " + categories); // 2
+//            return categories; 
+//        }
+        
+//        function getErogA(){
+//                         $.ajax({
+//                             type: "GET",
+//                             //url: "http://192.168.1.105:8000/dispenser/dati/",
+//                             url: "http://172.18.255.7:8000/dispenser/dati/", // eduroam Santa Mara
+//                             success: function(data){
+//                                 console.log("dati ricevuti erogA");
+//                                 //console.log(data);
+//                                 // salvo i dati
+//                                 categories = data[0];
+//                                 autoE = data[1];
+//                                 userE = data[2];
+//
+//                             }
+//
+//                         })
+//
+//                         return autoE;
+//        }
+//
+//         function getCat(){
+//                         $.ajax({
+//                             type: "GET",
+//                             //url: "http://192.168.1.105:8000/dispenser/dati/",
+//                             url: "http://172.18.255.7:8000/dispenser/dati/", // eduroam Santa Mara
+//                             success: function(data){
+//                                 console.log("dati ricevuti categorie");
+//                                 //console.log(data);
+//                                 // salvo i dati
+//                                 categories = data[0];
+//                                 autoE = data[1];
+//                                 userE = data[2];
+//
+//                             }
+//
+//                         })
+//
+//                         return categories;
+//        }
+//
+//         function getErogU(){
+//                         $.ajax({
+//                             type: "GET",
+//                             //url: "http://192.168.1.105:8000/dispenser/dati/",
+//                             url: "http://172.18.255.7:8000/dispenser/dati/", // eduroam Santa Mara
+//                             success: function(data){
+//                                 console.log("dati ricevuti erogU");
+//                                 //console.log(data);
+//                                 // salvo i dati
+//                                 categories = data[0];
+//                                 autoE = data[1];
+//                                 userE = data[2];
+//                                 return userE;
+//                             }
+//
+//                         })
+//                         console.log(userE); 
+//                         
+//        }
+
+    
+       
+
+    
+    $("#button").click(function(){
+        // capire come estrapolo dal click sul calendario l'informazione circa quale giorno ho cliccato 
+        var giorno = '2019-11-05'; 
+        var amg = {
+            anno: '2019',
+            mese: '11',
+            giorno: '5'
+        }; 
+        var jsonAMG = JSON.stringify(amg); 
+        var datoStr = "anno=2019&mese=11&giorno=5"; 
+        console.log(jsonAMG); 
+            
+        
+//    $.ajax({
+//                             type: "GET",
+//                             url: "http://192.168.1.105:8000/dispenser/dati/",
+//                             //url: "http://172.18.167.65:8000/dispenser/dati/", // eduroam Santa Mara
+//                             //url: "http://172.17.196.174:8000/dispenser/dati/", // eduroam Morgagni
+//                             data: datoStr,
+//                             //contentType: "application/json", // specifico il tipo di dati che invio al server (django)
+//                             success: function(data){
+//                                 console.log("dati ricevuti");
+//                                 console.log(data);
+//                                 console.log(data[0]);
+//                                 console.log(typeof(data)); 
+//                                 console.log(typeof(data[0])); 
+//                                 
+//                                 var orari = new Array(data.length); 
+//                                 console.log(orari.length); 
+//                                 console.log(data.length);
+//                                 
+//                                 
+//                                 for(var i = 0; i < data.length; i++){
+//                                     var today = new Date(data[i]); 
+//                                     var oms = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds(); 
+//                                     orari[i] = oms; 
+//                                 }
+//                                 
+//                                 console.log(orari); 
+//                                 
+//                                 var oggi = new Date(data[0]); 
+//                                 //console.log(oggi.getHours()); 
+//                                 var concatenamento = oggi.getHours() + ':' + oggi.getMinutes() + ':' + oggi.getSeconds(); 
+//                                 console.log(concatenamento); 
+//                                 console.log(typeof(concatenamento)); 
+//                                 
+//                                 var array = new Array(4);
+//                                 console.log(array.length);
+//                                
+//                                 for(var i = 0; i < array.length; i++){
+//                                     array[i] = parseInt(data[i]); 
+//                                 }
+//                                 console.log(array); 
+//                                 
+//                                 // salvo i dati
+//                                 //categories = data[0];
+//                                 //console.log(typeof(categories));
+//                                 autoE = data[1];
+//                                 userE = data[2];
+//                                
+//                                 // grafico 
+//                                  var chart = Highcharts.chart('container', {
+//                             chart: {
+//                                 type: 'column', // column
+//                                 events: {
+//                                    load: function () {
+//                                        
+//                                        // vecchie 
+//                                        var series0 = this.series[0]; // erogazioni automatiche
+//                                        var series1 = this.series[1]; // erogazioni utente
+//                                        var c = this.xAxis[0].categories; 
+//                                        var count = 0; 
+//                                        console.log("POINTS: " + series0.points);
+//                                        
+//
+//                                        setInterval(function () {
+//                                        console.log("aggiornamento");
+//                                        console.log("DENTRO SET INTERVAL: " + series0.points);
+//                                        
+//                                        
+//                                         
+//                                        // confronto il contenuto delle variabili "vecchie" con i dati in arrivo e se sono diversi (o undefined) allora li aggiungo 
+//                                        
+//                                        count++; 
+//                                        c.push(orari[3]); 
+//                                         
+//                                        series0.addPoint([orari[3], 8], true);
+//                                        //series1.addPoint([orari[3], 5], true);
+//                                            
+//                                        console.log('contatore: ' + count); 
+//                                             
+//                                        if(count >= 25){
+//                                            console.log('rimuovi dati vecchi');
+//                                            c.shift(); 
+//                                            series0.removePoint([c[0], series0.points[0]],true); 
+//                                             
+//                                        }
+//                                        
+//                                        }, 1000);
+//                                    }
+//                                }
+//                             },
+//
+//                             title: {
+//                                 text: 'Erogazioni 5 Novembre 2019'
+//                             },
+//
+//                             xAxis: {
+//                                 type: 'datetime',
+//                                 categories: orari
+//                             },
+//
+//                             series: [{
+//                             name: 'Erogazioni automatiche',
+//                             color: '#ff00ff',
+//                             data: [1, 12, 6, 9],// getErogA()
+//                             
+//                             }
+////                                      , {
+////                             name: 'Erogazioni utente',
+////                             color: '#00bfff',
+////                             data: [11, 3, 8, 3],//getErogU()
+////                          
+////                             }
+//                                     ],
+//
+//
+//
+//
+//
+//                            }); // chiude il chart 
+//                                 
+//                                 } // chiude success 
+//
+//    }) // chiude ajax  // ajax con passaggio giorno a django
+        
+        
+        
+        // GRAFICO 
+        
+        $.ajax({
+            type: 'GET',
+            url: "http://192.168.1.105:8000/dispenser/giorno/",
+            success: function(data){
+                console.log("dati ricevuti"); 
+                console.log(data); 
+         
+                // grafico 
+                var chart = Highcharts.chart('container', {
+                    chart: {
+                        type: 'column', // column
+                        events: {
+                            load: function () {
+                                var series0 = this.series[0]; // erogazioni automatiche
+                                var series1 = this.series[1]; // erogazioni utente
+                                
+                                var lastId = $('#oggi tr:last').find('#id').html(); 
+                                console.log(lastId); 
+                                var lastDate = $('#oggi tr:last').find('#date').html(); 
+                                console.log(lastDate); 
+                                var lastErog = $('#oggi tr:last').find('#erogation').html(); 
+                                console.log(lastErog); 
+                                var lastUser = $('#oggi tr:last').find('#userMod').html(); 
+                                console.log(lastUser); 
+                                var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
+                                console.log(lastTime); 
+                                
+                                if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
+                                    // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
+                                    // oppure i dati precedenti sono diversi dai dati appena ricevuti
+                                    // allora li renderizzo
+
+                                    console.log("i dati sono undefined o sono diversi a quelli precedenti");
+
+                                    $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
+                                    "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
+                                    "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
+                                    
+                                    if(data['erogation'] == 1){
+                                        if(data['userMod'] == true){ // erogazione utente
+                                            series1.addPoint([1], true); 
+                                        }
+                                        else{ // erogazione automatica
+                                            series0.addPoint([0,1], true); 
+                                        }
+                                    }
+                                    
+                                }
+
+                                else{
+                                    console.log("dati già stampati");
+                                }
+                                
+                              
+                                
+
+//                                setInterval(function () {
+//                                    console.log("aggiornamento");
+//                                    console.log("DENTRO SET INTERVAL: " + series0.points);
+//                                        
+//                                        
+//                                         
+//                                    // confronto il contenuto delle variabili "vecchie" con i dati in arrivo e se sono diversi (o undefined) allora li aggiungo 
+//                                        
+//                                    count++; 
+//                                    c.push(orari[3]); 
+//                                         
+//                                    series0.addPoint([orari[3], 8], true);
+//                                    //series1.addPoint([orari[3], 5], true);
+//                                            
+//                                    console.log('contatore: ' + count); 
+//                                             
+//                                    if(count >= 25){
+//                                        console.log('rimuovi dati vecchi');
+//                                        c.shift(); 
+//                                        series0.removePoint([c[0], series0.points[0]],true); 
+//                                             
+//                                    }
+//                                        
+//                                }, 1000);
+                            }
+                        }
+                    },
+                    title: {
+                        text: 'Erogazioni 5 Novembre 2019'
+                    },
+                    
+                    // sistemare xAxis
+
+//                    xAxis: {
+//                        type: 'datetime',
+//                        categories: orari
+//                    },
+
+                    series: [{
+                        name: 'Erogazioni automatiche',
+                        color: '#ff00ff',
+                        data: [0],
+                             
+                    }
+                    , {
+                        name: 'Erogazioni utente',
+                        color: '#00bfff',
+                        data: [0],
+                          
+                   }
+                    ],
+
+
+
+
+
+                            }); // chiude il chart 
+            }
+            
+        })
+    
+    
+    
+}); // chiude click
+         
+
+  
+        
+
+        });
+    </script>
+
+</head>
+
+
+<body>
+    <div id="container"></div>
+    <button id="bottone"> Ricevi dati </button>
+    <button id="button"> Render </button>
+     
+    <table id="oggi">
+        <tr id="prova">
+            <th>Id</th>
+            <th>Data</th>
+            <th>Erogation</th>
+            <th>UserMode</th>
+            <th>TimeMode</th>
+        </tr>
+
+        {% for riga in righe %}
+        <tr id="old">
+
+            <td id="id"> {{riga.id}} </td>
+            <td id="date"> {{riga.date}} </td>
+            <td id="erogation"> {{riga.erogation}} </td>
+            <td id="userMod"> {{riga.userMod}} </td>
+            <td id="timeMod"> {{riga.timeMod}} </td>
+
+
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</body>
+</html>

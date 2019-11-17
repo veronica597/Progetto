@@ -13,6 +13,7 @@
     <div id="container"></div>
     <script>
         var chart = Highcharts.chart('container', {{ chart|safe }});
+
     </script>
     <script type="text/javascript">
         $(document).ready(function (){
@@ -27,9 +28,10 @@
         console.log(s);
         console.log(s1);
 
-        setInterval(function() { // Call a function repetatively with 2 Second interval
-                    getData();
-                }, 2000); //5000mSeconds update rate
+
+<!--        setInterval(function() { // Call a function repetatively with 2 Second interval-->
+<!--                    getData();-->
+<!--                }, 2000); //5000mSeconds update rate-->
 
         function getData(){
 
