@@ -27,3 +27,7 @@ class DatiRaccolti(models.Model):
 def __str__(self):
     return self.language.name
 
+
+ # def getDate(self):
+ #     return self.date.strftime('%Y-%m-%d%H')
+

@@ -15,7 +15,8 @@ from django.db.models import Count, Q
 
 
 def index(request):
-    return HttpResponse("<p> Food Dispenser Application </p>")
+    #return HttpResponse("<p> Food Dispenser Application </p>")
+    return render(request, 'home.html')
 
 
 def profile(request):
