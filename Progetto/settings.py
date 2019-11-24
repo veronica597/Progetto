@@ -30,6 +30,10 @@ ALLOWED_HOSTS = ['*',
                  '192.168.1.35',
                  '192.168.1.105',  # casa chiara
                  '192.168.43.37',  # HIGHWAY 4G - HUAWEI P30 lite
+                 '172.22.36.134',  # FirenzeWiFi
+                 '172.18.255.7',  # eduroam Santa Mara
+                 '172.18.167.65',
+                 '172.17.196.174',  # eduroam Morgagni
                 ]
 
 
@@ -112,7 +116,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'  # per mettere italiano 'it-IT'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Rome'
+
+DATETIME_FORMAT = "%Y-%m-%d%H-%M"
 
 USE_I18N = True
 
@@ -124,5 +130,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+STATICFILES_DIRS = (
+     os.path.join(BASE_DIR, 'static'),
+)
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')
+
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')

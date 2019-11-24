@@ -13,11 +13,12 @@
         $(document).ready(function (){
             console.log("pronti alla get");
 
-            var INDIRIZZO_IP = "192.168.1.105"; // indirizzo IP del computer
+            //var INDIRIZZO_IP = "192.168.1.105"; // indirizzo IP del computer
+            //var urlHome = "http://192.168.1.105:8000/dispenser/";
 
             // Casa Chiara
             var DEVICE_IP = '192.168.1.128'; // indirizzo IP della scheda ESP8266
-            var url = "http://INDIRIZZO_IP:8000/dispenser/client/";
+            var url = "http://192.168.1.105:8000/dispenser/sensor/";
 
             // MICC
             //var DEVICE_IP = '192.168.1.134';
@@ -25,11 +26,12 @@
 
             // HUAWEI P30 lite -- 192.168.43.37
             //var DEVICE_IP = '192.168.43.128';
-            //var url = "http://INDIRIZZO_IP:8000/dispenser/client/";
+            //var url = "http://192.168.43.37:8000/dispenser/client/";
 
             var data = {
                 erogation : 0, // no erogazione
                 userMod : 0, // modalita' automatica
+                timeMod : 1, // modalita' giorno
             };
 
 
@@ -49,8 +51,40 @@
                     data.userMod = 1; // modalita' utente
                     dataJson = JSON.stringify(data);
                     //$.post(url, dataJson, success(buttonON));
-                    $("#stampa").html("Il servo ha ruotato");
+
+                    // prova richiesta ajax 1
+<!--                    $.ajax({-->
+<!--                        url: url,  -->
+<!--                        type: 'POST',-->
+<!--                        data: dataJson,-->
+<!--                        dataType: 'json',-->
+
+<!--                        success: function(){-->
+<!--                            console.log("sto facendo una richiesta ajax al server django");-->
+<!--                            $("#stampa").html("Il servo ha ruotato");-->
+<!--                        },-->
+<!--                        error: function(request, error){-->
+<!--                            alert("Request: " + JSON.stringify(request));-->
+<!--                        }-->
+<!--                    });-->
+
+                    // prova ajax 2
+                    var xhr = new XMLHttpRequest();
+                    //xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                    xhr.onreadystatechange = function(){
+                        if(this.readyState == 4 && this.status == 200){
+                            console.log("ajax ok");
+                            document.getElementById("stampa").innerHTML = this.responseText;
+                            // nella pagina stampo la tabella con tutte le righe del database
+                        }
+                    };
+
+                    xhr.open("GET", url, true);
+                    xhr.send();
+
+
                 });
+
             }
 
 
@@ -71,7 +105,9 @@
     <!-- parte da matchare con arduino -->
     <div id="arduino">
 
-        <button id="on"> Ruota il servo </button> <!--onclick="attivaServo()"-->
+
+
+        <button id="on" type="button" class="btn btn-primary btn-lg "> Erogate food </button>
 
     </div>
 
