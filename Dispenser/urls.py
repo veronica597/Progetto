@@ -4,6 +4,7 @@ from Dispenser import views
 from django.views.generic import TemplateView
 
 urlpatterns = [
+    url(r'^profile/',views.profile, name='profile'),
     # url(r'^$', views.index, name='index'),
     # url(r'', include('Dispenser.urls')),
      url(r'^$', views.home, name='home'),

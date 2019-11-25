@@ -21,12 +21,18 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+
+
+
+
 </head>
 
 
 <body>
 
 {#tabella dati#}
+
 
 <div class="container-fluid">
     <h1 style="color: darksalmon">Food Dispenser Data</h1>
@@ -56,28 +62,7 @@
 {# calendario #}
 
 
-<main class="container-fluid">
-    <h4 style="color: darksalmon">Select a date to filter: </h4>
-    <div class="row" style="padding: 10px">
-        <div class="col">
-            <input data-date-format="dd/mm/yyyy" id="datepicker">
-        </div>
-    </div>
-</main>
 
-
-<script type="text/javascript">
-
-    $('#datepicker').datepicker({
-        weekStart: 1,
-        daysOfWeekHighlighted: "6,0",
-        autoclose: true,
-        todayHighlight: true,
-    });
-
-    $('#datepicker').datepicker("setDate", new Date());
-    console.log($('#datepicker').datepicker("getDate"));
-</script>
 
 
 </body>

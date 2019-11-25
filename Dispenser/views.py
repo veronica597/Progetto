@@ -14,6 +14,7 @@ from django.db import models
 from django.db.models import Count, Q
 
 
+
 def index(request):
     #return HttpResponse("<p> Food Dispenser Application </p>")
     return render(request, 'home.html')
