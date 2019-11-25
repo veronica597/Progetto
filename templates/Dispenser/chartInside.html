@@ -12,132 +12,30 @@
 
     <script type="text/javascript">
         
-
-
+        
         $(document).ready(function (){
             console.log("pronti alla get");
         
-//        
-//        $(document).ajaxSuccess(function(){
-//                console.log("dentro ajax success"); // 4
-//                result = categories;
-//                //console.log(result); 
-//                alert(result);
-//             
-//            });
-            
-//      
-//        
-//        function getData(){
-//            console.log("dentro getData"); // 1
-//            
-//            //var saluti = "Ciao";
-//            
-//            $.ajax({
-//                             type: "GET",
-//                             //url: "http://192.168.1.105:8000/dispenser/dati/",
-//                             url: "http://172.18.255.7:8000/dispenser/dati/", // eduroam Santa Mara
-//                             success: function(data){
-//                                 console.log("dati ricevuti erogA"); // 3 
-//                                 //console.log(data);
-//                                 // salvo i dati
-//                                 categories = data[0];
-//                                 autoE = data[1];
-//                                 userE = data[2];
-//
-//                             }
-//
-//                         })
-////            var requestUrl = "http://172.18.255.7:8000/dispenser/dati/";
-////
-////            $.get(requestUrl, function(data){
-////                console.log("prendo i dati");
-////               //console.log(data);
-////                categories = data[0];
-////                autoE = data[1];
-////                userE = data[2];
-////                console.log("CAT: " + categories);
-////            });
-//            console.log("CAT: " + categories); // 2
-//            return categories; 
-//        }
-        
-//        function getErogA(){
-//                         $.ajax({
-//                             type: "GET",
-//                             //url: "http://192.168.1.105:8000/dispenser/dati/",
-//                             url: "http://172.18.255.7:8000/dispenser/dati/", // eduroam Santa Mara
-//                             success: function(data){
-//                                 console.log("dati ricevuti erogA");
-//                                 //console.log(data);
-//                                 // salvo i dati
-//                                 categories = data[0];
-//                                 autoE = data[1];
-//                                 userE = data[2];
-//
-//                             }
-//
-//                         })
-//
-//                         return autoE;
-//        }
-//
-//         function getCat(){
-//                         $.ajax({
-//                             type: "GET",
-//                             //url: "http://192.168.1.105:8000/dispenser/dati/",
-//                             url: "http://172.18.255.7:8000/dispenser/dati/", // eduroam Santa Mara
-//                             success: function(data){
-//                                 console.log("dati ricevuti categorie");
-//                                 //console.log(data);
-//                                 // salvo i dati
-//                                 categories = data[0];
-//                                 autoE = data[1];
-//                                 userE = data[2];
-//
-//                             }
-//
-//                         })
-//
-//                         return categories;
-//        }
-//
-//         function getErogU(){
-//                         $.ajax({
-//                             type: "GET",
-//                             //url: "http://192.168.1.105:8000/dispenser/dati/",
-//                             url: "http://172.18.255.7:8000/dispenser/dati/", // eduroam Santa Mara
-//                             success: function(data){
-//                                 console.log("dati ricevuti erogU");
-//                                 //console.log(data);
-//                                 // salvo i dati
-//                                 categories = data[0];
-//                                 autoE = data[1];
-//                                 userE = data[2];
-//                                 return userE;
-//                             }
-//
-//                         })
-//                         console.log(userE); 
-//                         
-//        }
 
     
-       
-
     
     $("#button").click(function(){
         // capire come estrapolo dal click sul calendario l'informazione circa quale giorno ho cliccato 
-        var giorno = '2019-11-05'; 
+        
         var amg = {
             anno: '2019',
-            mese: '11',
-            giorno: '5'
+            mese: '10',
+            giorno: '22'
         }; 
-        var jsonAMG = JSON.stringify(amg); 
-        var datoStr = "anno=2019&mese=11&giorno=5"; 
-        console.log(jsonAMG); 
+  
+        //var jsonAMG = JSON.stringify(amg); 
+        var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + ""; 
+        
+        //console.log(jsonAMG); 
             
+        
+        // guardare questa parte per grafico mese/settimana in cui mi serve avere sull'asse x delle date 
+        
         
 //    $.ajax({
 //                             type: "GET",
@@ -268,119 +166,136 @@
         
         $.ajax({
             type: 'GET',
-            //url: "http://192.168.1.105:8000/dispenser/giorno/",
-            url: "http://172.18.185.19:8000/dispenser/giorno/",
+            //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
+            url: "http://192.168.1.105:8000/dispenser/dati/", 
+            //url: "http://172.18.185.19:8000/dispenser/giorno/",
+            data: datoStr,
             success: function(data){
                 console.log("dati ricevuti"); 
                 console.log(data); 
+                
          
                 // grafico 
-                var chart = Highcharts.chart('container', {
-                    chart: {
-                        type: 'column', // column
-                        events: {
-                            load: function () {
-                                var series0 = this.series[0]; // erogazioni automatiche
-                                var series1 = this.series[1]; // erogazioni utente
-                                
-                                var lastId = $('#oggi tr:last').find('#id').html(); 
-                                console.log(lastId); 
-                                var lastDate = $('#oggi tr:last').find('#date').html(); 
-                                console.log(lastDate); 
-                                var lastErog = $('#oggi tr:last').find('#erogation').html(); 
-                                console.log(lastErog); 
-                                var lastUser = $('#oggi tr:last').find('#userMod').html(); 
-                                console.log(lastUser); 
-                                var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
-                                console.log(lastTime); 
-                                
-                                if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
-                                    // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
-                                    // oppure i dati precedenti sono diversi dai dati appena ricevuti
-                                    // allora li renderizzo
-
-                                    console.log("i dati sono undefined o sono diversi a quelli precedenti");
-
-                                    $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
-                                    "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
-                                    "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
-                                    
-                                    if(data['erogation'] == 1){
-                                        if(data['userMod'] == true){ // erogazione utente
-                                            series1.addPoint([1], true); 
-                                        }
-                                        else{ // erogazione automatica
-                                            series0.addPoint([0,1], true); 
-                                        }
-                                    }
-                                    
-                                }
-
-                                else{
-                                    console.log("dati già stampati");
-                                }
-                                
-                              
-                                
-
-//                                setInterval(function () {
-//                                    console.log("aggiornamento");
-//                                    console.log("DENTRO SET INTERVAL: " + series0.points);
-//                                        
-//                                        
-//                                         
-//                                    // confronto il contenuto delle variabili "vecchie" con i dati in arrivo e se sono diversi (o undefined) allora li aggiungo 
-//                                        
-//                                    count++; 
-//                                    c.push(orari[3]); 
-//                                         
-//                                    series0.addPoint([orari[3], 8], true);
-//                                    //series1.addPoint([orari[3], 5], true);
-//                                            
-//                                    console.log('contatore: ' + count); 
-//                                             
-//                                    if(count >= 25){
-//                                        console.log('rimuovi dati vecchi');
-//                                        c.shift(); 
-//                                        series0.removePoint([c[0], series0.points[0]],true); 
-//                                             
-//                                    }
-//                                        
-//                                }, 1000);
-                            }
-                        }
-                    },
-                    title: {
-                        text: 'Erogazioni 5 Novembre 2019'
-                    },
-                    
-                    // sistemare xAxis
-
-//                    xAxis: {
-//                        type: 'datetime',
-//                        categories: orari
+//                var chart = Highcharts.chart('container', {
+//                    chart: {
+//                        type: 'column', // column
+//                        
+////                        events: {
+////                            load: function () {
+////                                var series0 = this.series[0]; // erogazioni automatiche
+////                                var series1 = this.series[1]; // erogazioni utente
+////                                
+////                                var lastId = $('#oggi tr:last').find('#id').html(); 
+////                                console.log(lastId); 
+////                                var lastDate = $('#oggi tr:last').find('#date').html(); 
+////                                console.log(lastDate); 
+////                                var lastErog = $('#oggi tr:last').find('#erogation').html(); 
+////                                console.log(lastErog); 
+////                                var lastUser = $('#oggi tr:last').find('#userMod').html(); 
+////                                console.log(lastUser); 
+////                                var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
+////                                console.log(lastTime); 
+////                                
+////                                if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
+////                                    // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
+////                                    // oppure i dati precedenti sono diversi dai dati appena ricevuti
+////                                    // allora li renderizzo
+////
+////                                    console.log("i dati sono undefined o sono diversi a quelli precedenti");
+////
+////                                    $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
+////                                    "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
+////                                    "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
+////                                    
+////                                    if(data['erogation'] == 1){
+////                                        if(data['userMod'] == true){ // erogazione utente
+////                                            series1.addPoint([1], true); 
+////                                        }
+////                                        else{ // erogazione automatica
+////                                            series0.addPoint([0,1], true); 
+////                                        }
+////                                    }
+////                                    
+////                                }
+////
+////                                else{
+////                                    console.log("dati già stampati");
+////                                }
+////                                
+////                              
+////                                
+////                                 POLLING 
+////                                
+////                                setInterval(function () {  
+////                                    console.log("aggiornamento");
+////                                     // confronto il contenuto delle variabili "vecchie" con i dati in arrivo e se sono diversi (o undefined) allora li aggiungo 
+////                                    
+////                                    if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
+////                                    // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
+////                                    // oppure i dati precedenti sono diversi dai dati appena ricevuti
+////                                    // allora li renderizzo
+////
+////                                    console.log("i dati sono undefined o sono diversi a quelli precedenti");
+////
+////                                    $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
+////                                    "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
+////                                    "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
+////                                    
+////                                    if(data['erogation'] == 1){
+////                                        if(data['userMod'] == true){ // erogazione utente
+////                                            series1.addPoint([0,1], true); 
+////                                        }
+////                                        else{ // erogazione automatica
+////                                            series0.addPoint([0,1], true); 
+////                                        }
+////                                    }
+////                                    
+////                                }
+////
+////                                else{
+////                                    console.log("dati già stampati");
+////                                }
+////        
+////                                        
+////                                }, 1000);
+////                                
+////                                
+////                                
+////                            }
+////                        } // chiude events 
+//                    
 //                    },
-
-                    series: [{
-                        name: 'Erogazioni automatiche',
-                        color: '#ff00ff',
-                        data: [0],
-                             
-                    }
-                    , {
-                        name: 'Erogazioni utente',
-                        color: '#00bfff',
-                        data: [0],
-                          
-                   }
-                    ],
-
-
-
-
-
-                            }); // chiude il chart 
-            }
+//                    title: {
+//                        text: 'Erogazioni 22 Ottobre 2019'
+//                    },
+//                    
+//                    // sistemare xAxis
+//
+//                    xAxis: {
+//                        categories: [data[0]]
+//                    },
+//
+//                    series: [{
+//                        name: 'Erogazioni automatiche',
+//                        color: '#ff00ff',
+//                        data: [data[1]],
+//                             
+//                    }
+//                             
+//                    , {
+//                        name: 'Erogazioni utente',
+//                        color: '#00bfff',
+//                        data: [data[2]],
+//                          
+//                   }
+//                    ],
+//
+//
+//
+//
+//
+//                            }); // chiude il chart 
+            } // chiude success
             
         })
     
