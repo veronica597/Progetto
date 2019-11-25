@@ -1,22 +1,31 @@
+<!-- CONTIENE I FILE
+INDEX.HTML: per quanto riguarda la renderizzazione della tabella con i dati
+GET_POST.HTML: per la parte di interazione con il servo.Cioè posso premere il tasto e azionare il servo.
+-->
+
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title> Chart in html con dati presi da view Django </title>
+    <title> Chart Today's Data</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-                    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
 
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
     <script type="text/javascript">
-        
+
 
 
         $(document).ready(function (){
             console.log("pronti alla get");
-        
+
 //        
 //        $(document).ajaxSuccess(function(){
 //                console.log("dentro ajax success"); // 4
@@ -25,7 +34,7 @@
 //                alert(result);
 //             
 //            });
-            
+
 //      
 //        
 //        function getData(){
@@ -61,7 +70,7 @@
 //            console.log("CAT: " + categories); // 2
 //            return categories; 
 //        }
-        
+
 //        function getErogA(){
 //                         $.ajax({
 //                             type: "GET",
@@ -122,27 +131,26 @@
 //                         
 //        }
 
-    
 
 
-    
+/* PARTE DI CODICE PER IL GRAFICO GIORNALIERO*/
+
     $("#button").click(function(){
         // capire come estrapolo dal click sul calendario l'informazione circa quale giorno ho cliccato
 
 
-        var giorno;
-        giorno =
-        {#var giorno = '2019-11-05'; #}
-        {#var amg = {#}
-        {#    anno: '2019',#}
-        {#    mese: '11',#}
-        {#    giorno: '5'#}
-        {#}; #}
-        {#var jsonAMG = JSON.stringify(amg); #}
-        {#var datoStr = "anno=2019&mese=11&giorno=5"; #}
-        {#console.log(jsonAMG); #}
-            
-        
+
+        var giorno = '2019-11-05';
+        var amg = {
+            anno: '2019',
+            mese: '11',
+            giorno: '5'
+        };
+        var jsonAMG = JSON.stringify(amg);
+        var datoStr = "anno=2019&mese=11&giorno=5";
+        console.log(jsonAMG);
+
+
 //    $.ajax({
 //                             type: "GET",
 //                             url: "http://192.168.1.105:8000/dispenser/dati/",
@@ -265,20 +273,20 @@
 //                                 } // chiude success 
 //
 //    }) // chiude ajax  // ajax con passaggio giorno a django
-        
-        
-        
-        // GRAFICO 
-        
+
+
+
+        // GRAFICO
+
         $.ajax({
             type: 'GET',
             //url: "http://192.168.1.105:8000/dispenser/giorno/",
             url: "http://172.18.185.19:8000/dispenser/giorno/",
             success: function(data){
-                console.log("dati ricevuti"); 
-                console.log(data); 
-         
-                // grafico 
+                console.log("dati ricevuti");
+                console.log(data);
+
+                // grafico
                 var chart = Highcharts.chart('container', {
                     chart: {
                         type: 'column', // column
@@ -286,18 +294,18 @@
                             load: function () {
                                 var series0 = this.series[0]; // erogazioni automatiche
                                 var series1 = this.series[1]; // erogazioni utente
-                                
-                                var lastId = $('#oggi tr:last').find('#id').html(); 
-                                console.log(lastId); 
-                                var lastDate = $('#oggi tr:last').find('#date').html(); 
-                                console.log(lastDate); 
-                                var lastErog = $('#oggi tr:last').find('#erogation').html(); 
-                                console.log(lastErog); 
-                                var lastUser = $('#oggi tr:last').find('#userMod').html(); 
-                                console.log(lastUser); 
-                                var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
-                                console.log(lastTime); 
-                                
+
+                                var lastId = $('#oggi tr:last').find('#id').html();
+                                console.log(lastId);
+                                var lastDate = $('#oggi tr:last').find('#date').html();
+                                console.log(lastDate);
+                                var lastErog = $('#oggi tr:last').find('#erogation').html();
+                                console.log(lastErog);
+                                var lastUser = $('#oggi tr:last').find('#userMod').html();
+                                console.log(lastUser);
+                                var lastTime = $('#oggi tr:last').find('#timeMod').html();
+                                console.log(lastTime);
+
                                 if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
                                     // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
                                     // oppure i dati precedenti sono diversi dai dati appena ricevuti
@@ -308,24 +316,24 @@
                                     $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
                                     "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
                                     "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
-                                    
+
                                     if(data['erogation'] == 1){
                                         if(data['userMod'] == true){ // erogazione utente
-                                            series1.addPoint([1], true); 
+                                            series1.addPoint([1], true);
                                         }
                                         else{ // erogazione automatica
-                                            series0.addPoint([0,1], true); 
+                                            series0.addPoint([0,1], true);
                                         }
                                     }
-                                    
+
                                 }
 
                                 else{
                                     console.log("dati già stampati");
                                 }
-                                
-                              
-                                
+
+
+
 
 //                                setInterval(function () {
 //                                    console.log("aggiornamento");
@@ -357,7 +365,7 @@
                     title: {
                         text: 'Erogazioni 5 Novembre 2019'
                     },
-                    
+
                     // sistemare xAxis
 
 //                    xAxis: {
@@ -369,13 +377,13 @@
                         name: 'Erogazioni automatiche',
                         color: '#ff00ff',
                         data: [0],
-                             
+
                     }
                     , {
                         name: 'Erogazioni utente',
                         color: '#00bfff',
                         data: [0],
-                          
+
                    }
                     ],
 
@@ -383,53 +391,163 @@
 
 
 
-                            }); // chiude il chart 
+                            }); // chiude il chart
             }
-            
-        })
-    
-    
-    
-}); // chiude click
-         
 
-  
-        
+        })
+
+
+
+}); // chiude click
 
         });
     </script>
+
+<!-- PARTE PER INTERAGIRE CON ARDUINO -->
+
+    <script type="text/javascript" >
+
+    $(document).ready(function (){
+            console.log("pronti alla get");
+
+            //var INDIRIZZO_IP = "192.168.1.105"; // indirizzo IP del computer
+            //var urlHome = "http://192.168.1.105:8000/dispenser/";
+
+            // Casa Chiara
+            var DEVICE_IP = '192.168.1.128'; // indirizzo IP della scheda ESP8266
+            var url = "http://192.168.1.105:8000/dispenser/sensor/";
+
+            // MICC
+            //var DEVICE_IP = '192.168.1.134';
+            //var url = "http://INDIRIZZO_IP:8000/dispenser/client/";
+
+            // HUAWEI P30 lite -- 192.168.43.37
+            //var DEVICE_IP = '192.168.43.128';
+            //var url = "http://192.168.43.37:8000/dispenser/client/";
+
+            var data = {
+                erogation : 0, // no erogazione
+                userMod : 0, // modalita' automatica
+                timeMod : 1, // modalita' giorno
+            };
+
+
+            var dataJson = JSON.stringify(data); // converto l'oggetto JS in una stringa JSON
+
+            function success(d){
+                $(d).css({border:"3px solid orange"});
+            }
+
+            function attivaServo(){
+                console.log("click sul bottone 'Ruota il servo'");
+                var requestUrl = "http://" + DEVICE_IP + "/servoOpen";
+                $.get(requestUrl, function(){
+                    alert("sto facendo una get all'ESP8266");
+                    var buttonON = $("#on");
+                    data.erogation = 1; // erogazione effettuata
+                    data.userMod = 1; // modalita' utente
+                    dataJson = JSON.stringify(data);
+                    //$.post(url, dataJson, success(buttonON));
+
+                    // prova richiesta ajax 1
+<!--                    $.ajax({-->
+<!--                        url: url,  -->
+<!--                        type: 'POST',-->
+<!--                        data: dataJson,-->
+<!--                        dataType: 'json',-->
+
+<!--                        success: function(){-->
+<!--                            console.log("sto facendo una richiesta ajax al server django");-->
+<!--                            $("#stampa").html("Il servo ha ruotato");-->
+<!--                        },-->
+<!--                        error: function(request, error){-->
+<!--                            alert("Request: " + JSON.stringify(request));-->
+<!--                        }-->
+<!--                    });-->
+
+                    // prova ajax 2
+                    var xhr = new XMLHttpRequest();
+                    //xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                    xhr.onreadystatechange = function(){
+                        if(this.readyState == 4 && this.status == 200){
+                            console.log("ajax ok");
+                            document.getElementById("stampa").innerHTML = this.responseText;
+                            // nella pagina stampo la tabella con tutte le righe del database
+                        }
+                    };
+
+                    xhr.open("GET", url, true);
+                    xhr.send();
+
+
+                });
+
+            }
+
+
+            $("#on").click(attivaServo);
+
+        });
+
+    </script>
+
+
 
 </head>
 
 
 <body>
+
+    <h1 style="color: darksalmon; alignment: center" >Today's graph and data:</h1>
+
+
     <div id="container"></div>
     <button id="bottone"> Ricevi dati </button>
     <button id="button"> Render </button>
-     
-    <table id="oggi">
-        <tr id="prova">
-            <th>Id</th>
-            <th>Data</th>
-            <th>Erogation</th>
-            <th>UserMode</th>
-            <th>TimeMode</th>
-        </tr>
-
-        {% for riga in righe %}
-        <tr id="old">
-
-            <td id="id"> {{riga.id}} </td>
-            <td id="date"> {{riga.date}} </td>
-            <td id="erogation"> {{riga.erogation}} </td>
-            <td id="userMod"> {{riga.userMod}} </td>
-            <td id="timeMod"> {{riga.timeMod}} </td>
 
 
-        </tr>
-        {% endfor %}
 
-    </table>
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="container-fluid">
+                <table class="table" id="oggi">
+                    <thead>
+                    <tr id="prova">
+                        <th>Id</th>
+                        <th>Data</th>
+                        <th>Erogation</th>
+                        <th>UserMode</th>
+                        <th>TimeMode</th>
+                    </tr>
+                    <tbody>
+                    {% for riga in righe %}
+                        <tr id="old">
+                            <td id="id">{{riga.id}} </td>
+                            <td id="date">{{riga.date}} </td>
+                            <td id="erogation">{{riga.erogation}} </td>
+                            <td id="userMod">{{riga.userMod}} </td>
+                            <td id="timeMod">{{riga.timeMod}} </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <p id="tit"> If you want to erogate food press the following button:</p>
+
+            <div id="arduino">
+                <button id="on" type="button" class="btn btn-default"> Erogation </button>
+            </div>
+
+            <div id="stampa"></div>
+
+            <p></p>
+            <p>Links to other graphs:</p>
+            <button id="on" type="button" class="btn btn-link"> Time Mode Chart </button>
+            <button id="on" type="button" class="btn btn-link"> Erogation Mode Chart </button>
+        </div>
+    </div>
 
 </body>
 </html>
