@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Grafico mese/settimana </title>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+                    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+    </script>
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+
+    <script type="text/javascript">
+        
+        
+        $(document).ready(function (){
+            console.log("pronti alla get");
+        
+
+    
+       
+
+    
+    $("#button").click(function(){
+        // dovro' generare due date --una del giorno corrente e una in modo da avere il giorno del mese precedente 
+        // vedere tutte le condizioni 
+        
+        gC = new Date(); // giorno corrente
+        giornoC = gC.getDate() + "-" + gC.getMonth() + "-" + gC.getFullYear(); 
+        console.log(giornoC); 
+        
+        
+        // controllo il valore dell'attributo passato nella url 
+        // --> se e' 0 voglio la settimana
+        // --> se e' 1 voglio il mese 
+        
+        //  mese 
+        
+        gM = new Date(); 
+        gM.setDate(gC.getDate()); // mantengo il giorno 
+        
+        if(gC.getMonth() == 0){ // se il mese e' Gennaio, cambio il mese ma cambio anche l'anno 
+            gM.setMonth(11); // 11 e' dicembre 
+            gM.setFullYear(gC.getFullYear() - 1); 
+        }
+        
+        else{
+
+            gM.setMonth(gC.getMonth() - 1);
+            gM.setFullYear(gC.getFullYear()); 
+
+        }
+        
+        giornoM = gM.getDate() + "-" + gM.getMonth() + "-" + gM.getFullYear(); 
+        console.log("Giorno mese scorso: " + giornoM); 
+       
+        
+        // settimana 
+        
+        gS = new Date(); 
+        
+        if(gC.getMonth() == 0){
+            gS.setFullYear(gC.getFullYear() - 1); 
+                    
+        }
+        
+        mesi31 = [3, 5, 8, 10]; 
+        mesi30 = [0, 2, 4, 6, 7, 9, 11]; 
+       
+        
+        if(gC.getDate() <= 7){
+            
+            gS.setMonth(gC.getMonth() - 1);
+            
+            var i = 0; 
+            while(i < mesi31.length){
+                
+                // se il mese 'precedente' ha 31 giorni (nov, apr, giu, set)
+                
+                if(gS.getMonth() == mesi31[i]){
+                    gS.setDate(31 + (gC.getDate() - 7));
+                    gS.setFullYear(gC.getFullYear() - 1); 
+                }
+                    
+                
+                
+                // se il mese 'precedente' ha 30 giorni
+                
+                if(gS.getMonth() == mesi30[i])
+                    gS.setDate(30 + (gC.getDate() - 7));
+
+                
+            }
+            
+            if(gS.getMonth() == 1) // se il mese e' febbraio 
+                gS.setDate(28 + (gC.getDate() - 7));
+          
+           
+        }
+        
+        else{
+            gS.setMonth(gC.getMonth()); // mantengo il mese 
+            gS.setDate(gC.getDate() - 7); 
+
+        }
+        
+        
+        giornoS = gS.getDate() + "-" + gS.getMonth() + "-" + gS.getFullYear(); 
+        console.log("Giorno settimana scorsa: " + giornoS); 
+        
+        
+        var amgI = {
+            anno: '2019', // gM/gS .getDate()
+            mese: '8', // gM/gS .getMonth()
+            giorno: '14' // gM/gS .getFullYear()
+        }; 
+        
+        var amgF = {
+            anno: '2019', // gC .getDate()
+            mese: '10', // gC .getMonth()
+            giorno: '22' // gC .getFullYear()
+        }; 
+
+         var datoStr = "annoI=" + amgI.anno + "&meseI=" + amgI.mese + "&giornoI=" + amgI.giorno + "&annoF=" + amgF.anno + "&meseF=" + amgF.mese + "&giornoF=" + amgF.giorno + ""; 
+
+
+        
+        // GRAFICO 
+        
+        $.ajax({
+            type: 'GET',
+            //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
+            //url: "http://192.168.1.105:8000/dispenser/periodo/", 
+            url: "http://172.18.187.182:8000/dispenser/periodo/",
+            data: datoStr,
+            success: function(data){
+                console.log("dati ricevuti"); 
+                console.log(data); 
+                
+         
+                // grafico 
+                var chart = Highcharts.chart('container', {
+                    chart: {
+                        type: 'column', // column
+                        
+//                        events: {
+//                            load: function () {
+//                                var series0 = this.series[0]; // erogazioni automatiche
+//                                var series1 = this.series[1]; // erogazioni utente
+//                                
+//                                var lastId = $('#oggi tr:last').find('#id').html(); 
+//                                console.log(lastId); 
+//                                var lastDate = $('#oggi tr:last').find('#date').html(); 
+//                                console.log(lastDate); 
+//                                var lastErog = $('#oggi tr:last').find('#erogation').html(); 
+//                                console.log(lastErog); 
+//                                var lastUser = $('#oggi tr:last').find('#userMod').html(); 
+//                                console.log(lastUser); 
+//                                var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
+//                                console.log(lastTime); 
+//                                
+//                                if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
+//                                    // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
+//                                    // oppure i dati precedenti sono diversi dai dati appena ricevuti
+//                                    // allora li renderizzo
+//
+//                                    console.log("i dati sono undefined o sono diversi a quelli precedenti");
+//
+//                                    $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
+//                                    "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
+//                                    "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
+//                                    
+//                                    if(data['erogation'] == 1){
+//                                        if(data['userMod'] == true){ // erogazione utente
+//                                            series1.addPoint([1], true); 
+//                                        }
+//                                        else{ // erogazione automatica
+//                                            series0.addPoint([0,1], true); 
+//                                        }
+//                                    }
+//                                    
+//                                }
+//
+//                                else{
+//                                    console.log("dati già stampati");
+//                                }
+//                                
+//                              
+//                                
+
+//                                
+//                                
+//                            }
+//                        } // chiude events 
+                    
+                    },
+                    title: {
+                        text: 'Erogazioni 22 Ottobre 2019'
+                    },
+                    
+                    // sistemare xAxis
+
+//                    xAxis: {
+//                        categories: [data[0]]
+//                    },
+
+                    series: [{
+                        name: 'Erogazioni automatiche',
+                        color: 'green',
+                        data: [data[0]],
+                        
+                    }
+                             
+                    , {
+                        name: 'Erogazioni utente',
+                        color: 'orange',
+                        data: [data[1]],
+                        
+                          
+                   }
+                    ],
+
+
+
+
+
+                            }); // chiude il chart 
+            } // chiude success
+            
+        })
+    
+    
+    
+}); // chiude click
+         
+
+  
+        
+
+        });
+    </script>
+
+    
+</head>
+<body>
+    
+    <div id="container"></div>
+    <button id="button"> Render </button>
+    
+<!--
+     <table id="oggi">
+        <tr id="prova">
+            <th>Id</th>
+            <th>Data</th>
+            <th>Erogation</th>
+            <th>UserMode</th>
+            <th>TimeMode</th>
+        </tr>
+
+        {% for riga in righe %}
+        <tr id="old">
+
+            <td id="id"> {{riga.id}} </td>
+            <td id="date"> {{riga.date}} </td>
+            <td id="erogation"> {{riga.erogation}} </td>
+            <td id="userMod"> {{riga.userMod}} </td>
+            <td id="timeMod"> {{riga.timeMod}} </td>
+
+
+        </tr>
+        {% endfor %}
+
+    </table>
+-->
+
+</body>
+</html>
