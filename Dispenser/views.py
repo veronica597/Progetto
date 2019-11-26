@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.db import models
 
 
+
 @csrf_exempt
 def index(request):
     # return HttpResponse("<p> Food Dispenser Application </p>")
@@ -20,6 +21,7 @@ def index(request):
 
 def profile(request):
     return HttpResponse("<p>Profile page of user </p>")
+
 
 
 @csrf_exempt
@@ -70,6 +72,7 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
         context = {
             'righe': DatiRaccolti.objects.values().filter(date=oggi),
         }
+
 
         return render(request, 'get_post.html', context)
 
