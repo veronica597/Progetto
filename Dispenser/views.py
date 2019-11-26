@@ -24,13 +24,6 @@ def profile(request):
     return HttpResponse("<p>Profile page of user </p>")
 
 
-@csrf_exempt
-def home(request):  # renderizza i dati del database
-    if request.method == 'GET':
-        return render(request, 'index.html', {
-            'righe': DatiRaccolti.objects.all(),
-        })
-
 
 @csrf_exempt
 def sensor(request):  # processa i dati da inserire nel database
@@ -75,7 +68,7 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
 
     if request.method == 'GET':
         print('get')
-        return render(request, 'get_post.html')
+        return render(request, 'get_post.html') ## CI DOVREBBE ESSERE CHART INSIDE.!!!! ALTRIMENTI NON POSSO COLLABORARE DA ARDUINO CON IL TASTO
 
     return HttpResponseForbidden
 
