@@ -43,7 +43,9 @@
                 $(d).css({border:"3px solid orange"});
             }
 
-            function attivaServo(){
+            // RIGUARDARE 
+            
+            function attivaServo(){ 
                 console.log("click sul bottone 'Ruota il servo'");
                 var requestUrl = "http://" + DEVICE_IP + "/servoOpen";
                 $.get(requestUrl, function(){
@@ -70,19 +72,6 @@
 <!--                        }-->
 <!--                    });-->
 
-//                    // prova ajax 2
-//                    var xhr = new XMLHttpRequest();
-//                    //xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-//                    xhr.onreadystatechange = function(){
-//                        if(this.readyState == 4 && this.status == 200){
-//                            console.log("ajax ok");
-//                            document.getElementById("stampa").innerHTML = this.responseText;
-//                            // nella pagina stampo la tabella con tutte le righe del database
-//                        }
-//                    };
-//
-//                    xhr.open("GET", url, true);
-//                    xhr.send();
 
 
                 });
@@ -109,26 +98,26 @@
                         
                         $.ajax({
                             type: 'GET',
-                            url: "http://192.168.1.105:8000/dispenser/giorno/",
+                            //url: "http://192.168.1.105:8000/dispenser/giorno/",
                             //url: "http://127.0.0.1:8000/dispenser/giorno/",
-                            //url: "http://172.18.185.19:8000/dispenser/giorno/",
+                            url: "http://172.18.187.182:8000/dispenser/giorno/",
                             data: datoStr,
                             success: function(data){
                                 console.log("dati ricevuti"); 
-                                console.log(data); 
+                                console.log(typeof(data)); 
                                 
                                 // gestire il caso in cui i dati non ci siano
                                 
-                                if(data == "Non ci sono erogazioni per il giorno corrente"){
-                                    $('#container').hide();
-                                    $('#oggi').hide();
-                                    $('#no_erog').html(data).css({color:'red'}); 
-                                }
-                                
-                                else{
-                                    $('#no_erog').hide(); 
-                                    $('#container').show();
-                                    $('#oggi').html();
+//                                if(data == "Non ci sono erogazioni per il giorno corrente"){
+//                                    $('#container').hide();
+//                                    $('#oggi').hide();
+//                                    $('#no_erog').html(data).css({color:'red'}); 
+//                                }
+//                                
+//                                else{
+//                                    $('#no_erog').hide(); 
+//                                    $('#container').show();
+//                                    $('#oggi').show();
                                     
                                 // grafico 
                                 var chart = Highcharts.chart('container', {
@@ -136,45 +125,61 @@
                                         type: 'column', // column
                                         events: {
                                             load: function () {
-                                                var series0 = this.series[0]; // erogazioni automatiche
-                                                var series1 = this.series[1]; // erogazioni utente
+                                                
+                                                if(typeof(data) === 'string'){
+                                                    $('#no_erog').html(data).css({color:'red'}); 
+                                                    $('#container').hide();
+                                                    $('#oggi').hide();
+                                                }
+                                                
+                                                else{
+                                                    $('#no_erog').hide();
+                                                    $('#container').show();
+                                                    $('#oggi').show();
+                                                    
+                                                    
+                                                    var series0 = this.series[0]; // erogazioni automatiche
+                                                    var series1 = this.series[1]; // erogazioni utente
 
-                                                var lastId = $('#oggi tr:last').find('#id').html(); 
-                                                console.log(lastId); 
-                                                var lastDate = $('#oggi tr:last').find('#date').html(); 
-                                                console.log(lastDate); 
-                                                var lastErog = $('#oggi tr:last').find('#erogation').html(); 
-                                                console.log(lastErog); 
-                                                var lastUser = $('#oggi tr:last').find('#userMod').html(); 
-                                                console.log(lastUser); 
-                                                var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
-                                                console.log(lastTime); 
+                                                    var lastId = $('#oggi tr:last').find('#id').html(); 
+                                                    console.log(lastId); 
+                                                    var lastDate = $('#oggi tr:last').find('#date').html(); 
+                                                    console.log(lastDate); 
+                                                    var lastErog = $('#oggi tr:last').find('#erogation').html(); 
+                                                    console.log(lastErog); 
+                                                    var lastUser = $('#oggi tr:last').find('#userMod').html(); 
+                                                    console.log(lastUser); 
+                                                    var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
+                                                    console.log(lastTime); 
 
-                                                if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
-                                                    // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
-                                                    // oppure i dati precedenti sono diversi dai dati appena ricevuti
-                                                    // allora li renderizzo
+                                                    if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
+                                                        // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
+                                                        // oppure i dati precedenti sono diversi dai dati appena ricevuti
+                                                        // allora li renderizzo
 
-                                                    console.log("i dati sono undefined o sono diversi a quelli precedenti");
+                                                        console.log("i dati sono undefined o sono diversi a quelli precedenti");
 
-                                                    $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
-                                                    "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
-                                                    "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
+                                                        $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
+                                                        "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
+                                                        "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
 
-                                                    if(data['erogation'] == 1){
-                                                        if(data['userMod'] == true){ // erogazione utente
-                                                            series1.addPoint([0,1], true); 
+                                                        if(data['erogation'] == 1){
+                                                            if(data['userMod'] == true){ // erogazione utente
+                                                                series1.addPoint([0,1], true); 
+                                                            }
+                                                            else{ // erogazione automatica
+                                                                series0.addPoint([0,1], true); 
+                                                            }
                                                         }
-                                                        else{ // erogazione automatica
-                                                            series0.addPoint([0,1], true); 
-                                                        }
+
                                                     }
 
-                                                }
-
-                                                else{
-                                                    console.log("dati già stampati");
-                                                }
+                                                    else{
+                                                        console.log("dati già stampati");
+                                                    }
+                                                    
+                                                } // chiude l'else di controllo sul tipo dei dati 
+                                                
                                                 
                                                 
                                                 // POLLING
@@ -182,10 +187,27 @@
                                                 setInterval(function () {
                                                     console.log("aggiornamento");
                                                     
-                                                    if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
-                                                    // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
-                                                    // oppure i dati precedenti sono diversi dai dati appena ricevuti
-                                                    // allora li renderizzo
+                                                     //if typeof(data) !== undefined --> normal 
+                                                     // altrimenti --> scomparire tabella e grafico
+                                                    // stampare mess assenza roba 
+                                                    if(typeof(data) === 'string'){
+                                                        $('#no_erog').html(data).css({color:'red'}); 
+                                                        $('#container').hide();
+                                                        $('#oggi').hide();
+                                                    }
+                                                    
+                                                    else{
+                                                        $('#no_erog').hide();
+                                                        $('#container').show();
+                                                        $('#oggi').show();
+                                                        
+                                                        if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
+                                                    
+                                                            // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
+                                                    
+                                                            // oppure i dati precedenti sono diversi dai dati appena ricevuti
+                                                    
+                                                            // allora li renderizzo
 
                                                     console.log("i dati sono undefined o sono diversi a quelli precedenti");
 
@@ -207,11 +229,13 @@
                                                 else{
                                                     console.log("dati già stampati");
                                                 }
-                                                             
-                    
-                                                        
+                                                    } // chiude l'else di controllo sui dati 
+                                                    
+                                                    
+
                                                 }, 1000);
-                                            }
+                                                
+                                            }  // chiude load 
                                         }
                                     },
                                     title: {
@@ -228,14 +252,14 @@
                                     series: [{
                                         name: 'Erogazioni automatiche',
                                         color: '#ff00ff',
-                                        data: [0],
+                                        data: [],
 
                                     }
 
                                     , {
                                         name: 'Erogazioni utente',
                                         color: '#00bfff',
-                                        data: [1],
+                                        data: [],
 
                                    }
                                     ],
@@ -248,7 +272,7 @@
                                     
                                     
                                     
-                                }
+                              //  }
 
                                 
                             } // chiude success
@@ -261,7 +285,7 @@
 
 
             $("#on").click(attivaServo);
-                    $("#today").click(mostraDatiOggi);
+            $("#today").click(mostraDatiOggi);
 
         });
 
