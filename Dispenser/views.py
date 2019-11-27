@@ -12,7 +12,6 @@ from django.utils import timezone
 from django.db import models
 
 
-
 @csrf_exempt
 def index(request):
     # return HttpResponse("<p> Food Dispenser Application </p>")
@@ -21,7 +20,6 @@ def index(request):
 
 def profile(request):
     return HttpResponse("<p>Profile page of user </p>")
-
 
 
 @csrf_exempt
@@ -66,13 +64,24 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
         return HttpResponse()
 
     if request.method == 'GET':
+
         print('get')
         oggi = datetime.date.today()
+        # oggi = datetime.date(2019, 12, 4)
         print(oggi)
-        context = {
-            'righe': DatiRaccolti.objects.values().filter(date=oggi),
-        }
+        e = DatiRaccolti.objects.values('date').filter(date__gte=oggi, erogation=True).order_by('date').count()
+        noE = DatiRaccolti.objects.values('date').filter(date__gte=oggi, erogation=False).order_by('date').count()
 
+    # dovro' mettere tipo date__day = giorno, date__month = mese , ...
+
+        print("e: " + str(e))
+        print("noE: " + str(noE))
+
+        context = {
+            'erog': e,
+            'noErog': noE,
+            'righe': DatiRaccolti.objects.values().filter(date__gte=oggi)
+        }
 
         return render(request, 'get_post.html', context)
 
@@ -82,7 +91,7 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
 @csrf_exempt
 def grafico(request):  # inserire la parte per interpretare request.GET
     # quando clicco invio dei parametri che qui vengono recuperati per fitrare i dati-->  invio il context
-    context = {'righe': DatiRaccolti.objects.values().filter(date__gte="2019-10-22")}  # dati del giorno corrente
+    context = {'righe': DatiRaccolti.objects.values().filter(date__gte="2019-10-22")}
     return render(request, 'chartInside.html', context)
 
 
@@ -112,11 +121,14 @@ def sendData(request):  # view che invia i dati per costruire il CHART erogazion
 
 @csrf_exempt
 def ultimoDato(request):  # per aggiornamento tabella e chart
-    anno = request.GET.__getitem__('anno')
-    mese = request.GET.__getitem__('mese')
-    giorno = request.GET.__getitem__('giorno')
-    stringa = anno + "-" + mese + "-" + giorno
-    print(stringa)
+    # anno = request.GET.__getitem__('anno')
+    # mese = request.GET.__getitem__('mese')
+    # giorno = request.GET.__getitem__('giorno')
+    # stringa = anno + "-" + mese + "-" + giorno
+    # print(stringa)
+    # elementi = DatiRaccolti.objects.values().filter(date__gte=stringa)
+
+    stringa = datetime.date.today()
     elementi = DatiRaccolti.objects.values().filter(date__gte=stringa)
 
     # .strftime("%b. %d, %Y, %H:%M %p"))  # :%f per i millisecondi
@@ -136,33 +148,97 @@ def ultimoDato(request):  # per aggiornamento tabella e chart
 
 @csrf_exempt
 def periodo(request):  # per filtraggio mese/settimana
-    annoI = request.GET.__getitem__('annoI')
-    meseI = request.GET.__getitem__('meseI')
-    giornoI = request.GET.__getitem__('giornoI')
+    # annoI = request.GET.__getitem__('annoI')
+    # meseI = request.GET.__getitem__('meseI')
+    # giornoI = request.GET.__getitem__('giornoI')
+    #
+    # stringaI = annoI + "-" + meseI + "-" + giornoI
+    #
+    # annoF = request.GET.__getitem__('annoF')
+    # meseF = request.GET.__getitem__('meseF')
+    # giornoF = request.GET.__getitem__('giornoF')
+    #
+    # stringaF = annoF + "-" + meseF + "-" + giornoF
 
-    stringaI = annoI + "-" + meseI + "-" + giornoI
+    id = request.GET.__getitem__('id')
+    print('id: ' + id)
 
-    annoF = request.GET.__getitem__('annoF')
-    meseF = request.GET.__getitem__('meseF')
-    giornoF = request.GET.__getitem__('giornoF')
+    #oggi = datetime.date.today()
+    oggi = datetime.date(2019, 10, 22)
 
-    stringaF = annoF + "-" + meseF + "-" + giornoF
+    meseC = oggi.month
+    giornoC = oggi.day
+    annoC = oggi.year
+
+    print("oggi: " + str(oggi))
+
+    # in base al valore dell'id passato calcolo giorno mese scorso o giorno settimana scorsa
+
+    if id == '1':  # mese
+        print("mesee")
+        giornoP = giornoC  # mantengo il giorno
+
+        if meseC == 1:  # se e' gennaio cambio il mese ma anche l'anno
+            meseP = 12
+            annoP = annoC - 1
+
+        else:
+            meseP = meseC - 1
+            annoP = annoC
+
+        passato = datetime.date(annoP, meseP, giornoP)
+
+    elif id == '0':  # settimana
+        print("settimana")
+        mesi31 = [3, 5, 8, 10]
+        mesi30 = [0, 2, 4, 6, 7, 9, 11]
+
+        if giornoC <= 7:
+            annoP = annoC
+            meseP = meseC - 1
+
+            if meseC == 1:
+                annoP = annoC - 1
+
+            if meseP in mesi31:
+                giornoP = 31 + (giornoC - 7)
+
+            elif meseP in mesi30:
+                giornoP = 30 + (giornoC - 7)
+
+            elif meseP == 2:
+                giornoP = 28 + (giornoC - 7)
+
+        else:
+            meseP = meseC  # mantengo il mese
+            giornoP = giornoC - 7
+            annoP = annoC
+
+        passato = datetime.date(annoP, meseP, giornoP)
+
+    print(passato)
 
     # per grafico stile giorno singolo --> ho due colonne una per le erogazioni automatiche e una per le erogazioni utente
 
-    eA = DatiRaccolti.objects.values('date').filter(date__gte=stringaI, date__lte=stringaF, erogation=True, userMod=False).order_by('date').count()
-    # primo compreso, ultimo escluso --mi va bene ?
-    # anche utilizzando date__range=[..] ottengo lo stesso risultato
-    eU = DatiRaccolti.objects.values('date').filter(date__gte=stringaI, date__lte=stringaF, erogation=True, userMod=True).order_by('date').count()
+    # eA = DatiRaccolti.objects.values('date').filter(date__gte=stringaI, date__lte=stringaF, erogation=True, userMod=False).order_by('date').count()
+    # # primo compreso, ultimo escluso --mi va bene ?
+    # # anche utilizzando date__range=[..] ottengo lo stesso risultato
+    # eU = DatiRaccolti.objects.values('date').filter(date__gte=stringaI, date__lte=stringaF, erogation=True, userMod=True).order_by('date').count()
+
+    eA = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True, userMod=False).order_by('date').count()
+    eU = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True, userMod=True).order_by('date').count()
 
     print("eA: " + str(eA))
     print("eU: " + str(eU))
 
     erogazioni = [eA, eU]  # come categories cosa passo ??
-    return JsonResponse(erogazioni, safe=False)
 
-    # context = {'giorno': stringa, 'erogA': eA, 'erogU': eU}
-    # return render(request, 'chartInside.html', context)
+    # return JsonResponse(erogazioni, safe=False)
+
+    # return HttpResponse("CIAO CIAO")
+
+    context = {'erogA': eA, 'erogU': eU, 'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=oggi, erogation=True, userMod=False).order_by('date')}
+    return render(request, 'periodo.html', context)
 
 
 @csrf_exempt

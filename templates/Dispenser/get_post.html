@@ -101,9 +101,9 @@
                         
                         $.ajax({
                             type: 'GET',
-                            //url: "http://192.168.1.105:8000/dispenser/giorno/",
+                            url: "http://192.168.1.105:8000/dispenser/giorno/",
                             //url: "http://127.0.0.1:8000/dispenser/giorno/",
-                            url: "http://172.18.187.182:8000/dispenser/giorno/",
+                            //url: "http://172.18.187.182:8000/dispenser/giorno/",
                             data: datoStr,
                             success: function(data){
                                 console.log("dati ricevuti"); 
@@ -141,9 +141,9 @@
                                                     $('#oggi').show();
                                                     
                                                     
-                                                    var series0 = this.series[0]; // erogazioni automatiche
-                                                    var series1 = this.series[1]; // erogazioni utente
-
+                                                    var series0 = this.series[0]; // erogazioni 
+                                                    var series1 = this.series[1]; // no erogazioni
+                                                    
                                                     var lastId = $('#oggi tr:last').find('#id').html(); 
                                                     console.log(lastId); 
                                                     var lastDate = $('#oggi tr:last').find('#date').html(); 
@@ -253,14 +253,14 @@
                 //                    },
 
                                     series: [{
-                                        name: 'Erogazioni automatiche',
+                                        name: 'Erogazioni',
                                         color: '#ff00ff',
                                         data: [],
 
                                     }
 
                                     , {
-                                        name: 'Erogazioni utente',
+                                        name: 'No erogazioni',
                                         color: '#00bfff',
                                         data: [],
 
@@ -347,6 +347,215 @@
         {% endfor %}
 
     </table>
+    
+        
+     <script type="text/javascript">
+        
+      //$(document).ready(function (){
+        
+         // grafico 
+                var chart = Highcharts.chart('container', {
+                    chart: {
+                        type: 'column', // column
+                        events: {
+                            
+                            load: function () {
+                                console.log("dentro load");
+                            
+                            
+//                            if(typeof(data) === 'string'){
+//                                $('#no_erog').html(data).css({color:'red'}); 
+//                                $('#container').hide();
+//                                $('#oggi').hide();
+//                            }
+//                                                
+//                            else{
+//                                $('#no_erog').hide();
+//                                $('#container').show();
+//                                $('#oggi').show();
+//                                                    
+//                                                    
+//                                var series0 = this.series[0]; // erogazioni automatiche
+//                                var series1 = this.series[1]; // erogazioni utente
+//
+//                                var lastId = $('#oggi tr:last').find('#id').html(); 
+//                                console.log(lastId); 
+//                                var lastDate = $('#oggi tr:last').find('#date').html(); 
+//                                console.log(lastDate); 
+//                                var lastErog = $('#oggi tr:last').find('#erogation').html(); 
+//                                console.log(lastErog); 
+//                                var lastUser = $('#oggi tr:last').find('#userMod').html(); 
+//                                console.log(lastUser); 
+//                                var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
+//                                console.log(lastTime); 
+//
+//                                if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
+//                                    // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
+//                                    // oppure i dati precedenti sono diversi dai dati appena ricevuti
+//                                    // allora li renderizzo
+//
+//                                    console.log("i dati sono undefined o sono diversi a quelli precedenti");
+//
+//                                    $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
+//                                    "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
+//                                    "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
+//
+//                                    if(data['erogation'] == 1){
+//                                        if(data['userMod'] == true){ // erogazione utente
+//                                            series1.addPoint([0,1], true); 
+//                                        }
+//                                        else{ // erogazione automatica
+//                                            series0.addPoint([0,1], true); 
+//                                        }
+//                                    }
+//
+//                                }
+//
+//                                else{
+//                                    console.log("dati già stampati");
+//                                }
+//
+//                            } // chiude l'else di controllo sul tipo dei dati 
+
+
+
+                            // POLLING
+
+                            setInterval(function () {
+                                console.log("aggiornamento");
+                                
+                                $.ajax({
+                                    type: 'GET',
+                                    url: "http://192.168.1.105:8000/dispenser/giorno/",
+                                    //url: "http://127.0.0.1:8000/dispenser/giorno/",
+                                    //url: "http://172.18.187.182:8000/dispenser/giorno/",
+                            
+                                    success: function(data){
+                                        console.log("dati ricevuti"); 
+                                        console.log(typeof(data)); 
+                                        
+                                        var series0 = chart.series[0]; // erogazioni 
+                                        console.log(series0.yData); 
+                                        var series1 = chart.series[1]; // no erogazioni
+
+                                        var lastId = $('#oggi tr:last').find('#id').html(); 
+                                        console.log(lastId); 
+                                        var lastDate = $('#oggi tr:last').find('#date').html(); 
+                                        console.log(lastDate); 
+                                        var lastErog = $('#oggi tr:last').find('#erogation').html(); 
+                                        console.log(lastErog); 
+                                        var lastUser = $('#oggi tr:last').find('#userMod').html(); 
+                                        console.log(lastUser); 
+                                        var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
+                                        console.log(lastTime); 
+                                        
+                                        
+                                        if(typeof(data) === 'string'){
+                                            $('#no_erog').html(data).css({color:'red'}); 
+                                            $('#container').hide();
+                                            $('#oggi').hide();
+                                        }
+
+                                        else{
+                                            $('#no_erog').hide();
+                                            $('#container').show();
+                                            $('#oggi').show();
+                                            
+                                            
+                                            if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
+
+                                        // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
+
+                                        // oppure i dati precedenti sono diversi dai dati appena ricevuti
+
+                                        // allora li renderizzo
+                                                console.log("i dati sono undefined o sono diversi a quelli precedenti");
+
+                                                $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
+                                                "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
+                                                "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
+
+                                                if(data['erogation'] == true){
+                                                    //series0.addPoint([0, 1], true);
+                                                   
+                                                    series0.setData([series0.yData[0] + 1]);
+                                              
+                                                }
+                                                    
+                                                else{ // no erogazioni 
+                                                    //series1.addPoint([0,1], true); 
+                                                
+                                                    series1.setData([series1.yData[0] + 1]);
+                                                }
+                                            }
+
+                                            
+                                            else{
+                                                console.log("dati già stampati");
+                                            }
+                                            
+                                        } // chiude l'else di controllo sui dati 
+
+                                        
+                                        
+                                    } // chiude success 
+                                
+                                }); // chiude ajax
+
+
+
+                            }, 1000);
+                            
+                            
+                        }  // chiude load 
+                    }, // chiude events
+
+                    }, // chiude chart 
+                    
+                    
+                    title: {
+                        text: 'Erogazioni di oggi'
+                    },
+                    
+                    // sistemare xAxis
+
+//                    xAxis: {
+//                        categories: [data[0]]
+//                    },
+
+                    series: [{
+                        name: 'Erogazioni',
+                        color: '#ff00ff',
+                        data: [{{erog}}],
+                        
+                    }
+                             
+                    , {
+                        name: 'No erogazioni',
+                        color: '#00bfff',
+                        data: [{{noErog}}],
+                        
+                          
+                   }
+                    ],
+                    
+
+
+
+
+
+                }); 
+   
+         
+        
+         
+         
+         
+         
+      //});
+    
+    
+    </script>
 
 </body>
 

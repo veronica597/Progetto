@@ -1,67 +1,56 @@
-<!-- CONTIENE I FILE
-INDEX.HTML: per quanto riguarda la renderizzazione della tabella con i dati
-GET_POST.HTML: per la parte di interazione con il servo.Cioè posso premere il tasto e azionare il servo.
--->
-
-{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title> Chart Today's Data</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> Chart in html con dati presi da view Django </title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+                    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+    </script>
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-
     <script type="text/javascript">
-
-
-
-
-        $(document).ready(function (){
+        
+        
+        $(document).ready(function (ff){
             console.log("pronti alla get");
+        
 
-            /* PARTE DI CODICE PER IL GRAFICO GIORNALIERO*/
+    
+    $("#button").click(function(){
+        // capire come estrapolo dal click sul calendario l'informazione circa quale giorno ho cliccato 
+        
+        var amg = {
+            anno: '2019',
+            mese: '10',
+            giorno: '22'
+        }; 
+  
+        //var jsonAMG = JSON.stringify(amg); 
+        var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + ""; 
+        
+        //console.log(jsonAMG); 
 
-            $("#button").click(function () {
-
-                // capire come estrapolo dal click sul calendario l'informazione circa quale giorno ho cliccato
-
-                var amg = {
-                    anno: '2019',
-                    mese: '10',
-                    giorno: '22'
-                };
-
-                //var jsonAMG = JSON.stringify(amg);
-                var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + "";
-
-                //console.log(jsonAMG);
-
-                // GRAFICO EROGAZIONI/PASSAGGI
-
-                $.ajax({
-                    type: 'GET',
-                    //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
-                    //url: "http://192.168.1.105:8000/dispenser/dati/",
-                    url: "http://172.18.187.182:8000/dispenser/erog/",
-                    data: datoStr,
-                    success: function (data) {
-                        console.log("dati ricevuti");
-                        console.log(data);
-
-
-                        // grafico
-                        var chart = Highcharts.chart('container', {
-                            chart: {
-                                type: 'column', // column
-
+        // GRAFICO EROGAZIONI/PASSAGGI
+        
+        $.ajax({
+            type: 'GET',
+            //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
+            url: "http://192.168.1.105:8000/dispenser/erog/", 
+            //url: "http://172.18.187.182:8000/dispenser/erog/",
+            data: datoStr,
+            success: function(data){
+                console.log("dati ricevuti"); 
+                console.log(data); 
+               
+                
+         
+                // grafico 
+                var chart = Highcharts.chart('container', {
+                    chart: {
+                        type: 'column', // column
+                        
 //                        events: {
 //                            load: function () {
 //                                var series0 = this.series[0]; // erogazioni automatiche
@@ -134,12 +123,6 @@ GET_POST.HTML: per la parte di interazione con il servo.Cioè posso premere il t
 //                                    
 //                                }
 //
-
-//    }) // chiude ajax  // ajax con passaggio giorno a django
-
-
-                                // GRAFICO
-
 //                                else{
 //                                    console.log("dati già stampati");
 //                                }
@@ -151,184 +134,188 @@ GET_POST.HTML: per la parte di interazione con il servo.Cioè posso premere il t
 //                                
 //                            }
 //                        } // chiude events 
+                    
+                    },
+                    title: {
+                        text: 'Erogazioni 22 Ottobre 2019'
+                    },
+                    
+                    // sistemare xAxis
 
-                            },
-                            title: {
-                                text: 'Erogazioni 22 Ottobre 2019'
-                            },
+                    xAxis: {
+                        categories: [data[0]]
+                    },
 
-                            // sistemare xAxis
-
-                            xAxis: {
-                                categories: [data[0]]
-                            },
-
-                            series: [{
-                                name: 'Erogazioni',
-                                color: '#ff00ff',
-                                data: [data[1]],
-
-                            }
-
-                                , {
-                                    name: 'No erogazioni',
-                                    color: '#00bfff',
-                                    data: [data[2]],
-
-                                }
-                            ],
-
-
-                        }); // chiude il chart
-                    } // chiude success
-
-                }) // chiude ajax
-
-
-            }); // chiude click
-
-
-            $('#button1').click(function () {
-                var amg = {
-                    anno: '2019',
-                    mese: '10',
-                    giorno: '22'
-                };
-
-                var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + "";
-
-
-                // GRAFICO EROGAZIONI AUTOMATICHE/UTENTE 
-
-
-                $.ajax({
-                    type: 'GET',
-                    //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
-                    //url: "http://192.168.1.105:8000/dispenser/dati/",
-                    url: "http://172.18.187.182:8000/dispenser/dati/",
-                    data: datoStr,
-                    success: function (data) {
-
-                        console.log("dati ricevuti");
-                        console.log(data);
-
-
-                        // grafico
-                        var chart = Highcharts.chart('container1', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
-                            chart: {
-                                type: 'column', // column
-
-
-                            },
-
-                            title: {
-                                text: 'Erogazioni 22 Ottobre 2019'
-                            },
-
-                            // sistemare xAxis
-
-                            xAxis: {
-                                categories: [data[0]]
-                            },
-
-                            series: [{
-                                name: 'Erogazioni automatiche',
-                                color: '#ff0000',
-                                data: [data[1]],
-                            }
-
-                                , {
-                                    name: 'Erogazioni utente',
-                                    color: '#3cb371',
-                                    data: [data[2]],
-
-
-                                }
-                            ],
-
-
-                        }); // chiude il chart
+                    series: [{
+                        name: 'Erogazioni',
+                        color: '#ff00ff',
+                        data: [data[1]],
+                             
                     }
+                             
+                    , {
+                        name: 'No erogazioni',
+                        color: '#00bfff',
+                        data: [data[2]],
+                          
+                   }
+                    ],
 
-                })
 
 
-            }); // chiude click
-
-
-            $('#button2').click(function () {
+                            }); // chiude il chart 
+            } // chiude success
+            
+        }) // chiude ajax 
+    
+    
+    
+}); // chiude click
+            
+            
+            
+            $('#button1').click(function(){
                 var amg = {
                     anno: '2019',
                     mese: '10',
                     giorno: '22'
-                };
+                }; 
+                
+                var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + ""; 
+                        
+                
+                // GRAFICO EROGAZIONI AUTOMATICHE/UTENTE 
+        
+        $.ajax({
+            type: 'GET',
+            //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
+            url: "http://192.168.1.105:8000/dispenser/dati/", 
+            //url: "http://172.18.187.182:8000/dispenser/dati/",
+            data: datoStr,
+            success: function(data){
+                console.log("dati ricevuti"); 
+                console.log(data); 
+                
+         
+                // grafico 
+                var chart = Highcharts.chart('container1', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato 
+                    chart: {
+                        type: 'column', // column
+                    
+                    },
+                    
+                    title: {
+                        text: 'Erogazioni 22 Ottobre 2019'
+                    },
+                    
+                    // sistemare xAxis
 
-                var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + "";
+                    xAxis: {
+                        categories: [data[0]]
+                    },
+
+                    series: [{
+                        name: 'Erogazioni automatiche',
+                        color: '#ff0000',
+                        data: [data[1]],
+                             
+                    }
+                             
+                    , {
+                        name: 'Erogazioni utente',
+                        color: '#3cb371',
+                        data: [data[2]],
+                          
+                   }
+                    ],
 
 
+
+                            }); // chiude il chart 
+            } // chiude success
+            
+        }) // chiude ajax 
+            }); 
+            
+      
+        
+         $('#button2').click(function(){
+                var amg = {
+                    anno: '2019',
+                    mese: '10',
+                    giorno: '22'
+                }; 
+                
+                var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + ""; 
+                        
+                
                 // GRAFICO EROGAZIONI GIORNO/NOTTE 
+        
+        $.ajax({
+            type: 'GET',
+            //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
+            url: "http://192.168.1.105:8000/dispenser/erogGN/", 
+            //url: "http://172.18.187.182:8000/dispenser/erogGN/",
+            data: datoStr,
+            success: function(data){
+                console.log("dati ricevuti"); 
+                console.log(data); 
+                
+         
+                // grafico 
+                var chart = Highcharts.chart('container2', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato 
+                    chart: {
+                        type: 'column', // column
+                    
+                    },
+                    
+                    title: {
+                        text: 'Erogazioni 22 Ottobre 2019'
+                    },
+                    
+                    // sistemare xAxis
 
-                $.ajax({
-                    type: 'GET',
-                    //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
-                    //url: "http://192.168.1.105:8000/dispenser/dati/",
-                    url: "http://172.18.187.182:8000/dispenser/erogGN/",
-                    data: datoStr,
-                    success: function (data) {
-                        console.log("dati ricevuti");
-                        console.log(data);
+                    xAxis: {
+                        categories: [data[0]]
+                    },
+
+                    series: [{
+                        name: 'Erogazioni modalità giorno',
+                        color: '#ffd700',
+                        data: [data[1]],
+                             
+                    }
+                             
+                    , {
+                        name: 'Erogazioni modalità notte',
+                        color: '#4169e1',
+                        data: [data[2]],
+                          
+                   }
+                    ],
 
 
-                        // grafico
-                        var chart = Highcharts.chart('container2', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
-                            chart: {
-                                type: 'column', // column
 
-                            },
-
-                            title: {
-                                text: 'Erogazioni 22 Ottobre 2019'
-                            },
-
-                            // sistemare xAxis
-
-                            xAxis: {
-                                categories: [data[0]]
-                            },
-
-                            series: [{
-                                name: 'Erogazioni modalità giorno',
-                                color: '#ffd700',
-                                data: [data[1]],
-
-                            }
-
-                                , {
-                                    name: 'Erogazioni modalità notte',
-                                    color: '#4169e1',
-                                    data: [data[2]],
-
-                                }
-                            ],
-
-
-                        }); // chiude il chart
-                    } // chiude success
-
-                }) // chiude ajax
+                            }); // chiude il chart 
+            } // chiude success
+            
+        }) // chiude ajax 
             });
+            
+        
+
         });
-
+        
     </script>
-
-
 
 </head>
 
 
 <body>
-
-
+    
+<!--    Parte in bella-->
+    
+<!--
     <h1 style="color: darksalmon; alignment: center" >Today's graph and data:</h1>
 
     <div class="row">
@@ -372,22 +359,17 @@ GET_POST.HTML: per la parte di interazione con il servo.Cioè posso premere il t
             <button id="on" type="button" class="btn btn-link"> Erogation Mode Chart </button>
         </div>
     </div>
-
-
+    
+-->
+    
     <div id="container"></div> 
     <div id="container1"></div>
     <div id="container2"></div>
-
-
+    
     <button id="button"> Erogazioni </button>
     <button id="button1"> Erogazioni automatiche/utente </button>
     <button id="button2"> Erogazioni giorno/notte </button>
-
-
-
-
-
-    <!--GRAFICI SONO SOPRA -->
+     
     <table id="oggi">
         <tr id="prova">
             <th>Id</th>
@@ -411,6 +393,8 @@ GET_POST.HTML: per la parte di interazione con il servo.Cioè posso premere il t
         {% endfor %}
 
     </table>
+    
+
 
 </body>
 </html>

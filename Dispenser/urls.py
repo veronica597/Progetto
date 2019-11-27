@@ -6,7 +6,6 @@ urlpatterns = [
 
     url(r'^profile/',views.profile, name='profile'),
 
-
     url(r'^sensor/', views.sensor, name='sensor'),
 
     url(r'^client/', views.client, name='client'),  # get_post.html

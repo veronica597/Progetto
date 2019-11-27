@@ -130,8 +130,8 @@
         $.ajax({
             type: 'GET',
             //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
-            //url: "http://192.168.1.105:8000/dispenser/periodo/", 
-            url: "http://172.18.187.182:8000/dispenser/periodo/",
+            url: "http://192.168.1.105:8000/dispenser/periodo/", 
+            //url: "http://172.18.187.182:8000/dispenser/periodo/",
             data: datoStr,
             success: function(data){
                 console.log("dati ricevuti"); 
@@ -245,9 +245,8 @@
 <body>
     
     <div id="container"></div>
-    <button id="button"> Render </button>
+<!--    <button id="button"> Render </button>-->
     
-<!--
      <table id="oggi">
         <tr id="prova">
             <th>Id</th>
@@ -271,7 +270,51 @@
         {% endfor %}
 
     </table>
--->
+    <script type="text/javascript">
+        
+      //$(document).ready(function (){
+        
+         // grafico 
+                var chart = Highcharts.chart('container', {
+                    chart: {
+                        type: 'column', // column
+
+                    },
+                    title: {
+                        text: 'Erogazioni periodo'
+                    },
+                    
+                    // sistemare xAxis
+
+//                    xAxis: {
+//                        categories: [data[0]]
+//                    },
+
+                    series: [{
+                        name: 'Erogazioni automatiche',
+                        color: 'green',
+                        data: [{{erogA}}],
+                        
+                    }
+                             
+                    , {
+                        name: 'Erogazioni utente',
+                        color: 'orange',
+                        data: [{{erogU}}],
+                        
+                          
+                   }
+                    ],
+
+
+
+
+
+                }); 
+      //});
+    
+    
+    </script>
 
 </body>
 </html>
