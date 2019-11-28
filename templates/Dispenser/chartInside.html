@@ -13,9 +13,8 @@
     <script type="text/javascript">
         
         
-        $(document).ready(function (ff){
+        $(document).ready(function (){
             console.log("pronti alla get");
-        
 
     
     $("#button").click(function(){
@@ -36,9 +35,9 @@
         
         $.ajax({
             type: 'GET',
-            //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
-            url: "http://192.168.1.105:8000/dispenser/erog/", 
-            //url: "http://172.18.187.182:8000/dispenser/erog/",
+            //url: "http://192.168.1.105:8000/dispenser/erog/", 
+            //url: "http://172.17.196.174:8000/dispenser/erog/",
+            url: "http://localhost:8000/dispenser/erog/",
             data: datoStr,
             success: function(data){
                 console.log("dati ricevuti"); 
@@ -172,139 +171,10 @@
     
 }); // chiude click
             
-            
-            
-            $('#button1').click(function(){
-                var amg = {
-                    anno: '2019',
-                    mese: '10',
-                    giorno: '22'
-                }; 
-                
-                var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + ""; 
-                        
-                
-                // GRAFICO EROGAZIONI AUTOMATICHE/UTENTE 
-        
-        $.ajax({
-            type: 'GET',
-            //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
-            url: "http://192.168.1.105:8000/dispenser/dati/", 
-            //url: "http://172.18.187.182:8000/dispenser/dati/",
-            data: datoStr,
-            success: function(data){
-                console.log("dati ricevuti"); 
-                console.log(data); 
-                
-         
-                // grafico 
-                var chart = Highcharts.chart('container1', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato 
-                    chart: {
-                        type: 'column', // column
-                    
-                    },
-                    
-                    title: {
-                        text: 'Erogazioni 22 Ottobre 2019'
-                    },
-                    
-                    // sistemare xAxis
-
-                    xAxis: {
-                        categories: [data[0]]
-                    },
-
-                    series: [{
-                        name: 'Erogazioni automatiche',
-                        color: '#ff0000',
-                        data: [data[1]],
-                             
-                    }
-                             
-                    , {
-                        name: 'Erogazioni utente',
-                        color: '#3cb371',
-                        data: [data[2]],
-                          
-                   }
-                    ],
-
-
-
-                            }); // chiude il chart 
-            } // chiude success
-            
-        }) // chiude ajax 
-            }); 
-            
-      
-        
-         $('#button2').click(function(){
-                var amg = {
-                    anno: '2019',
-                    mese: '10',
-                    giorno: '22'
-                }; 
-                
-                var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + ""; 
-                        
-                
-                // GRAFICO EROGAZIONI GIORNO/NOTTE 
-        
-        $.ajax({
-            type: 'GET',
-            //url: "http://192.168.1.105:8000/dispenser/giorno/",  // non a /giorno ma alla view che interpreta i dati e mi permette di disegnare il grafico lato html
-            url: "http://192.168.1.105:8000/dispenser/erogGN/", 
-            //url: "http://172.18.187.182:8000/dispenser/erogGN/",
-            data: datoStr,
-            success: function(data){
-                console.log("dati ricevuti"); 
-                console.log(data); 
-                
-         
-                // grafico 
-                var chart = Highcharts.chart('container2', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato 
-                    chart: {
-                        type: 'column', // column
-                    
-                    },
-                    
-                    title: {
-                        text: 'Erogazioni 22 Ottobre 2019'
-                    },
-                    
-                    // sistemare xAxis
-
-                    xAxis: {
-                        categories: [data[0]]
-                    },
-
-                    series: [{
-                        name: 'Erogazioni modalità giorno',
-                        color: '#ffd700',
-                        data: [data[1]],
-                             
-                    }
-                             
-                    , {
-                        name: 'Erogazioni modalità notte',
-                        color: '#4169e1',
-                        data: [data[2]],
-                          
-                   }
-                    ],
-
-
-
-                            }); // chiude il chart 
-            } // chiude success
-            
-        }) // chiude ajax 
-            });
-            
-        
-
         });
+            
+            
+           
         
     </script>
 
@@ -366,9 +236,8 @@
     <div id="container1"></div>
     <div id="container2"></div>
     
-    <button id="button"> Erogazioni </button>
-    <button id="button1"> Erogazioni automatiche/utente </button>
-    <button id="button2"> Erogazioni giorno/notte </button>
+<!--    <button id="button"> Erogazioni </button>-->
+    
      
     <table id="oggi">
         <tr id="prova">
@@ -393,6 +262,129 @@
         {% endfor %}
 
     </table>
+    
+    <script>
+        
+        
+        
+        // grafico erogazioni automatiche/utente
+                var chart = Highcharts.chart('container1', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato 
+                    chart: {
+                        type: 'column', 
+                    
+                    },
+                    
+                    title: {
+                        text: 'Erogazioni ' + {{giorno|safe}} + ''
+                    },
+                    
+                    // sistemare xAxis
+
+                    xAxis: {
+                        categories: [{{giorno|safe}}]
+                    },
+
+                    series: [{
+                        name: 'Erogazioni automatiche',
+                        color: '#ff0000',
+                        data: [{{erogA}}],
+                             
+                    }
+                             
+                    , {
+                        name: 'Erogazioni utente',
+                        color: '#3cb371',
+                        data: [{{erogU}}],
+                          
+                   }
+                    ],
+
+
+
+            }); // chiude il chart 
+        
+        
+        // grafico erogazioni/no erogazioni
+        
+                var chart = Highcharts.chart('container', {
+                    chart: {
+                        type: 'column', // column
+                    
+                    },
+                    title: {
+                        text: 'Erogazioni ' + {{giorno|safe}} + ''
+                    },
+                    
+                    // sistemare xAxis
+
+                    xAxis: {
+                        categories: [{{giorno|safe}}]
+                    },
+
+                    series: [{
+                        name: 'Erogazioni',
+                        color: '#ff00ff',
+                        data: [{{erog}}],
+                             
+                    }
+                             
+                    , {
+                        name: 'No erogazioni',
+                        color: '#00bfff',
+                        data: [{{noErog}}],
+                          
+                   }
+                    ],
+
+
+
+                            }); // chiude il chart 
+        
+        
+        
+        
+        
+         // grafico erogazioni giorno/notte 
+                var chart = Highcharts.chart('container2', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato 
+                    chart: {
+                        type: 'column', // column
+                    
+                    },
+                    
+                    title: {
+                        text: 'Erogazioni ' + {{giorno|safe}} + ''
+                    },
+                    
+                    // sistemare xAxis
+
+                    xAxis: {
+                        categories: [{{giorno|safe}}]
+                    },
+
+                    series: [{
+                        name: 'Erogazioni modalità giorno',
+                        color: '#ffd700',
+                        data: [{{erogG}}],
+                             
+                    }
+                             
+                    , {
+                        name: 'Erogazioni modalità notte',
+                        color: '#4169e1',
+                        data: [{{erogN}}],
+                          
+                   }
+                    ],
+
+
+
+                            }); // chiude il chart 
+        
+        
+    
+    </script>
+    
+    
     
 
 

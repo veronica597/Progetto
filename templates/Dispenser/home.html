@@ -46,15 +46,23 @@
         <div class="collapse navbar-collapse" id="mainNavBar">
 
             <ul class="nav navbar-nav">
-<!--                <li><a href=http://localhost:8000/dispenser/chart/>Show today's data</a></li>-->
+<!--                <li><a href='http://localhost:8000/dispenser/client/'>Show today's data</a></li>-->
                 <li><a href='http://192.168.1.105:8000/dispenser/client/'>Show today's data</a></li> 
+<!--                <li><a href='http://172.17.196.174:8000/dispenser/client/'>Show today's data</a></li> -->
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Statistics <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-<!--                        <li><a href="#">Weekly</a></li>-->
                         <li><a href="http://192.168.1.105:8000/dispenser/periodo/?id=0">Weekly</a></li>
                         <li><a href="http://192.168.1.105:8000/dispenser/periodo/?id=1">Monthly</a></li>
+<!--
+                        <li><a href="http://172.17.196.174:8000/dispenser/periodo/?id=0">Weekly</a></li>
+                        <li><a href="http://172.17.196.174:8000/dispenser/periodo/?id=1">Monthly</a></li>
+-->
+<!--
+                        <li><a href="http://localhost:8000/dispenser/periodo/?id=0">Weekly</a></li>
+                        <li><a href="http://localhost:8000/dispenser/periodo/?id=1">Monthly</a></li>
+-->
                     </ul>
                 </li>
                 <li>
@@ -85,7 +93,20 @@
                                 console.log(day);
                                 console.log(month);
                                 console.log(year);
-                                window.location.href="http://localhost:8000/dispenser/profile/"
+                                var requestUrl = "http://192.168.1.105:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                //var requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; // non funziona boh 
+                                $.get(requestUrl, function(data) {
+                                    console.log('DATI RICEVUTI: ' + data); 
+                                    if(data == 0){
+                                        alert("Ci scusiamo per il disagio. I dati sono assenti");
+                                    }
+                                    else{
+                                         window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; 
+                                        //window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    }
+                                    
+                                });
+
                             });
                         });
 

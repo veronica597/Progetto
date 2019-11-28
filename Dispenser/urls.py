@@ -10,14 +10,14 @@ urlpatterns = [
 
     url(r'^client/', views.client, name='client'),  # get_post.html
 
-    url(r'^chart/', views.grafico, name='grafico'),  # giorno qualunque NO giorno corrente
     url(r'^dati/', views.sendData, name='dati'),  # per ricevere i dati di erogazioni automatiche/utente
+    url(r'^fake/', views.absentData, name='fake'),  # per controllare se i dati sono presenti o no
 
     url(r'^giorno/', views.ultimoDato, name='giorno'),  # per avere l'ultima riga -- aggiornamento
 
     url(r'^periodo/', views.periodo, name='periodo'),
-    url(r'^grafPeriodo/', views.grafico_periodo, name='grafP'),
 
+    # da eliminare
     url(r'^erog/', views.invioErog, name='erog'),  # per ricevere i dati di erogazioni/passaggi
 
     url(r'^erogGN/', views.invioGiornoNotte, name='erog'),  # per ricevere i dati di erogazioni giorno/notte
