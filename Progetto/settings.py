@@ -118,7 +118,7 @@ LANGUAGE_CODE = 'en-us'  # per mettere italiano 'it-IT'
 
 TIME_ZONE = 'Europe/Rome'
 
-DATETIME_FORMAT = "%Y-%m-%d%H-%M"
+# DATETIME_FORMAT = "%Y-%m-%d%H-%M"
 
 USE_I18N = True
 
