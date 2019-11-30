@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title> Grafico mese/settimana </title>
+    <title> Statistics </title>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -23,7 +26,7 @@
 
                     },
                     title: {
-                        text: 'Erogazioni ' + {{inizio|safe}} + "/" + {{fine|safe}} + ''
+                        text:''
                     },
                     
                     // sistemare xAxis
@@ -60,7 +63,7 @@
                     
                     },
                     title: {
-                        text: 'Erogazioni periodo'
+                        text: ''
                     },
                     
                     // sistemare xAxis
@@ -100,7 +103,7 @@
                     },
                     
                     title: {
-                        text: 'Erogazioni periodo'
+                        text: ''
                     },
                     
                     // sistemare xAxis
@@ -136,39 +139,61 @@
 
         });
     </script>
+    <script language="JavaScript" type="text/javascript"> // per tasto che mostra tabella!
+
+        function pippo(aDiv) {
+        aDiv.style.display = aDiv.style.display == "block" ? "none" : "block";
+        }
+    </script>
 
     
 </head>
 <body>
-    
-    <div id="container"></div>
-    <div id="container1"></div>
-    <div id="container2"></div>
-<!--    <button id="button"> Render </button>-->
-    
-     <table id="oggi">
-        <tr id="prova">
-            <th>Id</th>
-            <th>Data</th>
-            <th>Erogation</th>
-            <th>UserMode</th>
-            <th>TimeMode</th>
-        </tr>
 
-        {% for riga in righe %}
-        <tr id="old">
+    <a href="http://localhost:8000/" class="go-back" style="color: darksalmon">Home</a>
 
-            <td id="id"> {{riga.id}} </td>
-            <td id="date"> {{riga.date}} </td>
-            <td id="erogation"> {{riga.erogation}} </td>
-            <td id="userMod"> {{riga.userMod}} </td>
-            <td id="timeMod"> {{riga.timeMod}} </td>
+    <div class="text-center">
+    <h1 style="color: darksalmon">Statistics of the period:  {{inizio|safe}}-{{fine|safe}}</h1>
+    </div>
 
 
-        </tr>
-        {% endfor %}
 
-    </table>
+
+    <div class="row">
+        <div class="container-fluid">
+            <div class="col-sm-4" id="container"></div>
+            <div class="col-sm-4" id="container1"></div>
+            <div class="col-sm-4" id="container2"></div>
+        </div>
+    </div>
+
+    <button type= "button" class="btn btn-link" style="color: darksalmon" onclick="pippo(document.getElementById('d1'))">Hide table</button>
+
+     <div id="d1" class="row" style="display:block">
+     <div class="col-sm-12">
+         <table class="table table-hover" id="oggi">
+            <thead>
+                 <tr id="prova">
+{#                     <th>Id</th>#}
+                     <th>Data</th>
+                     <th>Erogation</th>
+                     <th>UserMode</th>
+                     <th>TimeMode</th>
+                 </tr>
+                 <tbody>
+                 {% for riga in righe %}
+                     <tr id="old">
+{#                         <td id="id"> {{riga.id}} </td>#}
+                         <td id="date"> {{riga.date}} </td>
+                         <td id="erogation"> {{riga.erogation}} </td>
+                         <td id="userMod"> {{riga.userMod}} </td>
+                         <td id="timeMod"> {{riga.timeMod}} </td>
+                     </tr>
+                 {% endfor %}
+                 </tbody>
+         </table>
+     </div>
+     </div>
 
 
 </body>

@@ -2,13 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title> Chart in html con dati presi da view Django </title>
+    <title> Selected day data</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
                     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
     </script>
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
     <script type="text/javascript">
         
@@ -35,7 +38,7 @@
         
         $.ajax({
             type: 'GET',
-            //url: "http://192.168.1.105:8000/dispenser/erog/", 
+            //url: "http://192.168.1.105:8000/dispenser/erog/",
             //url: "http://172.17.196.174:8000/dispenser/erog/",
             url: "http://localhost:8000/dispenser/erog/",
             data: datoStr,
@@ -172,29 +175,51 @@
 }); // chiude click
             
         });
-            
-            
-           
-        
+
     </script>
+
+
+<script language="JavaScript" type="text/javascript"> // per tasto che mostra tabella!
+
+function pippo(aDiv) {
+aDiv.style.display = aDiv.style.display == "block" ? "none" : "block";
+}
+</script>
+
 
 </head>
 
 
 <body>
-    
-<!--    Parte in bella-->
-    
-<!--
-    <h1 style="color: darksalmon; alignment: center" >Today's graph and data:</h1>
+
+    <a href="http://localhost:8000/" class="go-back" style="color: darksalmon">Home</a>
+
+    <div class="text-center">
+    <h1 style="color: darksalmon">Erogations of {{giorno|safe}}:</h1>
+    </div>
+
+
+
 
     <div class="row">
-        <div class="col-sm-8">
+        <div class="container-fluid">
+        <div class="col-sm-4"><div id="container"></div></div>
+        <div class="col-sm-4"><div id="container1"></div></div>
+        <div class="col-sm-4"><div id="container2"></div></div>
+        </div>
+    </div>
+
+
+    <!--<input type="button" value="Show table" onclick="pippo(document.getElementById('d1'))">-->
+    <button type= "button" class="btn btn-link" style="color: darksalmon" onclick="pippo(document.getElementById('d1'))">Hide table</button>
+
+    <div id="d1" class="row" style="display:block">
+        <div class="col-sm-12">
             <div class="container-fluid">
-                <table class="table" id="oggi">
+                <table class="table table-hover" id="oggi">
                     <thead>
                     <tr id="prova">
-                        <th>Id</th>
+{#                        <th>Id</th>#}
                         <th>Data</th>
                         <th>Erogation</th>
                         <th>UserMode</th>
@@ -203,7 +228,7 @@
                     <tbody>
                     {% for riga in righe %}
                         <tr id="old">
-                            <td id="id">{{riga.id}} </td>
+{#                            <td id="id">{{riga.id}} </td>#}
                             <td id="date">{{riga.date}} </td>
                             <td id="erogation">{{riga.erogation}} </td>
                             <td id="userMod">{{riga.userMod}} </td>
@@ -214,59 +239,20 @@
                 </table>
             </div>
         </div>
-        <div class="col-sm-4">
-            <p id="tit"> If you want to erogate food press the following button:</p>
-
-            <div id="arduino">
-                <button id="on" type="button" class="btn btn-default"> Erogation </button>
-            </div>
-
-            <div id="stampa"></div>
-
-            <p></p>
-            <p>Links to other graphs:</p>
-            <button id="on" type="button" class="btn btn-link"> Time Mode Chart </button>
-            <button id="on" type="button" class="btn btn-link"> Erogation Mode Chart </button>
-        </div>
     </div>
-    
--->
-    
-    <div id="container"></div> 
-    <div id="container1"></div>
-    <div id="container2"></div>
-    
-<!--    <button id="button"> Erogazioni </button>-->
-    
-     
-    <table id="oggi">
-        <tr id="prova">
-            <th>Id</th>
-            <th>Data</th>
-            <th>Erogation</th>
-            <th>UserMode</th>
-            <th>TimeMode</th>
-        </tr>
-
-        {% for riga in righe %}
-        <tr id="old">
-
-            <td id="id"> {{riga.id}} </td>
-            <td id="date"> {{riga.date}} </td>
-            <td id="erogation"> {{riga.erogation}} </td>
-            <td id="userMod"> {{riga.userMod}} </td>
-            <td id="timeMod"> {{riga.timeMod}} </td>
 
 
-        </tr>
-        {% endfor %}
+{#    <div class="row">#}
+{#        <div class="container-fluid">#}
+{#        <div class="col-sm-4"><div id="container"></div></div>#}
+{#        <div class="col-sm-4"><div id="container1"></div></div>#}
+{#        <div class="col-sm-4"><div id="container2"></div></div>#}
+{#        </div>#}
+{#    </div>#}
 
-    </table>
-    
+
     <script>
-        
-        
-        
+
         // grafico erogazioni automatiche/utente
                 var chart = Highcharts.chart('container1', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato 
                     chart: {
@@ -275,7 +261,7 @@
                     },
                     
                     title: {
-                        text: 'Erogazioni ' + {{giorno|safe}} + ''
+                        text:''
                     },
                     
                     // sistemare xAxis
@@ -312,7 +298,7 @@
                     
                     },
                     title: {
-                        text: 'Erogazioni ' + {{giorno|safe}} + ''
+                        text:''
                     },
                     
                     // sistemare xAxis
@@ -352,7 +338,7 @@
                     },
                     
                     title: {
-                        text: 'Erogazioni ' + {{giorno|safe}} + ''
+                        text:''
                     },
                     
                     // sistemare xAxis

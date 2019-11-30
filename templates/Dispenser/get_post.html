@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Get to the ESP8266</title>
+    <title>Today's data</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -11,6 +11,9 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
     </script>
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     
 
     <script type="text/javascript" >
@@ -59,47 +62,61 @@
 
 <body>
 
-    <h1 id="tit"> Let's play with the servo </h1>
+   <a href="http://localhost:8000/" class="go-back" style="color: darksalmon">Home</a>
 
-    <!-- parte da matchare con arduino -->
-    <div id="arduino">
-
-        <button id="on" type="button" class="btn btn-primary btn-lg "> Erogate food </button>
-
+    <div class="text-center">
+         <h1 id="tit" style="color: darksalmon">Today's data:</h1>
     </div>
+    <p class="lead">In this page we can see all the informations about about the use of the dispenser on the current day </p>
 
-    <div id="stampa"></div>
-    
-    <div id="no_erog"> </div>
-    
 <!--   grafico e tabella -->
-    <div id="container"></div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 style="color:salmon">Graph:</h4>
+            <div id="container"></div>
+        </div>
+    </div>
     
-    <table id="oggi">
-        <tr id="prova">
-            <th>Id</th>
-            <th>Data</th>
-            <th>Erogation</th>
-            <th>UserMode</th>
-            <th>TimeMode</th>
-        </tr>
-        
-        
+    <div class="row">
+        <div class="col-sm-7">
+        <h4 style="color:salmon">Table:</h4>
+            <div class="container-fluid">
+                <table class="table-hover" id="oggi">
+                    <thead>
+                    <tr id="prova">
+{#                        <th>Id</th>#}
+                        <th>Data</th>
+                        <th>Erogation</th>
+{#                        <th>UserMode</th>#}
+{#                        <th>TimeMode</th>#}
+                    </tr>
+                    <tbody>
+                    {% for riga in righe %}
+                        <tr id="old">
+{#                            <td id="id">{{riga.id}} </td>#}
+                            <td id="date">{{riga.date}} </td>
+                            <td id="erogation">{{riga.erogation}} </td>
+{#                            <td id="userMod">{{riga.userMod}} </td>#}
+{#                            <td id="timeMod">{{riga.timeMod}} </td>#}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <p></p>
+            <p class="lead" id="tit"> If you want to erogate food press the following button:</p>
+            <p></p>
+            <div id="arduino">
+                <button id="on" type="button" class="btn btn-default"> Erogation </button>
+            </div>
 
-        {% for riga in righe %}
-        <tr id="old">
-
-            <td id="id"> {{riga.id}} </td>
-            <td id="date"> {{riga.date}} </td>
-            <td id="erogation"> {{riga.erogation}} </td>
-            <td id="userMod"> {{riga.userMod}} </td>
-            <td id="timeMod"> {{riga.timeMod}} </td>
-
-
-        </tr>
-        {% endfor %}
-
-    </table>
+            <div id="stampa"></div>
+            <div id="no_erog"> </div>
+        </div>
+    </div>
     
         
      <script type="text/javascript">
@@ -261,7 +278,7 @@
                     
                     
                     title: {
-                        text: 'Erogazioni di oggi'
+                        text: ''
                     },
                     
                     // sistemare xAxis
@@ -291,17 +308,8 @@
 
 
 
-                }); 
-   
-         
-        
-         
-         
-         
-         
+                });
       //});
-    
-    
     </script>
 
 </body>
