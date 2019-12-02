@@ -60,7 +60,9 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
         context = {
             'erog': e,
             'noErog': noE,
-            'righe': DatiRaccolti.objects.values().filter(date__gte=oggi)
+            'righe': DatiRaccolti.objects.values().filter(date__gte=oggi)[:20], # trovare un modo per fare [:lenght/2]
+            'Righe': DatiRaccolti.objects.values().filter(date__gte=oggi)[21:40] # e così in base al numero totsle di dati
+
         }
 
         return render(request, 'get_post.html', context)
@@ -119,7 +121,9 @@ def sendData(request):  # view che invia i dati per costruire il CHART erogazion
     context = {'righe': DatiRaccolti.objects.values().filter(date__contains=stringa).order_by('date'),
                # sistemare contains
                'giorno': json.dumps(stringaI), 'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG,
-               'erogN': eN}
+               'erogN': eN,
+               'Righe': DatiRaccolti.objects.values().filter(date__contains=stringa)[:20]
+               }
 
     return render(request, 'chartInside.html', context)
 
@@ -247,8 +251,9 @@ def periodo(request):  # per filtraggio mese/settimana
 
     context = {'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG, 'erogN': eN,
                'inizio': json.dumps(inizio), 'fine': json.dumps(fine),
-               'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=oggi, erogation=True,
-                                                             userMod=False).order_by('date')}
+               'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=oggi, erogation=True,userMod=False).order_by('date'),
+               'Righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=oggi, erogation=True,userMod=False)[:20]
+               }
     return render(request, 'periodo.html', context)
 
 

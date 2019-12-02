@@ -6,7 +6,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-                    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
     </script>
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
 
@@ -14,45 +14,45 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
     <script type="text/javascript">
-        
-        
+
+
         $(document).ready(function (){
             console.log("pronti alla get");
 
-    
-    $("#button").click(function(){
-        // capire come estrapolo dal click sul calendario l'informazione circa quale giorno ho cliccato 
-        
-        var amg = {
-            anno: '2019',
-            mese: '10',
-            giorno: '22'
-        }; 
-  
-        //var jsonAMG = JSON.stringify(amg); 
-        var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + ""; 
-        
-        //console.log(jsonAMG); 
 
-        // GRAFICO EROGAZIONI/PASSAGGI
-        
-        $.ajax({
-            type: 'GET',
-            //url: "http://192.168.1.105:8000/dispenser/erog/",
-            //url: "http://172.17.196.174:8000/dispenser/erog/",
-            url: "http://localhost:8000/dispenser/erog/",
-            data: datoStr,
-            success: function(data){
-                console.log("dati ricevuti"); 
-                console.log(data); 
-               
-                
-         
-                // grafico 
-                var chart = Highcharts.chart('container', {
-                    chart: {
-                        type: 'column', // column
-                        
+            $("#button").click(function(){
+                // capire come estrapolo dal click sul calendario l'informazione circa quale giorno ho cliccato
+
+                var amg = {
+                    anno: '2019',
+                    mese: '10',
+                    giorno: '22'
+                };
+
+                //var jsonAMG = JSON.stringify(amg);
+                var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + "";
+
+                //console.log(jsonAMG);
+
+                // GRAFICO EROGAZIONI/PASSAGGI
+
+                $.ajax({
+                    type: 'GET',
+                    //url: "http://192.168.1.105:8000/dispenser/erog/",
+                    //url: "http://172.17.196.174:8000/dispenser/erog/",
+                    url: "http://localhost:8000/dispenser/erog/",
+                    data: datoStr,
+                    success: function(data){
+                        console.log("dati ricevuti");
+                        console.log(data);
+
+
+
+                        // grafico
+                        var chart = Highcharts.chart('container', {
+                            chart: {
+                                type: 'column', // column
+
 //                        events: {
 //                            load: function () {
 //                                var series0 = this.series[0]; // erogazioni automatiche
@@ -136,55 +136,61 @@
 //                                
 //                            }
 //                        } // chiude events 
-                    
-                    },
-                    title: {
-                        text: 'Erogazioni 22 Ottobre 2019'
-                    },
-                    
-                    // sistemare xAxis
 
-                    xAxis: {
-                        categories: [data[0]]
-                    },
+                            },
+                            title: {
+                                text: 'Erogazioni 22 Ottobre 2019'
+                            },
 
-                    series: [{
-                        name: 'Erogazioni',
-                        color: '#ff00ff',
-                        data: [data[1]],
-                             
-                    }
-                             
-                    , {
-                        name: 'No erogazioni',
-                        color: '#00bfff',
-                        data: [data[2]],
-                          
-                   }
-                    ],
+                            // sistemare xAxis
+
+                            xAxis: {
+                                categories: [data[0]]
+                            },
+
+                            series: [{
+                                name: 'Erogazioni',
+                                color: '#ff00ff',
+                                data: [data[1]],
+
+                            }
+
+                                , {
+                                    name: 'No erogazioni',
+                                    color: '#00bfff',
+                                    data: [data[2]],
+
+                                }
+                            ],
 
 
 
-                            }); // chiude il chart 
-            } // chiude success
-            
-        }) // chiude ajax 
-    
-    
-    
-}); // chiude click
-            
+                        }); // chiude il chart
+                    } // chiude success
+
+                }) // chiude ajax
+
+
+
+            }); // chiude click
+
         });
 
     </script>
 
 
-<script language="JavaScript" type="text/javascript"> // per tasto che mostra tabella!
+    <script language="JavaScript" type="text/javascript"> // per tasto che mostra tabella!
 
-function pippo(aDiv) {
-aDiv.style.display = aDiv.style.display == "block" ? "none" : "block";
-}
-</script>
+    function pippo(aDiv1, aDiv2) {
+        var e= document.getElementById(aDiv1);
+        var e2= document.getElementById(aDiv2);
+
+        if (e.style.display=="block"){
+            e.style.display="none";
+            e2.style.display="block";
+        }
+    }
+    </script>
 
 
 </head>
@@ -192,186 +198,207 @@ aDiv.style.display = aDiv.style.display == "block" ? "none" : "block";
 
 <body>
 
-    <a href="http://localhost:8000/" class="go-back" style="color: darksalmon">Home</a>
+<a href="http://localhost:8000/" class="go-back" style="color: darksalmon">Home</a>
 
-    <div class="text-center">
+<div class="text-center">
     <h1 style="color: darksalmon">Erogations of {{giorno|safe}}:</h1>
-    </div>
+</div>
 
 
 
 
-    <div class="row">
-        <div class="container-fluid">
+<div class="row">
+    <div class="container-fluid">
         <div class="col-sm-4"><div id="container"></div></div>
         <div class="col-sm-4"><div id="container1"></div></div>
         <div class="col-sm-4"><div id="container2"></div></div>
-        </div>
     </div>
+</div>
 
 
-    <!--<input type="button" value="Show table" onclick="pippo(document.getElementById('d1'))">-->
-    <button type= "button" class="btn btn-link" style="color: darksalmon" onclick="pippo(document.getElementById('d1'))">Hide table</button>
+<!--<input type="button" value="Show table" onclick="pippo(document.getElementById('d1'))">-->
+<button type= "button" class="btn btn-link" style="color: darksalmon" onclick="pippo('d1','d2')">Show all the table</button>
 
-    <div id="d1" class="row" style="display:block">
-        <div class="col-sm-12">
-            <div class="container-fluid">
-                <table class="table table-hover" id="oggi">
-                    <thead>
-                    <tr id="prova">
-{#                        <th>Id</th>#}
-                        <th>Data</th>
-                        <th>Erogation</th>
-                        <th>UserMode</th>
-                        <th>TimeMode</th>
+<div id="d1" class="row" style="display:block">
+    <div class="col-sm-12">
+        <div class="container-fluid">
+            <table class="table table-hover" id="oggi">
+                <thead>
+                <tr id="prova">
+                    {#                        <th>Id</th>#}
+                    <th>Data</th>
+                    <th>Erogation</th>
+                    <th>UserMode</th>
+                    <th>TimeMode</th>
+                </tr>
+                <tbody>
+                {% for riga in Righe %}
+                    <tr id="old">
+                        {#                            <td id="id">{{riga.id}} </td>#}
+                        <td id="date">{{riga.date}} </td>
+                        <td id="erogation">{{riga.erogation}} </td>
+                        <td id="userMod">{{riga.userMod}} </td>
+                        <td id="timeMod">{{riga.timeMod}} </td>
                     </tr>
-                    <tbody>
-                    {% for riga in righe %}
-                        <tr id="old">
-{#                            <td id="id">{{riga.id}} </td>#}
-                            <td id="date">{{riga.date}} </td>
-                            <td id="erogation">{{riga.erogation}} </td>
-                            <td id="userMod">{{riga.userMod}} </td>
-                            <td id="timeMod">{{riga.timeMod}} </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-
-
-{#    <div class="row">#}
-{#        <div class="container-fluid">#}
-{#        <div class="col-sm-4"><div id="container"></div></div>#}
-{#        <div class="col-sm-4"><div id="container1"></div></div>#}
-{#        <div class="col-sm-4"><div id="container2"></div></div>#}
-{#        </div>#}
-{#    </div>#}
-
-
-    <script>
-
-        // grafico erogazioni automatiche/utente
-                var chart = Highcharts.chart('container1', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato 
-                    chart: {
-                        type: 'column', 
-                    
-                    },
-                    
-                    title: {
-                        text:''
-                    },
-                    
-                    // sistemare xAxis
-
-                    xAxis: {
-                        categories: [{{giorno|safe}}]
-                    },
-
-                    series: [{
-                        name: 'Erogazioni automatiche',
-                        color: '#ff0000',
-                        data: [{{erogA}}],
-                             
-                    }
-                             
-                    , {
-                        name: 'Erogazioni utente',
-                        color: '#3cb371',
-                        data: [{{erogU}}],
-                          
-                   }
-                    ],
+</div>
 
 
 
-            }); // chiude il chart 
-        
-        
-        // grafico erogazioni/no erogazioni
-        
-                var chart = Highcharts.chart('container', {
-                    chart: {
-                        type: 'column', // column
-                    
-                    },
-                    title: {
-                        text:''
-                    },
-                    
-                    // sistemare xAxis
-
-                    xAxis: {
-                        categories: [{{giorno|safe}}]
-                    },
-
-                    series: [{
-                        name: 'Erogazioni',
-                        color: '#ff00ff',
-                        data: [{{erog}}],
-                             
-                    }
-                             
-                    , {
-                        name: 'No erogazioni',
-                        color: '#00bfff',
-                        data: [{{noErog}}],
-                          
-                   }
-                    ],
+<div id="d2" class="row" style="display:none"> <!-- tab completa -->
+    <div class="col-sm-12">
+        <div class="container-fluid">
+            <table class="table table-hover" id="oggi">
+                <thead>
+                <tr id="prova">
+                    {#                        <th>Id</th>#}
+                    <th>Data</th>
+                    <th>Erogation</th>
+                    <th>UserMode</th>
+                    <th>TimeMode</th>
+                </tr>
+                <tbody>
+                {% for riga in righe %}
+                    <tr id="old">
+                        {#                            <td id="id">{{riga.id}} </td>#}
+                        <td id="date">{{riga.date}} </td>
+                        <td id="erogation">{{riga.erogation}} </td>
+                        <td id="userMod">{{riga.userMod}} </td>
+                        <td id="timeMod">{{riga.timeMod}} </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 
+<script>
 
-                            }); // chiude il chart 
-        
-        
-        
-        
-        
-         // grafico erogazioni giorno/notte 
-                var chart = Highcharts.chart('container2', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato 
-                    chart: {
-                        type: 'column', // column
-                    
-                    },
-                    
-                    title: {
-                        text:''
-                    },
-                    
-                    // sistemare xAxis
+    // grafico erogazioni automatiche/utente
+    var chart = Highcharts.chart('container1', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
+        chart: {
+            type: 'column',
 
-                    xAxis: {
-                        categories: [{{giorno|safe}}]
-                    },
+        },
 
-                    series: [{
-                        name: 'Erogazioni modalità giorno',
-                        color: '#ffd700',
-                        data: [{{erogG}}],
-                             
-                    }
-                             
-                    , {
-                        name: 'Erogazioni modalità notte',
-                        color: '#4169e1',
-                        data: [{{erogN}}],
-                          
-                   }
-                    ],
+        title: {
+            text:''
+        },
+
+        // sistemare xAxis
+
+        xAxis: {
+            categories: [{{giorno|safe}}]
+        },
+
+        series: [{
+            name: 'Erogazioni automatiche',
+            color: '#ff0000',
+            data: [{{erogA}}],
+
+        }
+
+            , {
+                name: 'Erogazioni utente',
+                color: '#3cb371',
+                data: [{{erogU}}],
+
+            }
+        ],
 
 
 
-                            }); // chiude il chart 
-        
-        
-    
-    </script>
-    
-    
-    
+    }); // chiude il chart
+
+
+    // grafico erogazioni/no erogazioni
+
+    var chart = Highcharts.chart('container', {
+        chart: {
+            type: 'column', // column
+
+        },
+        title: {
+            text:''
+        },
+
+        // sistemare xAxis
+
+        xAxis: {
+            categories: [{{giorno|safe}}]
+        },
+
+        series: [{
+            name: 'Erogazioni',
+            color: '#ff00ff',
+            data: [{{erog}}],
+
+        }
+
+            , {
+                name: 'No erogazioni',
+                color: '#00bfff',
+                data: [{{noErog}}],
+
+            }
+        ],
+
+
+
+    }); // chiude il chart
+
+
+
+
+
+    // grafico erogazioni giorno/notte
+    var chart = Highcharts.chart('container2', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
+        chart: {
+            type: 'column', // column
+
+        },
+
+        title: {
+            text:''
+        },
+
+        // sistemare xAxis
+
+        xAxis: {
+            categories: [{{giorno|safe}}]
+        },
+
+        series: [{
+            name: 'Erogazioni modalità giorno',
+            color: '#ffd700',
+            data: [{{erogG}}],
+
+        }
+
+            , {
+                name: 'Erogazioni modalità notte',
+                color: '#4169e1',
+                data: [{{erogN}}],
+
+            }
+        ],
+
+
+
+    }); // chiude il chart
+
+
+
+</script>
+
+
+
 
 
 </body>
