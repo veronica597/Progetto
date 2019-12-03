@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title> Selected day data</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -12,6 +13,9 @@
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 
     <script type="text/javascript">
 
@@ -173,109 +177,86 @@
 
 
             }); // chiude click
+            $('#oggi').DataTable({
+                "scrollY": "270px",
+                "scrollCollapse": true,
+                "searching": false // false to disable search (or any other option)
+            });
+            $('.dataTables_length').addClass('bs-select');
+
+
 
         });
 
+
     </script>
 
 
-    <script language="JavaScript" type="text/javascript"> // per tasto che mostra tabella!
-
-    function pippo(aDiv1, aDiv2) {
-        var e= document.getElementById(aDiv1);
-        var e2= document.getElementById(aDiv2);
-
-        if (e.style.display=="block"){
-            e.style.display="none";
-            e2.style.display="block";
-        }
-    }
-    </script>
+{#    <script language="JavaScript" type="text/javascript"> // per tasto che mostra tabella!#}
+{##}
+{#    function pippo(aDiv1, aDiv2) {#}
+{#        var e= document.getElementById(aDiv1);#}
+{#        var e2= document.getElementById(aDiv2);#}
+{##}
+{#        if (e.style.display=="block"){#}
+{#            e.style.display="none";#}
+{#            e2.style.display="block";#}
+{#        }#}
+{#    }#}
+{#    </script>#}
 
 
 </head>
 
 
-<body>
+<body style="background-color: peachpuff">
 
-<a href="http://localhost:8000/" class="go-back" style="color: darksalmon">Home</a>
-
+<a href="http://localhost:8000/" class="go-back" style="color:salmon">Home</a>
 <div class="text-center">
-    <h1 style="color: darksalmon">Erogations of {{giorno|safe}}:</h1>
+    <h1 style="color: salmon">Erogations of {{giorno}}</h1>
 </div>
-
-
 
 
 <div class="row">
     <div class="container-fluid">
-        <div class="col-sm-4"><div id="container"></div></div>
+        <div class="col-sm-4"><div style="border-color: salmon" id="container"></div></div>
         <div class="col-sm-4"><div id="container1"></div></div>
         <div class="col-sm-4"><div id="container2"></div></div>
     </div>
 </div>
 
 
-<!--<input type="button" value="Show table" onclick="pippo(document.getElementById('d1'))">-->
-<button type= "button" class="btn btn-link" style="color: darksalmon" onclick="pippo('d1','d2')">Show all the table</button>
 
-<div id="d1" class="row" style="display:block">
-    <div class="col-sm-12">
-        <div class="container-fluid">
-            <table class="table table-hover" id="oggi">
-                <thead>
-                <tr id="prova">
-                    {#                        <th>Id</th>#}
-                    <th>Data</th>
-                    <th>Erogation</th>
-                    <th>UserMode</th>
-                    <th>TimeMode</th>
+{#<button type= "button" class="btn btn-link" style="color: darksalmon" onclick="pippo('d1','d2')">Show all the table</button>#}
+
+{#<div id="d1" class="row" style="display:block">#}
+{#    <div class="col-sm-12">#}
+
+
+        <div class="table-sm" style="padding:20px">
+        <table id="oggi" class="table table-hover" cellspacing="0" width="100%">
+                <thead style="background-color:peachpuff; border-color: salmon">
+                <tr style="border-bottom-color: salmon" id="prova">
+                    {# <th>Id</th>#}
+                    <th style="color: salmon">Data</th>
+                    <th style="color: salmon">Erogation</th>
+                    <th style="color: salmon">UserMode</th>
+                    <th style="color: salmon">TimeMode</th>
                 </tr>
-                <tbody>
-                {% for riga in Righe %}
-                    <tr id="old">
-                        {#                            <td id="id">{{riga.id}} </td>#}
-                        <td id="date">{{riga.date}} </td>
-                        <td id="erogation">{{riga.erogation}} </td>
-                        <td id="userMod">{{riga.userMod}} </td>
-                        <td id="timeMod">{{riga.timeMod}} </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-
-
-<div id="d2" class="row" style="display:none"> <!-- tab completa -->
-    <div class="col-sm-12">
-        <div class="container-fluid">
-            <table class="table table-hover" id="oggi">
-                <thead>
-                <tr id="prova">
-                    {#                        <th>Id</th>#}
-                    <th>Data</th>
-                    <th>Erogation</th>
-                    <th>UserMode</th>
-                    <th>TimeMode</th>
-                </tr>
-                <tbody>
+                <tbody style="background-color:peachpuff">
                 {% for riga in righe %}
                     <tr id="old">
-                        {#                            <td id="id">{{riga.id}} </td>#}
-                        <td id="date">{{riga.date}} </td>
-                        <td id="erogation">{{riga.erogation}} </td>
-                        <td id="userMod">{{riga.userMod}} </td>
-                        <td id="timeMod">{{riga.timeMod}} </td>
+                        {#<td id="id">{{riga.id}} </td>#}
+                        <td style="background-color:peachpuff"id="date">{{riga.date}} </td>
+                        <td style="background-color:peachpuff"style="color: salmon" id="erogation">{{riga.erogation}} </td>
+                        <td style="background-color:peachpuff"id="userMod">{{riga.userMod}} </td>
+                        <td style="background-color:peachpuff"id="timeMod">{{riga.timeMod}} </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
-    </div>
-</div>
+
 
 
 <script>
@@ -294,7 +275,7 @@
         // sistemare xAxis
 
         xAxis: {
-            categories: [{{giorno|safe}}]
+            categories: [{{Giorno|safe}}]
         },
 
         series: [{
@@ -331,7 +312,7 @@
         // sistemare xAxis
 
         xAxis: {
-            categories: [{{giorno|safe}}]
+            categories: [{{Giorno|safe}}]
         },
 
         series: [{
@@ -371,7 +352,7 @@
         // sistemare xAxis
 
         xAxis: {
-            categories: [{{giorno|safe}}]
+            categories: [{{Giorno|safe}}]
         },
 
         series: [{
