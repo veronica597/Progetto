@@ -109,7 +109,7 @@ def sendData(request):  # view che invia i dati per costruire il CHART erogazion
     # # p = DatiRaccolti.objects.values().filter(date__gte=stringa).get(pk=1)
     # # print(p)
 
-    context = {'righe': DatiRaccolti.objects.values().filter(date__contains=stringa).order_by('date'),  # sistemare contains
+    context = {'righe': DatiRaccolti.objects.values().filter(date__startswith=stringa).order_by('date'),  # sistemare contains
                'giorno': json.dumps(stringaI), 'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG, 'erogN': eN}
 
     return render(request, 'chartInside.html', context)
