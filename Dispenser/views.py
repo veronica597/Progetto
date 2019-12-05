@@ -16,7 +16,7 @@ from django.db.models import Q
 @csrf_exempt
 def index(request):
     # return HttpResponse("<p> Food Dispenser Application </p>")
-    return render(request, 'home.html')
+    return render(request, 'index.html')
 
 
 def profile(request):
@@ -60,7 +60,7 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
         context = {
             'erog': e,
             'noErog': noE,
-            'righe': DatiRaccolti.objects.values().filter(date__gte=oggi).order_by('-date')[:20], #  DA METTERE PER ORDINARE TABELLA
+            'righe': DatiRaccolti.objects.values().filter(date__gte=oggi).order_by('-date')[:5], #  DA METTERE PER ORDINARE TABELLA
             'Righe': DatiRaccolti.objects.values().filter(date__gte=oggi)
         }
 
@@ -124,6 +124,7 @@ def sendData(request):  # view che invia i dati per costruire il CHART erogazion
                'Righe': DatiRaccolti.objects.values().filter(date__contains=stringa)[:20]
                }
 
+
     return render(request, 'chartInside.html', context)
 
 
@@ -172,6 +173,7 @@ def periodo(request):  # per filtraggio mese/settimana
     meseC = oggi.month
     giornoC = oggi.day
     annoC = oggi.year
+
 
     print("oggi: " + str(oggi))
 
@@ -253,7 +255,8 @@ def periodo(request):  # per filtraggio mese/settimana
                'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=oggi, erogation=True,userMod=False).order_by('date'),
                'Righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=oggi, erogation=True,userMod=False)[:20]
                }
-    return render(request, 'periodo.html', context)
+
+    return render(request, 'statistics.html', context)
 
 
 # Da eliminare
