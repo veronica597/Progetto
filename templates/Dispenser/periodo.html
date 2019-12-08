@@ -156,24 +156,17 @@
                     }
                 ],
 
+           }); // chiude il chart
 
+    {#        // per tabella smart#}
+    {#        $('#oggi').DataTable({#}
+    {#            "scrollY": "270px",#}
+    {#            "scrollCollapse": true,#}
+    {#            "searching": false // false to disable search (or any other option)#}
+    {#        });#}
+    {#        $('.dataTables_length').addClass('bs-select');#}
+    {#});#}
 
-            }); // chiude il chart
-
-            // per tabella smart
-            $('#oggi').DataTable({
-                "scrollY": "270px",
-                "scrollCollapse": true,
-                "searching": false, // false to disable search (or any other option)
-                //"paging": false,
-                //"bInfo": false
-                //"info": false
-                "fixedHeader": true,
-                
-            });
-            $('.dataTables_length').addClass('bs-select');
-            //$('#oggi').("no-footer"); 
-    });
 
 
     </script>

@@ -17,7 +17,7 @@ from django.db.models import Q
 @csrf_exempt
 def index(request):
     # return HttpResponse("<p> Food Dispenser Application </p>")
-    return render(request, 'home.html')
+    return render(request, 'index.html')
 
 
 def profile(request):
@@ -62,7 +62,9 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
         context = {
             'erog': e,
             'noErog': noE,
-            'righe': DatiRaccolti.objects.values().filter(date__gte=oggi)[:20],  # .order_by('-date') DA METTERE PER ORDINARE TABELLA
+            'righe': DatiRaccolti.objects.values().filter(date__gte=oggi).order_by('date')[:5],
+
+            # 'righe': DatiRaccolti.objects.values().filter(date__gte=oggi).order_by('-date')[:5], #  DA METTERE PER ORDINARE TABELLA -- con i dati al contrario
             'Righe': DatiRaccolti.objects.values().filter(date__gte=oggi)
         }
 
@@ -77,7 +79,6 @@ def sendData(request):  # view che invia i dati per costruire il CHART erogazion
     anno = request.GET.__getitem__('anno')
     mese = request.GET.__getitem__('mese')
     giorno = request.GET.__getitem__('giorno')
-
 
     stringa = anno + "-" + mese + "-" + giorno
     stringaI = giorno + "-" + mese + "-" + anno  # per categories grafico -- vedere come togliere lo zero davanti
@@ -125,13 +126,13 @@ def absentData(request):
     giorno = request.GET.__getitem__('giorno')
 
     if int(giorno) < 10:
-        stringa = anno + "-" + mese + "-" + '0' + giorno  # + ' '
+        stringa = anno + "-" + mese + "-" + '0' + giorno
     else:
         stringa = anno + "-" + mese + "-" + giorno
 
     print(stringa)
 
-    f = DatiRaccolti.objects.values().filter(date__contains=stringa)  # .order_by('date')  # sistemare contains
+    f = DatiRaccolti.objects.values().filter(date__contains=stringa)  # .order_by('date')
     lu = len(f)
 
     return JsonResponse(lu, safe=False)
@@ -251,7 +252,8 @@ def periodo(request):  # per filtraggio mese/settimana
                'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=oggi, erogation=True, userMod=False).order_by('date'),
                'Righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=oggi, erogation=True, userMod=False)[:20]
                }
-    return render(request, 'periodo.html', context)
+
+    return render(request, 'statistics.html', context)
 
 
 # Da eliminare

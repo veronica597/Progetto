@@ -1,0 +1,88 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name ="author" content="Veronica Pecchioli">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<style>
+.nav > li > a:focus,
+.nav > li > a:hover
+{
+    text-decoration: underline;
+    background-color:#bbdefb ;
+    text-align: center;
+}
+
+
+
+</style>
+
+
+
+</head>
+<body style="background-color: #bbdefb">
+
+
+<div class="container-fluid">
+<nav class="navbar navbar-light" style="background-color:#eeffff">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar" >
+                <span class="icon-bar" style="background-color:#8aacc8"></span>
+                <span class="icon-bar"style="background-color: #8aacc8"></span>
+                <span class="icon-bar"style="background-color: #8aacc8"></span>
+            </button>
+            <a href="#" class="navbar-brand" style="color: black">Food Dispenser</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center" >
+
+            <ul class="nav navbar-nav">
+                <li ><a href='http://localhost:8000/dispenser/client/'style="color: black; text-align: center">Show today's data</a></li>
+                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Statistics</a></li>
+                <li style="margin-top: 13px; align-content: flex-end"><span id="Prato_z723" style="font-size:16px"></span><script src="//widget.time.is/it.js"></script><script>
+                time_is_widget.init({Prato_z723:{template:"TIME DATE", time_format:"hours:minutes", date_format:"year-monthnum-daynum"}});
+                </script>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    </nav>
+</div>
+
+<h1 style=" text-align: center; color:cornflowerblue" >Food Dispenser Application </h1>
+
+
+<div class="text-center">
+
+    <img src="{% static "Progetto/Img/foto4_copia copia.png" %}" alt="immagine di sfondo" class="rounded mx-auto d-block">
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

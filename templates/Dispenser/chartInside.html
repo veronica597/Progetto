@@ -9,13 +9,113 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
     </script>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+
+    <style>
+        .nav > li > a:focus,
+        .nav > li > a:hover
+        {
+            text-decoration: underline;
+            background-color:#bbdefb ;
+            text-align: center;
+        }
+
+         .table-bordered-costum{
+           border-style: solid;
+           border-color: white;
+       }
+
+        .table > tbody,thead,tr,td,th{
+           border-style: inherit;
+           border-color: white;
+           font-weight: normal;
+        }
+
+    </style>
+
+<script>
+    function pippo(aDiv1,) {
+            var e = document.getElementById(aDiv1);
+
+            if (e.style.display == "none") {
+                e.style.display = "block"
+            }
+        }
+
+        // SCRIPT PER I DUE DATETIMEPICKER
+     $('#datepickerI'),$('#datepickerF').datepicker({
+                            weekStart: 1,
+                            daysOfWeekHighlighted: "6,0",
+                            autoclose: true,
+                            todayHighlight: true,
+                        });
+
+                        $(function() {
+                            $('#datepickerI').datepicker();
+                            $('#datepickerF').datepicker();
+
+
+                            $("#datepickerI").on("change",function(){
+                                var day = $(this).datepicker('getDate').getDate();
+                                var month = $(this).datepicker('getDate').getMonth()+1;
+                                var year = $(this).datepicker('getDate').getFullYear();
+                                console.log(day);
+                                console.log(month);
+                                console.log(year);
+                                //var requestUrl = "http://192.168.1.105:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                var requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; // non funziona boh
+                                $.get(requestUrl, function(data) {
+                                    console.log('DATI RICEVUTI: ' + data);
+                                    if(data == 0){
+                                            $('#mioAlert').show()
+                                    }
+
+                                    else{
+                                         //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                        window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    }
+
+                                });
+
+                            });
+
+                            $("#datepickerF").on("change",function(){
+                                var day = $(this).datepicker('getDate').getDate();
+                                var month = $(this).datepicker('getDate').getMonth()+1;
+                                var year = $(this).datepicker('getDate').getFullYear();
+                                console.log(day);
+                                console.log(month);
+                                console.log(year);
+                                //var requestUrl = "http://192.168.1.105:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                var requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; // non funziona boh
+                                $.get(requestUrl, function(data) {
+                                    console.log('DATI RICEVUTI: ' + data);
+                                    if(data == 0){
+                                            $('#mioAlert').show()
+                                    }
+
+                                    else{
+                                         //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                        window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    }
+
+                                });
+
+                            });
+                        });
+
+
+</script>
 
     <script type="text/javascript">
 
@@ -176,16 +276,7 @@
 
 
 
-            }); // chiude click
-            $('#oggi').DataTable({
-                "scrollY": "270px",
-                "scrollCollapse": true,
-                "searching": false // false to disable search (or any other option)
             });
-            $('.dataTables_length').addClass('bs-select');
-
-
-
         });
 
 
@@ -208,58 +299,96 @@
 
 </head>
 
+<body style="background-color: #bbdefb">
 
-<body style="background-color: peachpuff">
+    <div class="container-fluid">
+    <nav class="navbar navbar-light" style="background-color:#eeffff">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar" style="color: black" >
+                <span class="icon-bar" style="background-color: #8aacc8"></span>
+                <span class="icon-bar" style="background-color: #8aacc8"></span>
+                <span class="icon-bar" style="background-color: #8aacc8"></span>
+            </button>
+            <a href="#" class="navbar-brand" style="color: black">Food Dispenser</a>
+        </div>
 
-<a href="http://localhost:8000/" class="go-back" style="color:salmon"><h4>Home</h4></a>
-<!--    <a href="http://192.168.6.86:8000/" class="go-back" style="color: salmon"> <h3>Home</h3></a>-->
-<div class="text-center">
-    <h1 style="color: salmon">Erogations of {{giorno}}</h1>
-</div>
+        <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center" >
+
+            <ul class="nav navbar-nav">
+                <li ><a href='http://localhost:8000'style="color: black; text-align: center">Home</a></li>
+                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li> <!-- E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
+                <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
+                <li>
+                    <main class="container-fluid">
+                        <div class="row" style="padding: 10px">
+                            <div class="col"><p style="color:black">Date:<input data-date-format="dd/mm/yyyy" id="datepickerI"></p>
+                            </div>
+                        </div>
+                    </main>
+                    <div class="row" style="padding: 10px">
+                    <div class="alert alert-danger" id="mioAlert">No data available!</div>
+                    <script>$('#mioAlert').hide()</script>
+                </div>
+                </li>
+                <li>
+                    <main class="container-fluid">
+                        <div class="row" style="padding: 10px">
+                            <div class="col"><p style="color:black">to:<input data-date-format="dd/mm/yyyy" id="datepickerF"></p>
+                            </div>
+                        </div>
+                    </main>
+                </li>
+            </ul>
+        </div>
+    </div>
+    </nav>
+    </div>
+
+
+<h1 style=" text-align: center; color:cornflowerblue" >Statistics of {{ giorno }}: </h1>
 
 
 <div class="row">
     <div class="container-fluid">
-        <div class="col-sm-4"><div style="border-color: salmon" id="container"></div></div>
+        <div class="col-sm-4"><div id="container"></div></div>
         <div class="col-sm-4"><div id="container1"></div></div>
         <div class="col-sm-4"><div id="container2"></div></div>
     </div>
 </div>
 
-
-<!--
-
-{#<button type= "button" class="btn btn-link" style="color: darksalmon" onclick="pippo('d1','d2')">Show all the table</button>#}
-
-{#<div id="d1" class="row" style="display:block">#}
-{#    <div class="col-sm-12">#}
--->
-
-
-        <div class="table-sm" style="padding:20px">
-        <table id="oggi" class="table table-hover" cellspacing="0" width="100%">
-                <thead style="background-color:peachpuff; border-color: salmon">
-                <tr style="border-bottom-color: salmon" id="prova">
-                    {# <th>Id</th>#}
-                    <th style="color: salmon">Data</th>
-                    <th style="color: salmon">Erogation</th>
-                    <th style="color: salmon">UserMode</th>
-                    <th style="color: salmon">TimeMode</th>
-                </tr>
-                <tbody style="background-color:peachpuff">
-                {% for riga in righe %}
-                    <tr id="old">
-                        {#<td id="id">{{riga.id}} </td>#}
-                        <td style="background-color:peachpuff"id="date">{{riga.date}} </td>
-                        <td style="background-color:peachpuff"style="color: salmon" id="erogation">{{riga.erogation}} </td>
-                        <td style="background-color:peachpuff"id="userMod">{{riga.userMod}} </td>
-                        <td style="background-color:peachpuff"id="timeMod">{{riga.timeMod}} </td>
+<div id="d1" class="row" style="display:none; margin-top: 50px;">
+        <div class="col-sm-12">
+            <table id="oggi" class="table table-hover table-bordered-costum " >
+                    <thead>
+                    <tr id="prova">
+{#                       <th>Id</th>#}
+                        <th>Data</th>
+                        <th>Erogation</th>
+                      <th>UserMode</th>
+                        <th>TimeMode</th>
                     </tr>
-                {% endfor %}
-                </tbody>
+
+                    <tbody>
+                    {% for riga in righe %}
+                        <tr id="old">
+{#                           <td id="id">{{riga.id}} </td>#}
+                            <td id="date">{{riga.date}} </td>
+                            <td id="erogation">{{riga.erogation}} </td>
+                          <td id="userMod">{{riga.userMod}} </td>
+                            <td id="timeMod">{{riga.timeMod}} </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
             </table>
         </div>
+    </div>
 
+
+
+<div class="text-center">
+    <button type= "button" class="btn btn-link" style="color: cornflowerblue" onclick="pippo('d1')">Show the table</button>
+</div>
 
 
 <script>
@@ -380,8 +509,6 @@
 
 
 </script>
-
-
 
 
 
