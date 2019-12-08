@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title> Statistics </title>
+<meta name ="author" content="Veronica Pecchioli">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+
+    <style>
+        .nav > li > a:focus,
+        .nav > li > a:hover
+        {
+            text-decoration: underline;
+            background-color:#bbdefb ;
+            text-align: center;
+        }
+
+         .table-bordered-costum{
+           border-style: solid;
+           border-color: white;
+       }
+
+        .table > tbody,thead,tr,td,th{
+           border-style: inherit;
+           border-color: white;
+           font-weight: normal;
+        }
+
+    </style>
+
+    <script>
+
+        function pippo(aDiv1,) {
+            var e = document.getElementById(aDiv1);
+
+            if (e.style.display == "none") {
+                e.style.display = "block"
+            }
+        }
+
+        // SCRIPT PER I DUE DATETIMEPICKER
+     $('#datepickerI'),$('#datepickerF').datepicker({
+                            weekStart: 1,
+                            daysOfWeekHighlighted: "6,0",
+                            autoclose: true,
+                            todayHighlight: true,
+                        });
+
+                        $(function() {
+                            $('#datepickerI').datepicker();
+                            $('#datepickerF').datepicker();
+
+
+                            $("#datepickerI").on("change",function(){
+                                var day = $(this).datepicker('getDate').getDate();
+                                var month = $(this).datepicker('getDate').getMonth()+1;
+                                var year = $(this).datepicker('getDate').getFullYear();
+                                console.log(day);
+                                console.log(month);
+                                console.log(year);
+                                //var requestUrl = "http://192.168.1.105:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                var requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; // non funziona boh
+                                $.get(requestUrl, function(data) {
+                                    console.log('DATI RICEVUTI: ' + data);
+                                    if(data == 0){
+                                            $('#mioAlert').show()
+                                    }
+
+                                    else{
+                                         //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                        window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    }
+
+                                });
+
+                            });
+
+                            $("#datepickerF").on("change",function(){
+                                var day = $(this).datepicker('getDate').getDate();
+                                var month = $(this).datepicker('getDate').getMonth()+1;
+                                var year = $(this).datepicker('getDate').getFullYear();
+                                console.log(day);
+                                console.log(month);
+                                console.log(year);
+                                //var requestUrl = "http://192.168.1.105:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                var requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; // non funziona boh
+                                $.get(requestUrl, function(data) {
+                                    console.log('DATI RICEVUTI: ' + data);
+                                    if(data == 0){
+                                            $('#mioAlert').show()
+                                    }
+
+                                    else{
+                                         //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                        window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    }
+
+                                });
+
+                            });
+                        });
+
+    </script>
+
+     <!-- Mi serve per vedere i grafici di ultimo/a mese/settimana  -->
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function (){
+            console.log("pronti alla get");
+
+            // grafico erogazioni automatiche/utente
+            var chart = Highcharts.chart('container1', {
+                chart: {
+                    type: 'column', // column
+
+                },
+                title: {
+                    text:''
+                },
+
+                // sistemare xAxis
+
+                xAxis: {
+                    categories: [({{Inizio|safe}} + " to " + {{Fine|safe}})]
+                },
+
+                series: [{
+                    name: 'Erogazioni automatiche',
+                    color: 'green',
+                    data: [{{erogA}}],
+
+                }
+
+                    , {
+                        name: 'Erogazioni utente',
+                        color: 'orange',
+                        data: [{{erogU}}],
+
+
+                    }
+                ],
+
+
+            });
+
+
+            // grafico erogazioni/no erogazioni
+
+            var chart = Highcharts.chart('container', {
+                chart: {
+                    type: 'column', // column
+
+                },
+                title: {
+                    text: ''
+                },
+
+                // sistemare xAxis
+
+                xAxis: {
+                    categories: [({{Inizio|safe}} + " to " + {{Fine|safe}})]
+                },
+
+                series: [{
+                    name: 'Erogazioni',
+                    color: '#ff00ff',
+                    data: [{{erog}}],
+
+                }
+
+                    , {
+                        name: 'No erogazioni',
+                        color: '#00bfff',
+                        data: [{{noErog}}],
+
+                    }
+                ],
+
+
+
+            }); // chiude il chart
+
+
+
+
+
+            // grafico erogazioni giorno/notte
+            var chart = Highcharts.chart('container2', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
+                chart: {
+                    type: 'column', // column
+
+                },
+
+                title: {
+                    text: ''
+                },
+
+                // sistemare xAxis
+
+                xAxis: {
+                    categories: [({{Inizio|safe}} + " to " + {{Fine|safe}})]
+                },
+
+                series: [{
+                    name: 'Erogazioni modalità giorno',
+                    color: '#ffd700',
+                    data: [{{erogG}}],
+
+                }
+
+                    , {
+                        name: 'Erogazioni modalità notte',
+                        color: '#4169e1',
+                        data: [{{erogN}}],
+
+                    }
+                ],
+
+
+
+            }); // chiude il chart
+
+    });
+
+
+    </script>
+
+
+
+
+
+</head>
+
+
+
+<body style="background-color: #bbdefb">
+
+    <div class="container-fluid">
+    <nav class="navbar navbar-light" style="background-color:#eeffff">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar" style="color: black" >
+                <span class="icon-bar" style="background-color:#8aacc8"></span>
+                <span class="icon-bar"style="background-color: #8aacc8"></span>
+                <span class="icon-bar"style="background-color: #8aacc8"></span>
+            </button>
+            <a href="#" class="navbar-brand" style="color: black">Food Dispenser</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center" >
+
+            <ul class="nav navbar-nav">
+                <li ><a href='http://localhost:8000'style="color: black; text-align: center">Home</a></li>
+                <li ><a href='#'style="color: black; text-align: center">Last Week</a></li> <!-- E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
+                <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
+                <li>
+                    <main class="container-fluid">
+                        <div class="row" style="padding: 10px">
+                            <div class="col"><p style="color:black">Date:<input data-date-format="dd/mm/yyyy" id="datepickerI"></p>
+                            </div>
+                        </div>
+                    </main>
+                    <div class="row" style="padding: 10px">
+                    <div class="alert alert-danger" id="mioAlert">No data available!</div>
+                    <script>$('#mioAlert').hide()</script>
+                </div>
+                </li>
+                <li>
+                    <main class="container-fluid">
+                        <div class="row" style="padding: 10px">
+                            <div class="col"><p style="color:black">to:<input data-date-format="dd/mm/yyyy" id="datepickerF"></p>
+                            </div>
+                        </div>
+                    </main>
+                </li>
+            </ul>
+        </div>
+    </div>
+    </nav>
+    </div>
+
+<h1 style=" text-align: center; color:cornflowerblue" >Statistics </h1>
+
+
+<div class="row">
+    <div class="container-fluid">
+        <div class="col-sm-4" id="container"></div>
+        <div class="col-sm-4" id="container1"></div>
+        <div class="col-sm-4" id="container2"></div>
+    </div>
+</div>
+
+    <div id="d1" class="row" style="display:none; margin-top: 50px;">
+        <div class="col-sm-12">
+            <table id="oggi" class="table table-hover table-bordered-costum " >
+                    <thead>
+                    <tr id="prova">
+{#                       <th>Id</th>#}
+                        <th>Data</th>
+                        <th>Erogation</th>
+                      <th>UserMode</th>
+                        <th>TimeMode</th>
+                    </tr>
+
+                    <tbody>
+                    {% for riga in righe %}
+                        <tr id="old">
+{#                           <td id="id">{{riga.id}} </td>#}
+                            <td id="date">{{riga.date}} </td>
+                            <td id="erogation">{{riga.erogation}} </td>
+                          <td id="userMod">{{riga.userMod}} </td>
+                            <td id="timeMod">{{riga.timeMod}} </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+<div class="text-center">
+    <button type= "button" class="btn btn-link" style="color: cornflowerblue" onclick="pippo('d1')">Show the table</button>
+</div>
+
+
+
+</body>
+</html>
