@@ -17,6 +17,8 @@ urlpatterns = [
 
     url(r'^periodo/', views.periodo, name='periodo'),
 
+    url(r'^asseX/', views.asseXIsto, name='asseX'),
+
     # da eliminare
     url(r'^erog/', views.invioErog, name='erog'),  # per ricevere i dati di erogazioni/passaggi
 

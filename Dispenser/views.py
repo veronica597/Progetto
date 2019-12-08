@@ -7,6 +7,7 @@ from .models import DatiRaccolti
 from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime
+from datetime import datetime
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db import models
@@ -49,9 +50,9 @@ def sensor(request):  # processa i dati da inserire nel database
 def client(request):  # processa i dati inviati a seguito del click dell'utente
 
     if request.method == 'GET':
-
         print('get')
-        oggi = datetime.date.today()
+        # oggi = datetime.date.today()
+        oggi = datetime.today()
         e = DatiRaccolti.objects.values('date').filter(date__gte=oggi, erogation=True).order_by('date').count()
         noE = DatiRaccolti.objects.values('date').filter(date__gte=oggi, erogation=False).order_by('date').count()
 
@@ -61,7 +62,8 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
         context = {
             'erog': e,
             'noErog': noE,
-            'righe': DatiRaccolti.objects.values().filter(date__gte=oggi)
+            'righe': DatiRaccolti.objects.values().filter(date__gte=oggi)[:20],  # .order_by('-date') DA METTERE PER ORDINARE TABELLA
+            'Righe': DatiRaccolti.objects.values().filter(date__gte=oggi)
         }
 
         return render(request, 'get_post.html', context)
@@ -72,27 +74,30 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
 @csrf_exempt
 def sendData(request):  # view che invia i dati per costruire il CHART erogazioni utente/automatiche lato html
 
-    # anno = request.GET.__getitem__('anno')
-    # mese = request.GET.__getitem__('mese')
-    # giorno = request.GET.__getitem__('giorno')
-    anno = request.GET.get('anno')
-    mese = request.GET.get('mese')
-    giorno = request.GET.get('giorno')
+    anno = request.GET.__getitem__('anno')
+    mese = request.GET.__getitem__('mese')
+    giorno = request.GET.__getitem__('giorno')
+
+
     stringa = anno + "-" + mese + "-" + giorno
-    stringaI = giorno + "-" + mese + "-" + anno  # per categories grafico
+    stringaI = giorno + "-" + mese + "-" + anno  # per categories grafico -- vedere come togliere lo zero davanti
+
     print(stringa)
 
-    # d = datetime.datetime(int(anno), int(mese), int(giorno), 0, 0, 0, tzinfo)
-    # print(d)
+    eA = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=True, userMod=False).order_by(
+        'date').count()
+    eU = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=True, userMod=True).order_by(
+        'date').count()
 
-    eA = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=True, userMod=False).order_by('date').count()
-    eU = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=True, userMod=True).order_by('date').count()
+    e = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=True).order_by(
+        'date').count()  # erogazioni
+    noE = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=False).order_by(
+        'date').count()  # no erogazioni
 
-    e = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=True).order_by('date').count()  # erogazioni
-    noE = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=False).order_by('date').count()  # no erogazioni
-
-    eG = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=True, timeMod=True).order_by('date').count()  # giorno
-    eN = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=True, timeMod=False).order_by('date').count()  # notte
+    eG = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=True, timeMod=True).order_by(
+        'date').count()  # giorno
+    eN = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=True, timeMod=False).order_by(
+        'date').count()  # notte
 
     print("eA: " + str(eA))
     print("eU: " + str(eU))
@@ -103,14 +108,12 @@ def sendData(request):  # view che invia i dati per costruire il CHART erogazion
     print("eG: " + str(eG))
     print("eN: " + str(eN))
 
-    # i = Q(date__lte=stringa)
-    # f = Q(date__gte=stringa)
-    #
-    # # p = DatiRaccolti.objects.values().filter(date__gte=stringa).get(pk=1)
-    # # print(p)
-
-    context = {'righe': DatiRaccolti.objects.values().filter(date__startswith=stringa).order_by('date'),  # sistemare contains
-               'giorno': json.dumps(stringaI), 'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG, 'erogN': eN}
+    context = {'righe': DatiRaccolti.objects.values().filter(date__contains=stringa).order_by('date'),
+               # sistemare contains
+               'giorno': stringaI, 'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG,
+               'erogN': eN, 'Giorno': json.dumps(stringaI),
+               'Righe': DatiRaccolti.objects.values().filter(date__contains=stringa)[:20]
+               }
 
     return render(request, 'chartInside.html', context)
 
@@ -120,10 +123,15 @@ def absentData(request):
     anno = request.GET.__getitem__('anno')
     mese = request.GET.__getitem__('mese')
     giorno = request.GET.__getitem__('giorno')
-    stringa = anno + "-" + mese + "-" + giorno
+
+    if int(giorno) < 10:
+        stringa = anno + "-" + mese + "-" + '0' + giorno  # + ' '
+    else:
+        stringa = anno + "-" + mese + "-" + giorno
+
     print(stringa)
 
-    f = DatiRaccolti.objects.values().filter(date__contains=stringa).order_by('date')  # sistemare contains
+    f = DatiRaccolti.objects.values().filter(date__contains=stringa)  # .order_by('date')  # sistemare contains
     lu = len(f)
 
     return JsonResponse(lu, safe=False)
@@ -132,7 +140,7 @@ def absentData(request):
 @csrf_exempt
 def ultimoDato(request):  # per aggiornamento tabella e chart
 
-    stringa = datetime.date.today()
+    stringa = datetime.today()
     elementi = DatiRaccolti.objects.values().filter(date__gte=stringa)
 
     lu = len(elementi)
@@ -154,8 +162,8 @@ def periodo(request):  # per filtraggio mese/settimana
     id = request.GET.__getitem__('id')
     print('id: ' + id)
 
-    # oggi = datetime.date.today()
-    oggi = datetime.date(2019, 10, 22)
+    oggi = datetime.today()
+    # oggi = datetime.date(2019, 10, 22)
 
     meseC = oggi.month
     giornoC = oggi.day
@@ -177,7 +185,8 @@ def periodo(request):  # per filtraggio mese/settimana
             meseP = meseC - 1
             annoP = annoC
 
-        passato = datetime.date(annoP, meseP, giornoP)
+        # passato = datetime.date(annoP, meseP, giornoP)
+        passato = datetime(annoP, meseP, giornoP).isoformat(' ')
 
     elif id == '0':  # settimana
         print("settimana")
@@ -205,21 +214,28 @@ def periodo(request):  # per filtraggio mese/settimana
             giornoP = giornoC - 7
             annoP = annoC
 
-        passato = datetime.date(annoP, meseP, giornoP)
+        # passato = datetime.date(annoP, meseP, giornoP)
+        passato = datetime(annoP, meseP, giornoP).isoformat(' ')
 
     print(passato)
 
     inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
     fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
 
-    eA = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True, userMod=False).order_by('date').count()
-    eU = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True, userMod=True).order_by('date').count()
+    eA = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True,
+                                                    userMod=False).order_by('date').count()
+    eU = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True,
+                                                    userMod=True).order_by('date').count()
 
-    e = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True).order_by('date').count()  # erogazioni
-    noE = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=False).order_by('date').count()  # no erogazioni
+    e = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True).order_by(
+        'date').count()  # erogazioni
+    noE = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=False).order_by(
+        'date').count()  # no erogazioni
 
-    eG = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True, timeMod=True).order_by('date').count()  # giorno
-    eN = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True, timeMod=False).order_by('date').count()  # notte
+    eG = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True,
+                                                    timeMod=True).order_by('date').count()  # giorno
+    eN = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=oggi, erogation=True,
+                                                    timeMod=False).order_by('date').count()  # notte
 
     print("eA: " + str(eA))
     print("eU: " + str(eU))
@@ -230,8 +246,11 @@ def periodo(request):  # per filtraggio mese/settimana
     print("eG: " + str(eG))
     print("eN: " + str(eN))
 
-    context = {'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG, 'erogN': eN, 'inizio': json.dumps(inizio), 'fine': json.dumps(fine),
-               'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=oggi, erogation=True, userMod=False).order_by('date')}
+    context = {'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG, 'erogN': eN,
+               'inizio': inizio, 'fine': fine, 'Inizio': json.dumps(inizio), 'Fine': json.dumps(fine),
+               'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=oggi, erogation=True, userMod=False).order_by('date'),
+               'Righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=oggi, erogation=True, userMod=False)[:20]
+               }
     return render(request, 'periodo.html', context)
 
 
@@ -258,6 +277,7 @@ def invioErog(request):  # views per grafico erogazioni/passaggi
     # context = {'giorno': stringa, 'erogA': eA, 'erogU': eU}
     # return render(request, 'chartInside.html', context)
 
+
 # views per grafico erogazioni giorno/notte
 
 
@@ -269,8 +289,10 @@ def invioGiornoNotte(request):
     stringa = anno + "-" + mese + "-" + giorno
     print(stringa)
 
-    eG = DatiRaccolti.objects.values('date').filter(date__gte=stringa, erogation=True, timeMod=True).order_by('date').count()  # giorno
-    eN = DatiRaccolti.objects.values('date').filter(date__gte=stringa, erogation=True, timeMod=False).order_by('date').count()  # notte
+    eG = DatiRaccolti.objects.values('date').filter(date__gte=stringa, erogation=True, timeMod=True).order_by(
+        'date').count()  # giorno
+    eN = DatiRaccolti.objects.values('date').filter(date__gte=stringa, erogation=True, timeMod=False).order_by(
+        'date').count()  # notte
 
     # dovro' mettere tipo date__day = giorno, date__month = mese , ...
 
@@ -282,4 +304,66 @@ def invioGiornoNotte(request):
 
     # context = {'giorno': stringa, 'erogA': eA, 'erogU': eU}
     # return render(request, 'chartInside.html', context)
+
+# view per creare l'array di date in un periodo (questi dati andranno a costituire l'asse x del grafico
+
+
+def asseXIsto(request):
+    # recupero il periodo -- dovro' recuperarlo dai parametri in request.GET
+
+    inizio = datetime(2019, 11, 27).isoformat(' ')
+    fine = datetime(2019, 12, 5).isoformat(' ')
+    db = DatiRaccolti.objects.values('date').filter(date__range=(inizio, fine))
+
+    # rendo db un array
+
+    listDb = list()
+    formatList = list()  # serve per renderizzare le date lato html
+
+    for entry in db:
+        listDb.append(entry['date'])
+
+    # print("lista date: ", listDb)
+    print(len(listDb))
+
+    arrayDate = []
+    arrayErog = []
+    i = 0
+    s = 0
+
+    while i < len(listDb):
+        x = listDb.pop(i)
+        print("x: ", x)
+        arrayDate.append(x)
+        formatList.append(x.strftime("%d-%m-%y"))
+        j = i + 1
+
+        while (j < len(listDb)) and (listDb[j].year == x.year) and (listDb[j].month == x.month) and (listDb[j].day == x.day):
+            j = j + 1
+            s = j
+
+        i = s
+
+    print("arrayDate: ", arrayDate)
+
+    # raccolgo i dati dell'asse y
+
+    for k in range(len(arrayDate)):
+        if k == len(arrayDate) - 1:  # cambiare eventualmente con contains
+            e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=fine, erogation=True).count()
+
+        else:
+            e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=arrayDate[k+1], erogation=True).count()
+
+        print("Le erogazioni del giorno " + str(arrayDate[k]) + " sono: " + str(e))
+        arrayErog.append(e)
+
+    print("arrayErog: ", arrayErog)
+
+    context = {'arrayDate': json.dumps(formatList), 'arrayErog': arrayErog,
+               'inizio': json.dumps(formatList[0]), 'fine': json.dumps(formatList[len(formatList) - 1])}
+
+    return render(request, 'istog.html', context)
+
+
 

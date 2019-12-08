@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Get to the ESP8266</title>
+    <title>Today's data</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -11,29 +12,46 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
     </script>
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    
+    <style>
+        .alert-custom{
+            background-color: salmon;
+            color: #fff;
+            text-align: center;
+
+        }
+        
+        .btn-custom{
+            background-color: salmon;
+            color: #fff;
+            text-align: center;
+        }
+        
+    
+    </style>
     
 
     <script type="text/javascript" >
 
         $(document).ready(function (){
             console.log("pronti alla get");
-       
             
-            //var INDIRIZZO_IP = "192.168.1.105"; // indirizzo IP del computer
-            //var urlHome = "http://192.168.1.105:8000/dispenser/";
 
             // Casa Chiara
-            var DEVICE_IP = '192.168.1.128'; // indirizzo IP della scheda ESP8266
-            var url = "http://192.168.1.105:8000/dispenser/sensor/";
+            //var DEVICE_IP = '192.168.1.128'; // indirizzo IP della scheda ESP8266
 
             // MICC
-            //var DEVICE_IP = '192.168.1.134';
-            //var url = "http://INDIRIZZO_IP:8000/dispenser/client/";
+            var DEVICE_IP = '192.168.0.134';
+           
 
             // HUAWEI P30 lite -- 192.168.43.37
             //var DEVICE_IP = '192.168.43.128';
-            //var url = "http://192.168.43.37:8000/dispenser/client/";
-
 
             // RIGUARDARE 
             
@@ -48,60 +66,160 @@
                     
 
             $("#on").click(attivaServo);
+
+             $('#oggi').DataTable({
+                "scrollY": "220px",
+                "scrollCollapse": true,
+                "searching": false, // false to disable search (or any other option)
+                "paging": false
+            });
+            $('.dataTables_length').addClass('bs-select');
+
+
         
         });
 
 
     </script>
-    <!-- controllare con la cartella static -->
 
+    <!--<script language="JavaScript" type="text/javascript">
+        function pippo(aDiv1,aDiv2) {
+        //eventuale tastto per tt tabella
+    }
+
+    </script>
+-->
 </head>
 
-<body>
 
-    <h1 id="tit"> Let's play with the servo </h1>
 
-    <!-- parte da matchare con arduino -->
-    <div id="arduino">
+<body style="background-color: white">
 
-        <button id="on" type="button" class="btn btn-primary btn-lg "> Erogate food </button>
 
+   <a href="http://localhost:8000/" class="go-back" style="color: salmon"> <h4>Home</h4></a>
+<!--    <a href="http://192.168.6.86:8000/" class="go-back" style="color: salmon"> <h3>Home</h3></a>-->
+
+    <div class="text-center">
+         <h1 id="tit" style="color: salmon">Today's data:</h1>
     </div>
+    <p class="lead">In this page we can see all the information about about the use of the dispenser on the current day </p>
+    <p class="lead" id="tit"> If you want to erogate food press the following button:   <button id="on" type="button" class="btn btn-custom"> Erogation </button></p>
 
-    <div id="stampa"></div>
-    
-    <div id="no_erog"> </div>
-    
+
+
+
+
+
 <!--   grafico e tabella -->
-    <div id="container"></div>
+
+    <div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col align-self-center">
+            <div id="container" style="display: none"></div>
+        </div>
+<!--            <div class="col-sm-4">-->
+<!--
+{#            <p class="lead" id="tit"> If you want to erogate food press the following button:</p>#}
+{#            <p></p>#}
+{#            <div id="arduino">#}
+{#                <button id="on" type="button" class="btn btn-default"> Erogation </button>#}
+{#            </div>#}
+-->
+  </div>
+          </div>
+         
+<!--            <div id="no_erog"> </div>-->
+        
+        <div class="container" style=" align-items: center; justify-content: center;margin-top: 100spx"> 
+                <div class="row justify-content-md-center">
+        
+                    <div class="col align-self-center" >
+<!--                    <div class="col-md-4 col-offset-md-8">-->
+                        
+                <div id="no_erog" class="alert alert-custom" role="alert" style="display: none"> <!-- style="display: none; background-color: peachpuff; color: white" -->
+                    
+<!--                    per icona -->
+<!--
+                    <div class="col-12 col-md-6 col-lg-4">
+                    <svg class="icon"><use xlink:href="/bootstrap-italia/dist/svg/sprite.svg#it-info-circle"></use></svg> it-info-circle
+                  </div>
+-->
+<!--                    <h4 class="alert-heading" >Avviso di successo!</h4>-->
+                    <h3> Non ci sono ancora dati per il giorno corrente ! </h3>
+<!--                    <hr>-->
+<!--                    <p class="mb-0">Quando necessario, assicurarti di inserire le utilità di margine per mantenere gli spazi equilibrati.</p>-->
+                   
+                </div>
+                        
+                 </div>
+                </div>
+    </div>
+      
+<!--            </div>-->
+
+       
+
+
+
+
+   <div id='contenitore' class="container" style="display: none">
+    <div id="row" class="row justify-content-md-center">
+<!--{#        <div id="p1" class="col-md-5">#}-->
+       <div id="p1" class="col align-self-center"> <!-- colonna centrale NEL CASO INIZIALE IN CUI HO SOLO QUESTA -->
+
+
+
+       <div class="table-sm">
+        <table id="oggi" class="table table-hover table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                    <tr id="prova">
+<!--{#                       <th>Id</th>#}-->
+                        <th>Data</th>
+                        <th>Erogation</th>
+<!--
+{#                       <th>UserMode</th>#}
+{#                       <th>TimeMode</th>#}
+-->
+                    </tr>
+
+                    <tbody>
+                    {% for riga in righe %}
+                        <tr id="old">
+<!--{#                           <td id="id">{{riga.id}} </td>#}-->
+                            <td id="date">{{riga.date}} </td>
+                            <td id="erogation">{{riga.erogation}} </td>
+<!--
+{#                           <td id="userMod">{{riga.userMod}} </td>#}
+{#                            <td id="timeMod">{{riga.timeMod}} </td>#}
+-->
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+
+        </div>
+    </div>
+   </div>
+   </div>
+    </div>
     
-    <table id="oggi">
-        <tr id="prova">
-            <th>Id</th>
-            <th>Data</th>
-            <th>Erogation</th>
-            <th>UserMode</th>
-            <th>TimeMode</th>
-        </tr>
-        
-        
-
-        {% for riga in righe %}
-        <tr id="old">
-
-            <td id="id"> {{riga.id}} </td>
-            <td id="date"> {{riga.date}} </td>
-            <td id="erogation"> {{riga.erogation}} </td>
-            <td id="userMod"> {{riga.userMod}} </td>
-            <td id="timeMod"> {{riga.timeMod}} </td>
 
 
-        </tr>
-        {% endfor %}
 
-    </table>
-    
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
      <script type="text/javascript">
         
       //$(document).ready(function (){
@@ -154,84 +272,135 @@
                                 
                                 $.ajax({
                                     type: 'GET',
-                                    url: "http://192.168.1.105:8000/dispenser/giorno/",
-                                    //url: "http://172.17.196.174:8000/dispenser/giorno/",
-                                    //url: "http://localhost:8000/dispenser/giorno/",
+                                    //url: "http://192.168.1.105:8000/dispenser/giorno/",
+                                    //url: "http://192.168.6.86:8000/dispenser/giorno/",
+                                    url: "http://localhost:8000/dispenser/giorno/",
                             
                                     success: function(data){
                                         console.log("dati ricevuti"); 
-                                        console.log(typeof(data)); 
+                                        console.log(typeof(data));
+
+
                                      
                                         var series0 = chart.series[0]; // erogazioni 
                                         console.log(series0.yData); 
                                         var series1 = chart.series[1]; // no erogazioni
 
-                                        var lastId = $('#oggi tr:last').find('#id').html(); 
-                                        console.log(lastId); 
+//                                        var lastId = $('#oggi tr:last').find('#id').html();
+//                                        console.log(lastId); 
                                         var lastDate = $('#oggi tr:last').find('#date').html(); 
-                                        console.log(lastDate); 
-                                        var lastErog = $('#oggi tr:last').find('#erogation').html(); 
+                                        console.log(lastDate);
+                                        var lastErog = $('#oggi tr:last').find('#erogation').html();
                                         console.log(lastErog); 
-                                        var lastUser = $('#oggi tr:last').find('#userMod').html(); 
-                                        console.log(lastUser); 
-                                        var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
-                                        console.log(lastTime); 
+//                                        var lastUser = $('#oggi tr:last').find('#userMod').html(); 
+//                                        console.log(lastUser); 
+//                                        var lastTime = $('#oggi tr:last').find('#timeMod').html();
+//                                        console.log(lastTime); 
                                         
                                         
                                         if(typeof(data) === 'string'){
-                                            $('#no_erog').html(data).css({color:'red'}); 
-                                            $('#container').hide();
-                                            $('#oggi').hide();
+                                            //$('#no_erog').html(data).css({color:'red'}); 
+                                            //$('#container').hide();
+                                            //$('#oggi').hide();
+                                            //$('#contenitore').hide(); 
+                                            $('#no_erog').css({display:'block'});
                                         }
 
                                         else{
                                             $('#no_erog').hide();
-                                            $('#container').show();
-                                            $('#oggi').show();
+                                            //$('#container').show();
+                                            //$('#oggi').show();
+                                            //$('#contenitore').show(); 
+                                            $('#contenitore').css({display: 'block'}); 
+                                            $('#container').css({display: 'block'}); 
+
+                                            var d = new Date(data['date']);
+                                            //console.log("DATAAAAAAAA: " + d);
+
+                                            var formatData = formatDate(d);
+                                            console.log("DATA: " + formatData);
+                                           
+                                            var e = data['erogation'].toString();
+                                            var E = e.substr(0,1).toUpperCase() + e.substr(1); // trasformo true/false in True/False
+                                            //console.log(E);
+
+                                            var u = data['userMod'].toString();
+                                            var U = u.substr(0,1).toUpperCase() + u.substr(1);
+                                            //console.log(U);
+
+                                            var t = data['timeMod'].toString();
+                                            var T = t.substr(0,1).toUpperCase() + t.substr(1);
+                                            //console.log(T);
                                          
+                                            //if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
+
+                                            ////CONTROLLARE PERCHE' AGGIUNGE A CASO!!!!!
+                                            //  && typeof lastUser === 'undefined' && typeof lastTime === 'undefined'
                                             
-                                            if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
-
-                                        // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
-
-                                        // oppure i dati precedenti sono diversi dai dati appena ricevuti
-
-                                        // allora li renderizzo
-                                                console.log("i dati sono undefined o sono diversi a quelli precedenti");
+                                            // funzione localCompare()
+                                            
+          
+                                            console.log("VALUE OF  LAST DATE: " + lastDate.valueOf());
+                                            console.log("VALUE OF FORMATDATA: " + formatData.valueOf());
+//                                            if((lastDate == formatData && lastErog != E) || (lastDate != formatData)){
+//                                                console.log("WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"); 
+//                                            }
+//                                            if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' ) ||
+//                                                [(lastDate == formatData && lastErog != E) || (lastDate != formatData)]){
                                                 
-                                                var d = new Date(data['date']); 
+                                                if((lastDate == formatData && lastErog != E) || (lastDate != formatData)){  
+                                                    
+                                                    // NB : quando clicco su 1, 2 in basso alla tabella in pratica ricomincia a prendere il primo
+                                                    // dato della tabella (il piu' vecchio) e quindi il confronto risulta falso e ho un'altra riga aggiunta (e il grafico sale).
+                                                    // vedere se il controllo su undefined serve ancora 
+
+                                                    // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
+
+                                                    // oppure i dati precedenti sono diversi dai dati appena ricevuti
+
+                                                    // allora li renderizzo
+                                                    console.log("i dati sono undefined o sono diversi a quelli precedenti");
+
+
+
                                         
                                                // formatto i dati in ingresso in modo da rispettare il formato presente nella tabella 
 
-                                                var formatData = formatDate(d); 
-                                                console.log("DATA: " + formatData);
+//                                                {#var formatData = formatDate(d); #}
+//                                                {#console.log("DATA: " + formatData);#}
+//                                                {##}
+//                                                {#console.log(typeof data['erogation']);#}
+//                                                {##}
+//                                                {#var e = data['erogation'].toString(); #}
+//                                                {#var E = e.substr(0,1).toUpperCase() + e.substr(1); // trasformo true/false in True/False#}
+//                                                {#console.log(E);#}
+//                                                {##}
+//                                                {#var u = data['userMod'].toString();#}
+//                                                {#var U = u.substr(0,1).toUpperCase() + u.substr(1); #}
+//                                                {#console.log(U);#}
+//                                                {##}
+//                                                {#var t = data['timeMod'].toString();#}
+//                                                {#var T = t.substr(0,1).toUpperCase() + t.substr(1); #}
+//                                                {#console.log(T);#}
+//
+//
+//                                                {#"<td id='userMod'>" + U + "</td>" +#}
+//                                                {# "<td id='id'>" + data['id'] + "</td>" +#}
+
+//                                                $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='date'>" + ' ' + formatData + "</td>" +
+//                                                "<td id='erogation'>" + E + "</td>" + "</tr>"); // riguardare
                                                 
-                                                console.log(typeof data['erogation']);
+                                                 $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='date'>" + formatData + "</td>" +
+                                                "<td id='erogation'>" + E + "</td>" + "</tr>"); // riguardare
 
-                                                var e = data['erogation'].toString(); 
-                                                var E = e.substr(0,1).toUpperCase() + e.substr(1); // trasformo true/false in True/False
-                                                console.log(E);
-
-                                                var u = data['userMod'].toString();
-                                                var U = u.substr(0,1).toUpperCase() + u.substr(1); 
-                                                console.log(U);
-
-                                                var t = data['timeMod'].toString();
-                                                var T = t.substr(0,1).toUpperCase() + t.substr(1); 
-                                                console.log(T);
-
-                                                $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + formatData + "</td>" +
-                                                "<td id='erogation'>" + E + "</td>" + "<td id='userMod'>" + U + "</td>" +
-                                                "<td id='timeMod'>" + T + "</td>" + "</tr>"); // riguardare
 
                                                 if(data['erogation'] == true){
                                                  
                                                     series0.setData([series0.yData[0] + 1]);
-                                              
                                                 }
                                                     
-                                                else{ // no erogazioni 
-                                                  
+                                                else{ // no erogazioni
+
                                                     series1.setData([series1.yData[0] + 1]);
                                                 }
                                             }
@@ -259,11 +428,11 @@
 
                     }, // chiude chart 
                     
-                    
+
                     title: {
-                        text: 'Erogazioni di oggi'
+                        text: ''
                     },
-                    
+
                     // sistemare xAxis
 
 //                    xAxis: {
@@ -291,17 +460,8 @@
 
 
 
-                }); 
-   
-         
-        
-         
-         
-         
-         
+                });
       //});
-    
-    
     </script>
 
 </body>

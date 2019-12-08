@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Renderizzazione istogramma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+    </script>
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+</head>
+<body>
+    <div id="container"></div>
+    
+    <script type="text/javascript">
+        
+        // grafico 
+    var chart = Highcharts.chart('container', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
+        chart: {
+            type: 'line',
+
+        },
+
+        title: {
+            text:'Andamento erogazioni tra il ' + {{inizio|safe}} + ' e il ' + {{fine|safe}} 
+        },
+
+        // sistemare xAxis
+
+        xAxis: {
+            categories: {{arrayDate|safe}}
+        },
+        
+        yAxis: {
+            title: {
+                text: 'Erogazioni'
+            }
+        },
+        
+        plotOptions: { //vedere 
+            line: {
+                dataLabels: {
+                    enabled: true
+                },
+                enableMouseTracking: false
+            }
+        },
+
+        series: [{
+            //name: 'Erogazioni',
+            color: 'blue',
+            data: {{arrayErog}},
+
+        }
+
+//            , {
+//                name: 'Erogazioni utente',
+//                color: '#3cb371',
+//                data: [{{erogU}}],
+//
+//            }
+        ],
+
+
+
+    }); // chiude il chart
+
+    
+    
+    
+    </script>
+
+</body>
+</html>
