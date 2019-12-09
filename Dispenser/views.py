@@ -143,6 +143,29 @@ def absentData(request):
 
 
 @csrf_exempt
+def absentDataPeriod(request): #per periodo scelto da utente
+    anno = request.GET.__getitem__('anno')
+    mese = request.GET.__getitem__('mese')
+    giorno = request.GET.__getitem__('giorno')
+
+    stringaI = anno + "-" + mese + "-" + giorno
+
+    annoF = request.GET.__getitem__('annoF')
+    meseF = request.GET.__getitem__('meseF')
+    giornoF = request.GET.__getitem__('giornoF')
+
+    stringaF = annoF + "-" + meseF + "-" + giornoF
+
+    print(stringaI,stringaF)
+
+    f = DatiRaccolti.objects.values().filter(date__gte=stringaI,date__lte=stringaF).order_by('date')  # sistemare contains
+    lu = len(f)
+
+    return JsonResponse(lu, safe=False)
+
+
+
+@csrf_exempt
 def ultimoDato(request):  # per aggiornamento tabella e chart
 
     stringa = datetime.date.today()
@@ -168,7 +191,7 @@ def periodo(request):  # per filtraggio mese/settimana
     print('id: ' + id)
 
     oggi = datetime.date.today()
-    #oggi = datetime.date(2019, 10, 22)
+
 
     meseC = oggi.month
     giornoC = oggi.day
@@ -221,7 +244,23 @@ def periodo(request):  # per filtraggio mese/settimana
 
         passato = datetime.date(annoP, meseP, giornoP)
 
-    print(passato)
+    elif id == '2':  # periodo scelto da utente
+
+
+         meseP=request.GET.__getitem__('mese')
+         giornoP = request.GET.__getitem__('giorno')
+         annoP = request.GET.__getitem__('anno')
+
+         passato = annoP + "-" + meseP + "-" + giornoP
+
+
+         meseC = request.GET.__getitem__('meseF')
+         giornoC = request.GET.__getitem__('giornoF')
+         annoC = request.GET.__getitem__('annoF')
+
+         oggi = annoC + "-" + meseC + "-" + giornoC
+
+    print(oggi,passato)
 
     inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
     fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)

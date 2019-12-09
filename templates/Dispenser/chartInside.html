@@ -53,66 +53,96 @@
         }
 
         // SCRIPT PER I DUE DATETIMEPICKER
-     $('#datepickerI'),$('#datepickerF').datepicker({
+
+                 $('#datepickerI'),$('#datepickerF').datepicker({
                             weekStart: 1,
                             daysOfWeekHighlighted: "6,0",
                             autoclose: true,
                             todayHighlight: true,
                         });
-
                         $(function() {
                             $('#datepickerI').datepicker();
                             $('#datepickerF').datepicker();
 
 
-                            $("#datepickerI").on("change",function(){
-                                var day = $(this).datepicker('getDate').getDate();
-                                var month = $(this).datepicker('getDate').getMonth()+1;
-                                var year = $(this).datepicker('getDate').getFullYear();
+                            $("#datepickerI").on("change", function () {
+                                day = $(this).datepicker('getDate').getDate();
+                                month = $(this).datepicker('getDate').getMonth() + 1;
+                                year = $(this).datepicker('getDate').getFullYear();
                                 console.log(day);
                                 console.log(month);
                                 console.log(year);
-                                //var requestUrl = "http://192.168.1.105:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                var requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; // non funziona boh
-                                $.get(requestUrl, function(data) {
-                                    console.log('DATI RICEVUTI: ' + data);
-                                    if(data == 0){
-                                            $('#mioAlert').show()
-                                    }
 
-                                    else{
-                                         //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                        window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    }
+                                $("#datepickerF").removeAttr("disabled"); // riattivo secondo calendario
 
-                                });
+                                console.log("tipo yeaar" + " " + typeof year);
+
+                                console.log("tipo yearF" + " " + typeof yearF);
+
 
                             });
 
-                            $("#datepickerF").on("change",function(){
-                                var day = $(this).datepicker('getDate').getDate();
-                                var month = $(this).datepicker('getDate').getMonth()+1;
-                                var year = $(this).datepicker('getDate').getFullYear();
-                                console.log(day);
-                                console.log(month);
-                                console.log(year);
-                                //var requestUrl = "http://192.168.1.105:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                var requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; // non funziona boh
-                                $.get(requestUrl, function(data) {
-                                    console.log('DATI RICEVUTI: ' + data);
-                                    if(data == 0){
-                                            $('#mioAlert').show()
-                                    }
 
-                                    else{
-                                         //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                        window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    }
+                            //caricamento(); // SE LO METTO QUI MI CARICA INDIPENDENTEMENTE IL GIORNO
 
-                                });
 
-                            });
+                            $("#datepickerF").on("change", function (){
+
+                               // caricamento(); // se lo metto qui il controllo poi mi chiama il giorno selezionato, MA SE IO VOGLIO UN PERIODO?? E CMQ NN VERREBBE NEMMENO IL GIORNO SELEZIONATO PERCHè NN CLICCO SU NIENTE
+                                dayF = $(this).datepicker('getDate').getDate();
+                                monthF = $(this).datepicker('getDate').getMonth() + 1;
+                                yearF = $(this).datepicker('getDate').getFullYear();
+
+                                console.log(dayF);
+                                console.log(monthF);
+                                console.log(yearF);
+
+                                console.log("tipo year2" +" "+ typeof year);
+                                console.log("tipo yearF2" +" "+ typeof yearF);
+                                caricamento();
+
                         });
+
+
+        });
+
+
+
+
+
+
+                           function caricamento() {
+                                if(year == yearF && month== monthF && day == dayF) {
+                                    console.log(" Mostro giorno scelto dal primo cal");
+                                   requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; // non funziona boh
+                                    $.get(requestUrl, function (data) {
+                                        console.log('DATI RICEVUTI: ' + data);
+                                        if (data == 0) {
+                                            $('#mioAlert').show()
+                                        } else {
+                                            //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                        }
+
+                                    });
+
+                                } else{
+                                    console.log(" Ho sel anche sul sec calendario. Mostro periodo selezionato! ");
+                                    requestUrl = "http://localhost:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                    $.get(requestUrl, function (data) {
+                                         console.log('DATI RICEVUTI: ' + data);
+                                        if (data == 0) {
+                                            $('#mioAlert').show()
+                                        }else {
+                                            window.location.href = "http://localhost:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                        }
+                                     });
+
+
+                                }
+                            }
+
+
 
 
 </script>
@@ -337,7 +367,7 @@
                 <li>
                     <main class="container-fluid">
                         <div class="row" style="padding: 10px">
-                            <div class="col"><p style="color:black">to:<input data-date-format="dd/mm/yyyy" id="datepickerF"></p>
+                            <div class="col"><p style="color:black">to:<input data-date-format="dd/mm/yyyy" id="datepickerF" disabled></p>
                             </div>
                         </div>
                     </main>
