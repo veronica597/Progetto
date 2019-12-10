@@ -84,18 +84,25 @@
             }
         }
 
-        function Pippo(aDiv1,aDiv2,aDiv3) {
+        function Pippo(aDiv1,aDiv2,aDiv3,aDiv4) {
             var e = document.getElementById(aDiv1);
             var b= document.getElementById(aDiv2);
             var c= document.getElementById(aDiv3);
-            b.style.display="inline";
+            var v= document.getElementById(aDiv4);
 
-            if(c.style.display=="block"){
+            b.style.display="inline"; // tengo bloccato menu tendina
+
+            if (v.style.display=="block" ){ // scompare input altro tasto
+                v.style.display="none";
+            }
+
+
+            if(c.style.display=="block" ){ // scomare alert
                 c.style.display="none";
             }
 
 
-            if (e.style.display == "none") {
+            if (e.style.display == "none") { //mostro input
                 e.style.display = "block"
             }
         }
@@ -386,9 +393,9 @@
                                       <div class="col-sm-12">
                                         <div class="link-list-wrapper">
                                           <ul class="link-list">
-                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="Pippo('t1','dpm','mioAlert2')">Day </button></p> </span></a>
+                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="Pippo('t1','dpm','mioAlert2','t2')">Day </button></p> </span></a>
                                             </li>
-                                              <li><a class="list-item" href="#"><span><button id="B2" type="button" class="btn btn-default" onclick="Pippo('t2','dpm','mioAlert')">Period </button></span></a>
+                                              <li><a class="list-item" href="#"><span><button id="B2" type="button" class="btn btn-default" onclick="Pippo('t2','dpm','mioAlert','t1')">Period </button></span></a>
                                               </li>
                                           </ul>
                                         </div>
