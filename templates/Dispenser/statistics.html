@@ -84,10 +84,15 @@
             }
         }
 
-        function Pippo(aDiv1,aDiv2) {
+        function Pippo(aDiv1,aDiv2,aDiv3) {
             var e = document.getElementById(aDiv1);
             var b= document.getElementById(aDiv2);
+            var c= document.getElementById(aDiv3);
             b.style.display="inline";
+
+            if(c.style.display=="block"){
+                c.style.display="none";
+            }
 
 
             if (e.style.display == "none") {
@@ -120,7 +125,8 @@
                                     $.get(requestUrl, function (data) {
                                         console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
-                                            $('#mioAlert').show()
+                                            var l= document.getElementById('mioAlert');
+                                            l.style.display='block';
                                         } else {
                                             //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                             window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
@@ -179,7 +185,9 @@
                                     $.get(requestUrl, function (data) {
                                         console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
-                                            $('#mioAlert2').show()
+                                            var l= document.getElementById('mioAlert2');
+                                            l.style.display='block';
+
                                         } else {
                                             //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                             window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
@@ -193,7 +201,9 @@
                                     $.get(requestUrl, function (data) {
                                          console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
-                                            $('#mioAlert2').show()
+                                            var l= document.getElementById('mioAlert2');
+                                            l.style.display='block';
+
                                         }else {
                                             window.location.href = "http://localhost:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
                                         }
@@ -376,9 +386,9 @@
                                       <div class="col-sm-12">
                                         <div class="link-list-wrapper">
                                           <ul class="link-list">
-                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="Pippo('t1','dpm')">Day </button></p> </span></a>
+                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="Pippo('t1','dpm','mioAlert2')">Day </button></p> </span></a>
                                             </li>
-                                              <li><a class="list-item" href="#"><span><button id="B2" type="button" class="btn btn-default" onclick="Pippo('t2','dpm')">Period </button></span></a>
+                                              <li><a class="list-item" href="#"><span><button id="B2" type="button" class="btn btn-default" onclick="Pippo('t2','dpm','mioAlert')">Period </button></span></a>
                                               </li>
                                           </ul>
                                         </div>
@@ -389,8 +399,8 @@
 
                                                 <div class="row" style="padding: 10px">
                                                     <div class="col-lg-12">
-                                                   <div class="alert alert-info" id="mioAlert">No data available!</div>
-                                                       <script>$('#mioAlert').hide()</script>
+                                                   <div style="display: none" class="alert alert-info" id="mioAlert">No data available!</div>
+{#                                                       <script>$('#mioAlert').hide()</script>#}
 
                                                  </div>
                                                 </div>
@@ -398,8 +408,8 @@
                                             <li style="display: none" id="t2"><a class="list-item" href="#"><span><p style="color:black">From:<input data-date-format="dd/mm/yyyy" id="datepickerI"> to: <input data-date-format="dd/mm/yyyy" id="datepickerF" disabled></p></span></a>
                                                 <div class="row" style="padding: 10px">
                                                     <div class="col-lg-12">
-                                                   <div class="alert alert-info" id="mioAlert2">No data available!</div>
-                                                       <script>$('#mioAlert2').hide()</script>
+                                                   <div style="display: none" class="alert alert-info" id="mioAlert2">No data available!</div>
+{#                                                       <script>$('#mioAlert2').hide()</script>#}
 
                                                  </div>
                                                 </div>
