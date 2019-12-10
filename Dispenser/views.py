@@ -144,6 +144,7 @@ def absentData(request):
 
 @csrf_exempt
 def absentDataPeriod(request): #per periodo scelto da utente
+
     anno = request.GET.__getitem__('anno')
     mese = request.GET.__getitem__('mese')
     giorno = request.GET.__getitem__('giorno')
@@ -245,6 +246,7 @@ def periodo(request):  # per filtraggio mese/settimana
         passato = datetime.date(annoP, meseP, giornoP)
 
     elif id == '2':  # periodo scelto da utente
+
 
 
          meseP=request.GET.__getitem__('mese')

@@ -104,7 +104,7 @@
                                 //var requestUrl = "http://192.168.1.105:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                 var requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; // non funziona boh
                                 $.get(requestUrl, function(data) {
-                                    console.log('DATI RICEVUTI: ' + data); 
+                                    console.log('DATI RICEVUTI: ' + data);
                                     if(data == 0){
                                             $('#mioAlert').show()
                                     }
@@ -113,7 +113,7 @@
                                          //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                         window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                     }
-                                    
+
                                 });
 
                             });
