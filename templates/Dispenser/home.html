@@ -113,7 +113,7 @@
                                 var requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; 
                                 //var requestUrl = "http://192.168.6.86:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                 $.get(requestUrl, function(data) {
-                                    console.log('DATI RICEVUTI: ' + data); 
+                                    console.log('DATI RICEVUTI: ' + data);
                                     if(data == 0){
                                             $('#mioAlert').show()
                                     }
@@ -130,7 +130,7 @@
                                         
 //                                        window.location.href="http://192.168.6.86:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                     }
-                                    
+
                                 });
 
                             });
