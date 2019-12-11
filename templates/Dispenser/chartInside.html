@@ -41,6 +41,12 @@
            font-weight: normal;
         }
 
+        .btn-default{
+            border-style:dot-dash ;
+            border-color: cornflowerblue ;
+        }
+
+
     </style>
 
 <script>
@@ -52,8 +58,33 @@
             }
         }
 
+        function Pippo(aDiv1,aDiv2,aDiv3,aDiv4) {
+            var e = document.getElementById(aDiv1);
+            var b= document.getElementById(aDiv2);
+            var c= document.getElementById(aDiv3);
+            var v= document.getElementById(aDiv4);
+
+            b.style.display="inline"; // tengo bloccato menu tendina
+
+            if (v.style.display=="block" ){ // scompare input altro tasto
+                v.style.display="none";
+            }
+
+
+            if(c.style.display=="block" ){ // scomare alert
+                c.style.display="none";
+            }
+
+
+            if (e.style.display == "none") { //mostro input
+                e.style.display = "block"
+            }
+        }
+
+
         // SCRIPT PER I DUE DATETIMEPICKER
-     $('#datepickerI'),$('#datepickerF').datepicker({
+
+                $('#datepickerI'),$('#datepickerF'),$('#datepickerI1').datepicker({
                             weekStart: 1,
                             daysOfWeekHighlighted: "6,0",
                             autoclose: true,
@@ -63,56 +94,107 @@
                         $(function() {
                             $('#datepickerI').datepicker();
                             $('#datepickerF').datepicker();
+                            $('#datepickerI1').datepicker();
 
-
-                            $("#datepickerI").on("change",function(){
-                                var day = $(this).datepicker('getDate').getDate();
-                                var month = $(this).datepicker('getDate').getMonth()+1;
-                                var year = $(this).datepicker('getDate').getFullYear();
+                            $("#datepickerI1").on("change", function () {
+                                day = $(this).datepicker('getDate').getDate();
+                                month = $(this).datepicker('getDate').getMonth() + 1;
+                                year = $(this).datepicker('getDate').getFullYear();
                                 console.log(day);
                                 console.log(month);
                                 console.log(year);
-                                //var requestUrl = "http://192.168.1.105:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                var requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; // non funziona boh
-                                $.get(requestUrl, function(data) {
-                                    console.log('DATI RICEVUTI: ' + data);
-                                    if(data == 0){
-                                            $('#mioAlert').show()
-                                    }
 
-                                    else{
-                                         //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                        window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    }
+                                requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    $.get(requestUrl, function (data) {
+                                        console.log('DATI RICEVUTI: ' + data);
+                                        if (data == 0) {
+                                            var l= document.getElementById('mioAlert');
+                                            l.style.display='block';
+                                        } else {
+                                            //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                        }
 
-                                });
+                                    });
 
                             });
 
-                            $("#datepickerF").on("change",function(){
-                                var day = $(this).datepicker('getDate').getDate();
-                                var month = $(this).datepicker('getDate').getMonth()+1;
-                                var year = $(this).datepicker('getDate').getFullYear();
+
+                            $("#datepickerI").on("change", function () {
+                                day = $(this).datepicker('getDate').getDate();
+                                month = $(this).datepicker('getDate').getMonth() + 1;
+                                year = $(this).datepicker('getDate').getFullYear();
                                 console.log(day);
                                 console.log(month);
                                 console.log(year);
-                                //var requestUrl = "http://192.168.1.105:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                var requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + ""; // non funziona boh
-                                $.get(requestUrl, function(data) {
-                                    console.log('DATI RICEVUTI: ' + data);
-                                    if(data == 0){
-                                            $('#mioAlert').show()
-                                    }
 
-                                    else{
-                                         //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                        window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    }
+                                $("#datepickerF").removeAttr("disabled"); // riattivo secondo calendario
 
-                                });
+                                console.log("tipo yeaar" + " " + typeof year);
+
+                                console.log("tipo yearF" + " " + typeof yearF);
+
 
                             });
+
+
+                            //caricamento(); // SE LO METTO QUI MI CARICA INDIPENDENTEMENTE IL GIORNO
+
+
+                            $("#datepickerF").on("change", function (){
+
+                               // caricamento(); // se lo metto qui il controllo poi mi chiama il giorno selezionato, MA SE IO VOGLIO UN PERIODO?? E CMQ NN VERREBBE NEMMENO IL GIORNO SELEZIONATO PERCHè NN CLICCO SU NIENTE
+                                dayF = $(this).datepicker('getDate').getDate();
+                                monthF = $(this).datepicker('getDate').getMonth() + 1;
+                                yearF = $(this).datepicker('getDate').getFullYear();
+
+                                console.log(dayF);
+                                console.log(monthF);
+                                console.log(yearF);
+
+                                console.log("tipo year2" +" "+ typeof year);
+                                console.log("tipo yearF2" +" "+ typeof yearF);
+                                caricamento();
+
                         });
+
+
+        });
+
+                           function caricamento() {
+                                if(year == yearF && month== monthF && day == dayF) {
+                                    console.log(" Mostro giorno scelto dal primo cal");
+                                   requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    $.get(requestUrl, function (data) {
+                                        console.log('DATI RICEVUTI: ' + data);
+                                        if (data == 0) {
+                                            var l= document.getElementById('mioAlert2');
+                                            l.style.display='block';
+                                        } else {
+                                            //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                        }
+
+                                    });
+
+                                } else{
+                                    console.log(" Ho sel anche sul sec calendario. Mostro periodo selezionato! ");
+                                    requestUrl = "http://localhost:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                    $.get(requestUrl, function (data) {
+                                         console.log('DATI RICEVUTI: ' + data);
+                                        if (data == 0) {
+                                            var l= document.getElementById('mioAlert2');
+                                            l.style.display='block';
+                                        }else {
+                                            window.location.href = "http://localhost:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                        }
+                                     });
+
+
+                                }
+                            }
+
+
 
 
 </script>
@@ -323,24 +405,56 @@
                 <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li> <!-- E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
                 <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
                 <li>
-                    <main class="container-fluid">
-                        <div class="row" style="padding: 10px">
-                            <div class="col"><p style="color:black">Date:<input data-date-format="dd/mm/yyyy" id="datepickerI"></p>
+                    <nav class="navbar navbar-expand-lg has-megamenu">
+
+                            <div class="menu-wrapper">
+                              <ul class="nav navbar-nav">
+                                <li class="nav-item dropdown megamenu">
+                                  <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false" style="color: black" ><span>Choose period to show data</span></a>
+                                  <div id="dpm" class="dropdown-menu" >
+                                    <div class="row">
+                                        <div class="container-fluid"></div>
+                                      <div class="col-sm-12">
+                                        <div class="link-list-wrapper">
+                                          <ul class="link-list">
+                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="Pippo('t1','dpm','mioAlert2','t2')">Day </button></p> </span></a>
+                                            </li>
+                                              <li><a class="list-item" href="#"><span><button id="B2" type="button" class="btn btn-default" onclick="Pippo('t2','dpm','mioAlert','t1')">Period </button></span></a>
+                                              </li>
+                                          </ul>
+                                        </div>
+                                        <div class="col-sm-12">
+                                        <div class="link-list-wrapper">
+                                          <ul class="link-list">
+                                            <li style="display: none" id="t1"><a class="list-item" href="#"><span><p style="color:black">Date:<input data-date-format="dd/mm/yyyy" id="datepickerI1"></p> </span></a>
+
+                                                <div class="row" style="padding: 10px">
+                                                    <div class="col-lg-12">
+                                                   <div  style="display: none" class="alert alert-info" id="mioAlert">No data available!</div>
+
+
+                                                 </div>
+                                                </div>
+                                            </li>
+                                            <li style="display: none" id="t2"><a class="list-item" href="#"><span><p style="color:black">From:<input data-date-format="dd/mm/yyyy" id="datepickerI"> to: <input data-date-format="dd/mm/yyyy" id="datepickerF" disabled></p></span></a>
+                                                <div class="row" style="padding: 10px">
+                                                    <div class="col-lg-12">
+                                                   <div style="display: none" class="alert alert-info" id="mioAlert2">No data available!</div>
+
+                                                 </div>
+                                                </div>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
                             </div>
-                        </div>
-                    </main>
-                    <div class="row" style="padding: 10px">
-                    <div class="alert alert-danger" id="mioAlert">No data available!</div>
-                    <script>$('#mioAlert').hide()</script>
-                </div>
-                </li>
-                <li>
-                    <main class="container-fluid">
-                        <div class="row" style="padding: 10px">
-                            <div class="col"><p style="color:black">to:<input data-date-format="dd/mm/yyyy" id="datepickerF"></p>
-                            </div>
-                        </div>
-                    </main>
+
+                    </nav>
                 </li>
             </ul>
         </div>
