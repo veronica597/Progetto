@@ -50,8 +50,15 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
         print('get')
         # oggi = datetime.date.today()
         oggi = datetime.today()
-        e = DatiRaccolti.objects.values('date').filter(date__gte=oggi, erogation=True).order_by('date').count()
-        noE = DatiRaccolti.objects.values('date').filter(date__gte=oggi, erogation=False).order_by('date').count()
+        meseC = oggi.month
+        giornoC = oggi.day
+        annoC = oggi.year
+
+        stringa = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+        print("stringa: ", stringa)
+
+        e = DatiRaccolti.objects.values().filter(date__gte=stringa, erogation=True).order_by('date').count()
+        noE = DatiRaccolti.objects.values().filter(date__gte=stringa, erogation=False).order_by('date').count()
 
         print("e: " + str(e))
         print("noE: " + str(noE))
@@ -59,10 +66,10 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
         context = {
             'erog': e,
             'noErog': noE,
-            'righe': DatiRaccolti.objects.values().filter(date__gte=oggi).order_by('date')[:5],
+            'righe': DatiRaccolti.objects.values().filter(date__gte=stringa).order_by('-date')[:5],
 
             # 'righe': DatiRaccolti.objects.values().filter(date__gte=oggi).order_by('-date')[:5], #  DA METTERE PER ORDINARE TABELLA -- con i dati al contrario
-            'Righe': DatiRaccolti.objects.values().filter(date__gte=oggi)
+            'Righe': DatiRaccolti.objects.values().filter(date__gte=stringa).order_by('-date')
         }
 
         return render(request, 'get_post.html', context)
@@ -192,7 +199,16 @@ def absentDataPeriod(request):  # per periodo scelto da utente
 @csrf_exempt
 def ultimoDato(request):  # per aggiornamento tabella e chart
 
-    stringa = datetime.today()
+    oggi = datetime.today()
+
+    meseC = oggi.month
+    giornoC = oggi.day
+    annoC = oggi.year
+
+    stringa = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+
+    print("stringa: ", stringa)
+
     elementi = DatiRaccolti.objects.values().filter(date__gte=stringa)
 
     lu = len(elementi)

@@ -31,12 +31,12 @@
 
        .table-bordered-costum{
            border-style: solid;
-           border-color: white;
+           border-color: cornflowerblue;
        }
 
         .table > tbody,thead,tr,td,th{
            border-style: inherit;
-           border-color: white;
+           border-color: cornflowerblue;
            font-weight: normal;
         }
 
@@ -88,10 +88,10 @@
             //var urlHome = "http://192.168.1.105:8000/dispenser/";
 
             // Casa Chiara
-            //var DEVICE_IP = '192.168.1.128'; // indirizzo IP della scheda ESP8266
+            var DEVICE_IP = '192.168.1.128'; // indirizzo IP della scheda ESP8266
 
             // MICC
-            var DEVICE_IP = '192.168.0.134';
+            //var DEVICE_IP = '192.168.0.134';
            
 
             // HUAWEI P30 lite -- 192.168.43.37
@@ -112,12 +112,12 @@
             $("#on").click(attivaServo);
 
 
-            {# $('#oggi').DataTable({#}
-            {#    "scrollY": "220px",#}
-            {#    "scrollCollapse": true,#}
-            {#    "searching": false // false to disable search (or any other option)#}
-
-            {#$('.dataTables_length').addClass('bs-select');#}
+//            {# $('#oggi').DataTable({#}
+//            {#    "scrollY": "220px",#}
+//            {#    "scrollCollapse": true,#}
+//            {#    "searching": false // false to disable search (or any other option)#}
+//
+//            {#$('.dataTables_length').addClass('bs-select');#}
 
 
         });
@@ -145,9 +145,17 @@
         <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center" >
 
             <ul class="nav navbar-nav">
+<!--
                 <li ><a href='http://localhost:8000'style="color: black; text-align: center">Home</a></li>
                 <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>
                 <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
+-->
+                
+                <li ><a href='http://192.168.1.227:8000'style="color: black; text-align: center">Home</a></li>
+                <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>
+                <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
+                
+<!--
                 {#                <li>#}
                 {#                    <main class="container-fluid">#}
                 {#                        <div class="row" style="padding: 10px">#}
@@ -168,6 +176,7 @@
                 {#                        </div>#}
                 {#                    </main>#}
                 {#                </li>#}
+-->
             </ul>
         </div>
     </div>
@@ -238,23 +247,24 @@
 </div>
 
 
-<div id ="p2" class="container" style="display: none"> <!-- mostro tt le righe -->
+<div id ="p2" class="container" style="display: none; margin-top: 50px;"> <!-- mostro tt le righe -->
     <div id="row" class="row justify-content-md-center">
         <div class="col align-self-center"> <!-- colonna centrale-->
-            <table id="oggi2" class="table table-hover table-bordered"> <!-- style="display: none" -->
+            <table id="oggi2" class="table table-hover table-bordered-costum"> <!-- style="display: none" -->
                 <thead>
-                <tr id="prova">
+                <tr id="prova2" style="background-color: #eeffff">
                     {#<th>Id</th>#}
-                    <th>Data</th>
-                    <th>Erogation</th>
+                    <th style="font-weight: bold; color: cornflowerblue">Data</th>
+                    <th style="font-weight: bold; color: cornflowerblue">Erogation</th>
                     {#<th>UserMode</th>#}
                     {#<th>TimeMode</th>#}
                 </tr>
+                </thead>
 
                 <tbody>
                 {% for riga in Righe %}
-                    <tr id="old">
-                        {#<td id="id">{{riga.id}} </td>#}
+                    <tr id="old2">
+                        <td id="id" style="display: none">{{riga.id}} </td>
                         <td id="date">{{riga.date}} </td>
                         <td id="erogation">{{riga.erogation}} </td>
                         {#<td id="userMod">{{riga.userMod}} </td>#}
@@ -313,6 +323,11 @@
     var chart = Highcharts.chart('container', {
         chart: {
             type: 'column', // column
+            borderColor: 'cornflowerblue',
+            borderRadius: 20, // per riquadro tondeggiante 
+            borderWidth: 2,
+            backgroundColor: 'rgb(238, 255, 255)',
+            
             events: {
 
                 load: function () {
@@ -325,29 +340,31 @@
 
                         $.ajax({
                             type: 'GET',
-                            //url: "http://192.168.1.105:8000/dispenser/giorno/",
+                            url: "http://192.168.1.227:8000/dispenser/giorno/",
                             //url: "http://172.17.196.174:8000/dispenser/giorno/",
-                            url: "http://localhost:8000/dispenser/giorno/",
+                            //url: "http://localhost:8000/dispenser/giorno/",
 
                             success: function(data){
                                 console.log("dati ricevuti");
-                                console.log(typeof(data));
+                                //console.log(typeof(data));
 
                                 var series0 = chart.series[0]; // erogazioni
-                                console.log(series0.yData);
+                                //console.log(series0.yData);
                                 var series1 = chart.series[1]; // no erogazioni
 
-                                var lastId = $('#oggi2 tr:last').find('#id').html();
-                                console.log(lastId);
-                                var lastDate = $('#oggi2 tr:last').find('#date').html();
+                                //var lastId = $('#oggi2 tr:first').find('#id').html();  // last
+                                var lastId = $('#old2').find('#id').html();  // last
+                                console.log("ID: " + lastId);
+                                
+                                var lastDate = $('#old2').find('#date').html();
                                 console.log(lastDate);
-                                console.log("ZZZZZZZH: "+ typeof (lastDate));
-                                var lastErog = $('#oggi2 tr:last').find('#erogation').html();
+                                //console.log("ZZZZZZZH: "+ typeof (lastDate));
+                                var lastErog = $('#old2').find('#erogation').html();
                                 console.log(lastErog);
-                                var lastUser = $('#oggi2 tr:last').find('#userMod').html();
-                                console.log(lastUser);
-                                var lastTime = $('#oggi2 tr:last').find('#timeMod').html();
-                                console.log(lastTime);
+//                                var lastUser = $('#oggi2 tr:last').find('#userMod').html();
+//                                console.log(lastUser);
+//                                var lastTime = $('#oggi2 tr:last').find('#timeMod').html();
+//                                console.log(lastTime);
 
 
                                 if(typeof(data) === 'string'){ // se nn ci sono dati
@@ -375,11 +392,11 @@
                                     pippo('container');
 
 
-
-
-                                    {#pippo('container'); // mostro GRAFICO#}
-                                    {#pippo('tasto'); // mostro tasto#}
-                                    {#pippo('oggi');#}
+//
+//
+//                                    {#pippo('container'); // mostro GRAFICO#}
+//                                    {#pippo('tasto'); // mostro tasto#}
+//                                    {#pippo('oggi');#}
 
 
 
@@ -388,64 +405,40 @@
 
                                     var formatData = formatDate(d);
                                     console.log("DATA: " + formatData);
-                                    console.log("GENTIL: " + typeof formatData);
+                                    //console.log("GENTIL: " + typeof formatData);
 
-                                    console.log(typeof data['erogation']);
+                                    //console.log(typeof data['erogation']);
+                                    
 
                                     var e = data['erogation'].toString();
                                     var E = e.substr(0,1).toUpperCase() + e.substr(1); // trasformo true/false in True/False
-                                    console.log(E);
+                                    console.log("E: " + E);
 
-                                    var u = data['userMod'].toString();
-                                    var U = u.substr(0,1).toUpperCase() + u.substr(1);
-                                    console.log(U);
+//                                    var u = data['userMod'].toString();
+//                                    var U = u.substr(0,1).toUpperCase() + u.substr(1);
+//                                    console.log("U: " + U);
 
-                                    var t = data['timeMod'].toString();
-                                    var T = t.substr(0,1).toUpperCase() + t.substr(1);
-                                    console.log(T);
+//                                    var t = data['timeMod'].toString();
+//                                    var T = t.substr(0,1).toUpperCase() + t.substr(1);
+//                                    console.log("T: " + T);
 
                                     //if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
 
                                     ////CONTROLLARE PERCHE' AGGIUNGE A CASO!!!!!
 
-                                    if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||
-                                        [(lastDate === formatData && lastErog !== E) || (lastDate !== formatData)]){
-
-                                        // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
-
-                                        // oppure i dati precedenti sono diversi dai dati appena ricevuti
-
-                                        // allora li renderizzo
-                                        console.log("i dati sono undefined o sono diversi a quelli precedenti");
-
-
-
-
-                                        // formatto i dati in ingresso in modo da rispettare il formato presente nella tabella
-
-                                        {#var formatData = formatDate(d); #}
-                                        {#console.log("DATA: " + formatData);#}
-                                        {##}
-                                        {#console.log(typeof data['erogation']);#}
-                                        {##}
-                                        {#var e = data['erogation'].toString(); #}
-                                        {#var E = e.substr(0,1).toUpperCase() + e.substr(1); // trasformo true/false in True/False#}
-                                        {#console.log(E);#}
-                                        {##}
-                                        {#var u = data['userMod'].toString();#}
-                                        {#var U = u.substr(0,1).toUpperCase() + u.substr(1); #}
-                                        {#console.log(U);#}
-                                        {##}
-                                        {#var t = data['timeMod'].toString();#}
-                                        {#var T = t.substr(0,1).toUpperCase() + t.substr(1); #}
-                                        {#console.log(T);#}
-
-
-                                        {#"<td id='userMod'>" + U + "</td>" +#}
-                                        {# "<td id='id'>" + data['id'] + "</td>" +#}
-
-                                        $('#oggi2 tr:last').after("<tr id='last_insert'>" + "<td id='date'>" + ' ' + formatData + "</td>" +
-                                            "<td id='erogation'>" + E + "</td>" + "</tr>"); // riguardare
+//                                    if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined') ||
+//                                            [(lastDate == formatData && lastErog != E) || (lastDate != formatData)]){
+                                     
+                                     /* separiamo i casi */
+                                     
+                                     if((typeof lastId === 'undefined' && typeof lastDate === 'undefined' && typeof lastErog === 'undefined') || (lastId != data['id'])){
+                                         console.log("CASO 1: tipi undefined"); 
+                                         
+                                        //$('#oggi2 tr:last').after("<tr id='last_insert'>" + "<td id='id' style='display:none'>" + data['id'] + "</td>" + "<td id='date'>" + formatData + "</td>" +
+                                           // "<td id='erogation'>" + E + "</td>" + "</tr>"); // riguardare  // + ' '
+                                         
+                                        $('#prova2').after("<tr id='old2'>" + "<td id='id' style='display:none'>" + data['id'] + "</td>" + "<td id='date'>" + formatData + "</td>" +
+                                            "<td id='erogation'>" + E + "</td>" + "</tr>");  // ho messo l'id dell'elemento della tabella cosi' non ho problemi per la selezione 
 
 
                                         if(data['erogation'] == true){
@@ -457,12 +450,83 @@
 
                                             series1.setData([series1.yData[0] + 1]);
                                         }
+                                     }
+                                    
+//                                    else if(lastId != data['id']){  // (lastDate == formatData && lastErog != E) || (lastDate != formatData)
+//                                         console.log("CASO 2: i dati sono nuovi !! "); 
+//                                        $('#oggi2 tr:last').after("<tr id='last_insert'>" + "<td id='date'>" + formatData + "</td>" +
+//                                            "<td id='erogation'>" + E + "</td>" + "</tr>"); // riguardare  // + ' '
+//
+//
+//                                        if(data['erogation'] == true){
+//
+//                                            series0.setData([series0.yData[0] + 1]);
+//                                        }
+//
+//                                        else{ // no erogazioni
+//
+//                                            series1.setData([series1.yData[0] + 1]);
+//                                        }
+//                                    }
+//                                    
+                                    else {  // if(lastDate == formatData && lastErog == E)
+                                        console.log("CASO 3: i dati sono gia' stati stampati");
+                                    
+                                     
+                                     
+
+                                        // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
+
+                                        // oppure i dati precedenti sono diversi dai dati appena ricevuti
+
+                                        // allora li renderizzo
+                                        //console.log("i dati sono undefined o sono diversi da quelli precedenti");
+
+
+
+
+                                        // formatto i dati in ingresso in modo da rispettare il formato presente nella tabella
+
+//                                        {#var formatData = formatDate(d); #}
+//                                        {#console.log("DATA: " + formatData);#}
+//                                        {##}
+//                                        {#console.log(typeof data['erogation']);#}
+//                                        {##}
+//                                        {#var e = data['erogation'].toString(); #}
+//                                        {#var E = e.substr(0,1).toUpperCase() + e.substr(1); // trasformo true/false in True/False#}
+//                                        {#console.log(E);#}
+//                                        {##}
+//                                        {#var u = data['userMod'].toString();#}
+//                                        {#var U = u.substr(0,1).toUpperCase() + u.substr(1); #}
+//                                        {#console.log(U);#}
+//                                        {##}
+//                                        {#var t = data['timeMod'].toString();#}
+//                                        {#var T = t.substr(0,1).toUpperCase() + t.substr(1); #}
+//                                        {#console.log(T);#}
+//
+//
+//                                        {#"<td id='userMod'>" + U + "</td>" +#}
+//                                        {# "<td id='id'>" + data['id'] + "</td>" +#}
+
+//                                        $('#oggi2 tr:last').after("<tr id='last_insert'>" + "<td id='date'>" + formatData + "</td>" +
+//                                            "<td id='erogation'>" + E + "</td>" + "</tr>"); // riguardare  // + ' '
+//
+//
+//                                        if(data['erogation'] == true){
+//
+//                                            series0.setData([series0.yData[0] + 1]);
+//                                        }
+//
+//                                        else{ // no erogazioni
+//
+//                                            series1.setData([series1.yData[0] + 1]);
+//                                        }
                                     }
 
 
-                                    else{
-                                        console.log("dati già stampati");
-                                    }
+//                                    else{  // if(lastDate == formatData && lastErog == E)
+//                                        console.log("dati già stampati");
+//                                    }
 
                                 } // chiude l'else di controllo sui dati
 
