@@ -220,11 +220,11 @@
         <div class="col align-self-center"> <!-- colonna centrale-->
             <table id="oggi" class="table table-hover table-bordered-costum"> <!-- style="display: none" -->
                 <thead>
-                <tr id="prova" style="border-bottom-color: white">
+                <tr id="prova" style="background-color: #eeffff">
 
                     {#                       <th>Id</th>#}
-                    <th>Data</th>
-                    <th>Erogation</th>
+                    <th style="font-weight: bold; color: cornflowerblue">Data</th>
+                    <th style="font-weight: bold; color: cornflowerblue">Erogation</th>
                     {#                       <th>UserMode</th>#}
                     {#                       <th>TimeMode</th>#}
                 </tr>
@@ -232,7 +232,7 @@
                 <tbody style="border-bottom-color: white">
                 {% for riga in righe %}
                     <tr id="old">
-                        {#                           <td id="id">{{riga.id}} </td>#}
+                        <td id="id" style="display: none">{{riga.id}} </td>
                         <td id="date">{{riga.date}} </td>
                         <td id="erogation">{{riga.erogation}} </td>
                         {#                           <td id="userMod">{{riga.userMod}} </td>#}
@@ -352,20 +352,60 @@
                                 //console.log(series0.yData);
                                 var series1 = chart.series[1]; // no erogazioni
 
-                                //var lastId = $('#oggi2 tr:first').find('#id').html();  // last
-                                var lastId = $('#old2').find('#id').html();  // last
-                                console.log("ID: " + lastId);
                                 
-                                var lastDate = $('#old2').find('#date').html();
-                                console.log(lastDate);
-                                //console.log("ZZZZZZZH: "+ typeof (lastDate));
-                                var lastErog = $('#old2').find('#erogation').html();
-                                console.log(lastErog);
-//                                var lastUser = $('#oggi2 tr:last').find('#userMod').html();
-//                                console.log(lastUser);
-//                                var lastTime = $('#oggi2 tr:last').find('#timeMod').html();
-//                                console.log(lastTime);
+                                /* controllo la tabella che attualmente e' visibile */
+                                
+                                
+                                var displayTab1 = $('#p1').css("display"); // se style contiene piu' proprieta' rivedere 
+                                console.log("TAB 1: " + displayTab1); 
+                            
+                                
+                                //var displayTab2 = $('#p2').attr('style');
+                                var displayTab2 = $('#p2').css('display');
+                                console.log("TAB 2: " + displayTab2); 
+                                
+                                var tab; // variabile che associo alla tabella attualmente visibile 
+                                
+                                if(displayTab1 == 'block'){
+                                   console.log("La tabella con CINQUE righe e' attualmente visibile"); 
+                                    
+                                    var lastId = $('#old').find('#id').html(); 
+                                    console.log("ID: " + lastId);
 
+                                    var lastDate = $('#old').find('#date').html();
+                                    console.log(lastDate);
+        
+                                    var lastErog = $('#old').find('#erogation').html();
+                                    console.log(lastErog);
+                                    
+                                    tab = 1; 
+
+                                   
+                                   
+                                }
+                                else{
+                                    console.log("La tabella con TUTTE le righe e' attualmente visibile");
+                                
+                                    //var lastId = $('#oggi2 tr:first').find('#id').html();  // last
+                                    var lastId = $('#old2').find('#id').html();  // last
+                                    console.log("ID: " + lastId);
+
+                                    var lastDate = $('#old2').find('#date').html();
+                                    console.log(lastDate);
+                                    //console.log("ZZZZZZZH: "+ typeof (lastDate));
+                                    var lastErog = $('#old2').find('#erogation').html();
+                                    console.log(lastErog);
+    //                                var lastUser = $('#oggi2 tr:last').find('#userMod').html();
+    //                                console.log(lastUser);
+    //                                var lastTime = $('#oggi2 tr:last').find('#timeMod').html();
+    //                                console.log(lastTime);
+                                    
+                                    tab = 2; 
+
+                                }
+                                
+                                
+                                
 
                                 if(typeof(data) === 'string'){ // se nn ci sono dati
 
@@ -437,8 +477,16 @@
                                         //$('#oggi2 tr:last').after("<tr id='last_insert'>" + "<td id='id' style='display:none'>" + data['id'] + "</td>" + "<td id='date'>" + formatData + "</td>" +
                                            // "<td id='erogation'>" + E + "</td>" + "</tr>"); // riguardare  // + ' '
                                          
-                                        $('#prova2').after("<tr id='old2'>" + "<td id='id' style='display:none'>" + data['id'] + "</td>" + "<td id='date'>" + formatData + "</td>" +
+                                         if(tab == 1){ // se la tabella con 5 righe e' attualmente viibile --> aggiungo in testa il nuovo dato in arrivo 
+                                             $('#prova').after("<tr id='old'>" + "<td id='id' style='display:none'>" + data['id'] + "</td>" + "<td id='date'>" + formatData + "</td>" +
                                             "<td id='erogation'>" + E + "</td>" + "</tr>");  // ho messo l'id dell'elemento della tabella cosi' non ho problemi per la selezione 
+                                         }
+                                         else{ // tab == 2
+                                             $('#prova2').after("<tr id='old2'>" + "<td id='id' style='display:none'>" + data['id'] + "</td>" + "<td id='date'>" + formatData + "</td>" +
+                                            "<td id='erogation'>" + E + "</td>" + "</tr>");  // ho messo l'id dell'elemento della tabella cosi' non ho problemi per la selezione 
+                                         }
+                                         
+                                        
 
 
                                         if(data['erogation'] == true){

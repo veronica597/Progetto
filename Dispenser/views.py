@@ -67,8 +67,6 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
             'erog': e,
             'noErog': noE,
             'righe': DatiRaccolti.objects.values().filter(date__gte=stringa).order_by('-date')[:5],
-
-            # 'righe': DatiRaccolti.objects.values().filter(date__gte=oggi).order_by('-date')[:5], #  DA METTERE PER ORDINARE TABELLA -- con i dati al contrario
             'Righe': DatiRaccolti.objects.values().filter(date__gte=stringa).order_by('-date')
         }
 
