@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title> Selected day data</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -32,12 +32,12 @@
 
          .table-bordered-costum{
            border-style: solid;
-           border-color: white;
+           border-color: cornflowerblue;
        }
 
         .table > tbody,thead,tr,td,th{
            border-style: inherit;
-           border-color: white;
+           border-color: cornflowerblue;
            font-weight: normal;
         }
 
@@ -104,15 +104,16 @@
                                 console.log(month);
                                 console.log(year);
 
-                                requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                //requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                     $.get(requestUrl, function (data) {
                                         console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
                                             var l= document.getElementById('mioAlert');
                                             l.style.display='block';
                                         } else {
-                                            //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                            window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            //window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                         }
 
                                     });
@@ -164,29 +165,32 @@
                            function caricamento() {
                                 if(year == yearF && month== monthF && day == dayF) {
                                     console.log(" Mostro giorno scelto dal primo cal");
-                                   requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                   //requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                     $.get(requestUrl, function (data) {
                                         console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
                                             var l= document.getElementById('mioAlert2');
                                             l.style.display='block';
                                         } else {
-                                            //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                            window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            //window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                         }
 
                                     });
 
                                 } else{
                                     console.log(" Ho sel anche sul sec calendario. Mostro periodo selezionato! ");
-                                    requestUrl = "http://localhost:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                    //requestUrl = "http://localhost:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                    requestUrl = "http://192.168.1.227:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
                                     $.get(requestUrl, function (data) {
                                          console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
                                             var l= document.getElementById('mioAlert2');
                                             l.style.display='block';
                                         }else {
-                                            window.location.href = "http://localhost:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                            //window.location.href = "http://localhost:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                            window.location.href = "http://192.168.1.227:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
                                         }
                                      });
 
@@ -225,7 +229,7 @@
                 $.ajax({
                     type: 'GET',
                     //url: "http://192.168.1.105:8000/dispenser/erog/",
-                    //url: "http://172.17.196.174:8000/dispenser/erog/",
+                    //url: "http://192.168.6.86:8000/dispenser/erog/",
                     url: "http://localhost:8000/dispenser/erog/",
                     data: datoStr,
                     success: function(data){
@@ -381,9 +385,6 @@
 
 </head>
 
-
-
-
 <body style="background-color: #bbdefb">
 
     <div class="container-fluid">
@@ -391,9 +392,9 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar" style="color: black" >
-                <span class="icon-bar" style="background-color:#8aacc8"></span>
-                <span class="icon-bar"style="background-color: #8aacc8"></span>
-                <span class="icon-bar"style="background-color: #8aacc8"></span>
+                <span class="icon-bar" style="background-color: #8aacc8"></span>
+                <span class="icon-bar" style="background-color: #8aacc8"></span>
+                <span class="icon-bar" style="background-color: #8aacc8"></span>
             </button>
             <a href="#" class="navbar-brand" style="color: black">Food Dispenser</a>
         </div>
@@ -401,9 +402,12 @@
         <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center" >
 
             <ul class="nav navbar-nav">
-                <li ><a href='http://localhost:8000'style="color: black; text-align: center">Home</a></li>
-                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li> <!-- E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
-                <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
+<!--                <li ><a href='http://localhost:8000'style="color: black; text-align: center">Home</a></li>-->
+                <li ><a href='http://192.168.1.227:8000'style="color: black; text-align: center">Home</a></li>
+<!--                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>  E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
+                <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>
+<!--                <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>-->
+                 <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
                 <li>
                     <nav class="navbar navbar-expand-lg has-megamenu">
 
@@ -417,7 +421,7 @@
                                       <div class="col-sm-12">
                                         <div class="link-list-wrapper">
                                           <ul class="link-list">
-                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="Pippo('t1','dpm','mioAlert2','t2')">Day </button></p> </span></a>
+                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="Pippo('t1','dpm','mioAlert2','t2')">Day </button> </span></a>
                                             </li>
                                               <li><a class="list-item" href="#"><span><button id="B2" type="button" class="btn btn-default" onclick="Pippo('t2','dpm','mioAlert','t1')">Period </button></span></a>
                                               </li>
@@ -465,34 +469,39 @@
 
 <h1 style=" text-align: center; color:cornflowerblue" >Statistics of {{ giorno }}: </h1>
 
-
+<div class="container-fluid">
 <div class="row">
-    <div class="container-fluid">
+    
         <div class="col-sm-4"><div id="container"></div></div>
         <div class="col-sm-4"><div id="container1"></div></div>
         <div class="col-sm-4"><div id="container2"></div></div>
-    </div>
+        
+ </div>
+    
+
 </div>
 
+    
+<div class="container-fluid">
 <div id="d1" class="row" style="display:none; margin-top: 50px;">
         <div class="col-sm-12">
             <table id="oggi" class="table table-hover table-bordered-costum " >
                     <thead>
-                    <tr id="prova">
+                    <tr id="prova" style="background-color: #eeffff">
 {#                       <th>Id</th>#}
-                        <th>Data</th>
-                        <th>Erogation</th>
-                      <th>UserMode</th>
-                        <th>TimeMode</th>
+                        <th style="font-weight: bold; color: cornflowerblue">Data</th>
+                        <th style="font-weight: bold; color: cornflowerblue">Erogation</th>
+                      <th style="font-weight: bold; color: cornflowerblue">UserMode</th>
+                        <th style="font-weight: bold; color: cornflowerblue">TimeMode</th>
                     </tr>
 
                     <tbody>
                     {% for riga in righe %}
                         <tr id="old">
 {#                           <td id="id">{{riga.id}} </td>#}
-                            <td id="date">{{riga.date}} </td>
+                            <td id="date" >{{riga.date}} </td>
                             <td id="erogation">{{riga.erogation}} </td>
-                          <td id="userMod">{{riga.userMod}} </td>
+                          <td id="userMod" >{{riga.userMod}} </td>
                             <td id="timeMod">{{riga.timeMod}} </td>
                         </tr>
                     {% endfor %}
@@ -506,7 +515,9 @@
 <div class="text-center">
     <button type= "button" class="btn btn-link" style="color: cornflowerblue" onclick="pippo('d1')">Show the table</button>
 </div>
-
+    
+    
+</div>
 
 <script>
 
@@ -514,6 +525,12 @@
     var chart = Highcharts.chart('container1', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
         chart: {
             type: 'column',
+            
+            borderColor: 'cornflowerblue',
+            borderRadius: 20, // per riquadro tondeggiante 
+            borderWidth: 2,
+            backgroundColor: 'rgb(238, 255, 255)',
+            
 
         },
 
@@ -552,6 +569,12 @@
     var chart = Highcharts.chart('container', {
         chart: {
             type: 'column', // column
+            
+            borderColor: 'cornflowerblue',
+            borderRadius: 20, // per riquadro tondeggiante 
+            borderWidth: 2,
+            backgroundColor: 'rgb(238, 255, 255)',
+            
 
         },
         title: {
@@ -591,6 +614,12 @@
     var chart = Highcharts.chart('container2', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
         chart: {
             type: 'column', // column
+            
+            borderColor: 'cornflowerblue',
+            borderRadius: 20, // per riquadro tondeggiante 
+            borderWidth: 2,
+            backgroundColor: 'rgb(238, 255, 255)',
+            
 
         },
 
@@ -622,12 +651,13 @@
 
 
     }); // chiude il chart
+    
+    
+    
 
 
 
 </script>
-
-
 
 
 

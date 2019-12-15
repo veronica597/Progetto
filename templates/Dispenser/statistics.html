@@ -36,12 +36,12 @@
 
          .table-bordered-costum{
            border-style: solid;
-           border-color: white;
+           border-color: cornflowerblue;
        }
 
         .table > tbody,thead,tr,td,th{
            border-style: inherit;
-           border-color: white;
+           border-color: cornflowerblue;
            font-weight: normal;
         }
          .btn-default{
@@ -128,16 +128,26 @@
                                 console.log(month);
                                 console.log(year);
 
-                                requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    $.get(requestUrl, function (data) {
-                                        console.log('DATI RICEVUTI: ' + data);
-                                        if (data == 0) {
-                                            var l= document.getElementById('mioAlert');
-                                            l.style.display='block';
-                                        } else {
-                                            //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                            window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                //requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                
+                                $.get(requestUrl, function (data) {
+                                    console.log('DATI RICEVUTI: ' + data);
+                                    if (data == 0) {
+                                        var l= document.getElementById('mioAlert');
+                                        l.style.display='block';
+                                    } 
+                                    else {
+                                           
+                                        if(day < 10){
+                                            //window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
+                                            window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
                                         }
+                                        else{
+                                            //window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                        }
+                                    }
 
                                     });
 
@@ -188,23 +198,35 @@
                            function caricamento() {
                                 if(year == yearF && month== monthF && day == dayF) {
                                     console.log(" Mostro giorno scelto dal primo cal");
-                                   requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                   //requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                     $.get(requestUrl, function (data) {
                                         console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
                                             var l= document.getElementById('mioAlert2');
                                             l.style.display='block';
 
-                                        } else {
-                                            //window.location.href="http://192.168.1.105:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                            window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                        }
+                                        
+                                        else {
+                                            if(day < 10){
+                                                //window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
+                                                window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
+                                           }
+                                           else{
+                                               //window.location.href="http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                               window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                           }
                                         }
 
                                     });
 
-                                } else{
+                                } 
+                               
+                               else{
                                     console.log(" Ho sel anche sul sec calendario. Mostro periodo selezionato! ");
-                                    requestUrl = "http://localhost:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                    //requestUrl = "http://localhost:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                   requestUrl = "http://192.168.1.227:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
                                     $.get(requestUrl, function (data) {
                                          console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
@@ -212,7 +234,22 @@
                                             l.style.display='block';
 
                                         }else {
-                                            window.location.href = "http://localhost:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                            if(day < 10){
+                                                //window.location.href = "http://localhost:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + '0' + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                                window.location.href = "http://192.168.1.227:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + '0' + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                            }
+                                            
+                                            if(dayF < 10){
+                                                //window.location.href = "http://localhost:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + '0' + dayF + "";
+                                                window.location.href = "http://192.168.1.227:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + '0' + dayF + "";
+                                            }
+                                            
+                                            else{
+                                                //window.location.href = "http://localhost:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                                window.location.href = "http://192.168.1.227:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                            }
+                                            
+                                           
                                         }
                                      });
 
@@ -239,6 +276,10 @@
             var chart = Highcharts.chart('container1', {
                 chart: {
                     type: 'column', // column
+                    borderColor: 'cornflowerblue',
+                    borderRadius: 20, // per riquadro tondeggiante 
+                    borderWidth: 2,
+                    backgroundColor: 'rgb(238, 255, 255)',
 
                 },
                 title: {
@@ -276,6 +317,18 @@
             var chart = Highcharts.chart('container', {
                 chart: {
                     type: 'column', // column
+                    borderColor: 'cornflowerblue',
+                    borderRadius: 20, // per riquadro tondeggiante 
+                    borderWidth: 2,
+                    backgroundColor: 'rgb(238, 255, 255)',
+//                    backgroundColor: {  // con sfumatura 
+//                linearGradient: [0, 0, 0, 1], // 500
+//                stops: [
+//                    [0, 'rgb(255, 255, 255)'],
+//                    //[0.5, 'rgb(238, 255, 255)'],
+//                    [1, 'rgb(238, 255, 255)']  // rgb(200, 200, 255)  // rgb(238, 255, 255)
+//                ]
+ //           },
 
                 },
                 title: {
@@ -315,6 +368,11 @@
             var chart = Highcharts.chart('container2', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
                 chart: {
                     type: 'column', // column
+                    
+                    borderColor: 'cornflowerblue',
+                    borderRadius: 20, // per riquadro tondeggiante 
+                    borderWidth: 2,
+                    backgroundColor: 'rgb(238, 255, 255)',
 
                 },
 
@@ -346,6 +404,145 @@
 
 
             }); // chiude il chart
+            
+            
+    // istogramma 
+    var chart = Highcharts.chart('container3', {  
+        chart: {
+            type: 'spline',
+            //type: 'line',
+            
+            //backgroundColor: 'peachpuff', // senza sfumatura, monocromo
+            
+//            backgroundColor: {  // con sfumatura 
+//                linearGradient: [0, 0, 500, 500],
+//                stops: [
+//                    [0, 'rgb(255, 255, 255)'],
+//                    [1, 'rgb(200, 200, 255)']
+//                ]
+//            },
+            
+            borderColor: 'cornflowerblue',
+            borderRadius: 20, // per riquadro tondeggiante 
+            borderWidth: 2,
+            backgroundColor: 'rgb(238, 255, 255)',
+            
+            
+//            plotBackgroundColor: { // sfondo solo per la parte interna del grafico 
+//                linearGradient: [0, 0, 500, 500],
+//                stops: [
+//                    [0, 'rgb(255, 255, 255)'],
+//                    [1, 'rgb(200, 200, 255)']
+//                ]
+//            },
+//            plotBackgroundImage: 'https://www.highcharts.com/samples/graphics/skies.jpg',
+
+
+        },
+        
+        accessibility: {
+            description: ''
+        },
+        
+        tooltip: {
+            // per fare scritte specifiche ... formatter: function(){}
+            
+//            formatter: function () {
+//                return 'The value for <b>' + this.x + '</b> is <b>' + this.y + '</b>';
+//            },
+//            backgroundColor: '#FCFFC5',
+//            borderColor: 'black',
+//            borderRadius: 10,
+//            borderWidth: 3,
+            
+//            backgroundColor: {
+//            linearGradient: [0, 0, 0, 60],
+//            stops: [
+//                [0, '#FFFFFF'],
+//                [1, '#E0E0E0']
+//            ]
+//            },
+//            borderWidth: 1,
+//            borderColor: '#AAA',
+            //crosshairs: true,
+            //shared:true, se avessi piu' linee
+            
+        },
+
+        title: {
+            text:''
+        },
+     
+
+        xAxis: {
+            categories: {{arrayDate|safe}},
+            // per formato date asse x 
+//            type: 'datetime',
+//            dateTimeLabelFormats: {
+//                day: '%e of %b'
+//            },
+                                 
+        },
+        
+        yAxis: {
+//            title: {
+//                text: 'Erogazioni'
+//            },
+            //gridLineColor: '#197F07', // per il colore delle righe
+            //gridLineDashStyle: 'longdash',  // per linee tratteggiate 
+            //lineColor: '#FF0000',
+            //lineWidth: 1
+        },
+        
+        plotOptions: { //vedere 
+                                 
+//            line: {
+//                dataLabels: {
+//                    enabled: true
+//                },
+//                enableMouseTracking: false
+//            }
+              series: {
+                    label: {
+                        connectorAllowed: false
+                    },
+//                    marker: {
+//                        symbol: 'diamond' // dimantini nei punti noti 
+//                    },
+//                    marker: {
+//               
+//                        symbol: 'url(https://www.highcharts.com/samples/graphics/sun.png)'
+//                    }
+//              
+            }
+                                 
+                                 
+        },
+
+        series: [{
+            name: 'Erogazioni',
+            color: 'blue',
+            data: {{arrayErog}}
+
+        },
+
+//            , {
+//                name: 'Erogazioni utente',
+//                color: '#3cb371',
+//                data: [{{erogU}}],
+//
+//            }
+        ],
+                    
+        // per spiegazione grafico 
+//        caption: {
+//        text: '<b>The caption renders in the bottom, and is part of the exported chart.</b><br><em>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</em>'
+//    },
+
+
+
+    }); // chiude il chart
+
 
     });
 
@@ -363,7 +560,7 @@
 <body style="background-color: #bbdefb">
 
     <div class="container-fluid">
-    <nav class="navbar navbar-light" style="background-color:#eeffff">
+    <nav class="navbar navbar-light"style="background-color:#eeffff">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar" style="color: black" >
@@ -377,9 +574,16 @@
         <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center" >
 
             <ul class="nav navbar-nav">
+<!--
                 <li ><a href='http://localhost:8000'style="color: black; text-align: center">Home</a></li>
-                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li> <!-- E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
+                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>  E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME 
                 <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
+-->
+                
+                <li ><a href='http://192.168.1.227:8000'style="color: black; text-align: center">Home</a></li>
+                <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li> <!-- E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
+                <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
+                
                 <li>
                     <nav class="navbar navbar-expand-lg has-megamenu">
 
@@ -393,7 +597,7 @@
                                       <div class="col-sm-12">
                                         <div class="link-list-wrapper">
                                           <ul class="link-list">
-                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="Pippo('t1','dpm','mioAlert2','t2')">Day </button></p> </span></a>
+                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="Pippo('t1','dpm','mioAlert2','t2')">Day </button> </span></a>
                                             </li>
                                               <li><a class="list-item" href="#"><span><button id="B2" type="button" class="btn btn-default" onclick="Pippo('t2','dpm','mioAlert','t1')">Period </button></span></a>
                                               </li>
@@ -444,44 +648,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{#                    <main class="container-fluid">#}
-{#                        <div class="row" style="padding: 10px">#}
-{#                            <div class="col"><p style="color:black">Date:<input data-date-format="dd/mm/yyyy" id="datepickerI"></p>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </main>#}
-{#                    <div class="row" style="padding: 10px">#}
-{#                    <div class="alert alert-danger" id="mioAlert">No data available!</div>#}
-{#                    <script>$('#mioAlert').hide()</script>#}
-{#                </div>#}
-{#                </li>#}
-{#                <li>#}
-{#                    <main class="container-fluid">#}
-{#                        <div class="row" style="padding: 10px">#}
-{#                            <div class="col"><p style="color:black">to:<input data-date-format="dd/mm/yyyy" id="datepickerF" disabled></p> <!-- con disabled è spento per default: lo accendo dopo aver selezionato la data nel primo (vedi codice datepickerI sopra) -->#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </main>#}
-{#                </li>#}
-
-
-
-
-
     </div>
     </nav>
     </div>
@@ -497,25 +663,41 @@
 <h1 style= "color:cornflowerblue; text-align: center" >Statistics </h1>
 </div>
 
-
+<div class="container-fluid">
 <div class="row">
-    <div class="container-fluid">
+    
         <div class="col-sm-4" id="container"></div>
-        <div class="col-sm-4" id="container1"></div>
+        <div class="col-sm-4" id="container1" style="min-height: 100%"></div>
         <div class="col-sm-4" id="container2"></div>
-    </div>
 </div>
+    
+<div class="row">
+   
+    
+    <div class="col-sm-12" style="margin-top: 2%" ><div id="container3"></div></div> <!-- container istogramma-->
+    
+    
+</div>
+    
+</div>
+
+
+
+
+
+
+    <div class="container-fluid">
 
     <div id="d1" class="row" style="display:none; margin-top: 50px;">
         <div class="col-sm-12">
             <table id="oggi" class="table table-hover table-bordered-costum " >
                     <thead>
-                    <tr id="prova">
+                    <tr id="prova" style="background-color: #eeffff">
 {#                       <th>Id</th>#}
-                        <th>Data</th>
-                        <th>Erogation</th>
-                      <th>UserMode</th>
-                        <th>TimeMode</th>
+                        <th style="font-weight: bold; color: cornflowerblue">Data</th>
+                        <th style="font-weight: bold; color: cornflowerblue">Erogation</th>
+                      <th style="font-weight: bold; color: cornflowerblue">UserMode</th>
+                        <th style="font-weight: bold; color: cornflowerblue">TimeMode</th>
                     </tr>
 
                     <tbody>
@@ -531,9 +713,9 @@
                     </tbody>
             </table>
         </div>
+        </div>
+
     </div>
-
-
 
 <div class="text-center">
     <button type= "button" class="btn btn-link" style="color: cornflowerblue" onclick="pippo('d1')">Show the table</button>
