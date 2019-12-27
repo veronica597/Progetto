@@ -20,6 +20,8 @@ urlpatterns = [
 
     url(r'^fakeP/', views.absentDataPeriod, name='fakeP'),  ## RITORNA PG STATISTIC
 
+    url(r'^fakeSM/', views.absentDataSM, name='fakeSM'),  # per verificare se ci sono dati per la settimana/il mese piu' recente
+
 
     # da eliminare
     url(r'^asseX/', views.asseXIsto, name='asseX'),

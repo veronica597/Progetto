@@ -78,17 +78,20 @@
 
     <script type="text/javascript" >
 
-        $(document).ready(function (){
+        //$(document).ready(function (){
             console.log("pronti alla get");
 
             console.log({{ righe.lenght }});
+            var ip = "localhost"; // 172.20.10.2
 
 
             //var INDIRIZZO_IP = "192.168.1.105"; // indirizzo IP del computer
             //var urlHome = "http://192.168.1.105:8000/dispenser/";
 
             // Casa Chiara
-            var DEVICE_IP = '192.168.1.128'; // indirizzo IP della scheda ESP8266
+            //var DEVICE_IP = '192.168.1.128'; // indirizzo IP della scheda ESP8266
+            
+            var DEVICE_IP = '172.20.10.5'; // indirizzo IP della scheda ESP8266
 
             // MICC
             //var DEVICE_IP = '192.168.0.134';
@@ -110,17 +113,95 @@
 
 
             $("#on").click(attivaServo);
+            
+            
+            // funzione per verificare la presenza di dati per la SETTIMANA piu' recente
+        
+        function dataAvailableS(){
+
+            console.log("dentro la funzione"); 
+            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=0"; 
+            
+            $.get(requestUrl, function (data) {
+                console.log('DATI RICEVUTI: ' + data);
+                if(data[0] == 0){
+                    console.log("alert a tutta pagina");
+                    // mi sposto sulla pagina /statistic cmq
+                
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0&noData=1";  
+                    
+                }
+                else{ // renderizzo i dati che ci sono normalmente 
+                    
+                    // recupero la data di inizio e di fine del periodo
+                    var start = new Date(data[1]); // passato 
+                    var end = new Date(data[2]); // oggi 
+                    
+                    var yearS = start.getFullYear();
+                    var monthS = start.getMonth() + 1; 
+                    var dayS = start.getDate(); 
+                    
+                    var yearE = end.getFullYear();
+                    var monthE = end.getMonth() + 1;
+                    var dayE = end.getDate();
+                    
+                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
+                    
+                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
+                    
+                    
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + '0' + dayE + "";
+                }
+            }); 
+        }
+        
+        //funzione per verificare la presenza di dati per la MESE piu' recente
+        
+        function dataAvailableM(){
+
+            console.log("dentro la funzione"); 
+            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=1"; 
+            
+            $.get(requestUrl, function (data) {
+                console.log('DATI RICEVUTI: ' + data);
+                if(data[0] == 0){
+                    console.log("alert a tutta pagina");
+                    // mi sposto sulla pagina /statistic cmq
+                    
+                    
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1&noData=1";  
+                    
+                }
+                else{ // renderizzo i dati che ci sono normalmente 
+                    
+                    // recupero la data di inizio e di fine del periodo
+                    var start = new Date(data[1]); // passato 
+                    var end = new Date(data[2]); // oggi 
+                    
+                    var yearS = start.getFullYear();
+                    var monthS = start.getMonth() + 1; 
+                    var dayS = start.getDate(); 
+                    
+                    var yearE = end.getFullYear();
+                    var monthE = end.getMonth() + 1;
+                    var dayE = end.getDate();
+                    
+                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
+                    
+                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
+                    
+                    
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + '0' + dayE + "";
+                }
+            }); 
+        }
+            
+            
+            
 
 
-//            {# $('#oggi').DataTable({#}
-//            {#    "scrollY": "220px",#}
-//            {#    "scrollCollapse": true,#}
-//            {#    "searching": false // false to disable search (or any other option)#}
-//
-//            {#$('.dataTables_length').addClass('bs-select');#}
 
-
-        });
+       // });
 
 
     </script>
@@ -145,15 +226,32 @@
         <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center" >
 
             <ul class="nav navbar-nav">
-<!--
+                
                 <li ><a href='http://localhost:8000'style="color: black; text-align: center">Home</a></li>
+                
+<!--                <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>-->
+                
+<!--
                 <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>
                 <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
 -->
                 
+                <!-- last week e last month modificati -->
+                
+                <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableS()">Last Week</a></li>
+                <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableM()">Last Month</a></li>
+                
+<!--
                 <li ><a href='http://192.168.1.227:8000'style="color: black; text-align: center">Home</a></li>
                 <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>
                 <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
+-->
+                
+<!--
+                <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>
+                <li ><a href='http://172.20.10.2:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>
+                <li ><a href='http://172.20.10.2:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
+-->
                 
 <!--
                 {#                <li>#}
@@ -340,9 +438,10 @@
 
                         $.ajax({
                             type: 'GET',
-                            url: "http://192.168.1.227:8000/dispenser/giorno/",
-                            //url: "http://172.17.196.174:8000/dispenser/giorno/",
-                            //url: "http://localhost:8000/dispenser/giorno/",
+                            //url: "http://192.168.1.227:8000/dispenser/giorno/",
+                            //url: "http://172.20.10.2:8000/dispenser/giorno/",
+                           
+                            url: "http://localhost:8000/dispenser/giorno/",
 
                             success: function(data){
                                 console.log("dati ricevuti");
@@ -598,17 +697,27 @@
         title: {
             text: ''
         },
+        
+        credits: {
+            enabled: false  // disabilito la scitta Highcharts.com
+        },
 
         // sistemare xAxis
 
-//                    xAxis: {
-//                        categories: [data[0]]
-//                    },
+        xAxis: {
+            accessibility: {
+                description: '' + {{Giorno|safe}} + ''
+            },
+            //categories: [data[0]]
+        },
 
         series: [{
             name: 'Erogazioni',
             color: '#ff00ff',
             data: [{{erog}}],
+            accessibility: {
+                description: "This is the number of erogations for today"
+            }
 
         }
 
@@ -616,6 +725,9 @@
                 name: 'No erogazioni',
                 color: '#00bfff',
                 data: [{{noErog}}],
+                accessibility: {
+                    description: "This is the number of passages without erogation for today"
+                }
 
 
             }

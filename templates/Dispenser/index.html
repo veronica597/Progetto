@@ -32,17 +32,18 @@
 
 
 </style>
-
-
+    
+    
+   
 
 </head>
 <body style="background-color: #bbdefb">
 
 
-<div class="container-fluid">
+<div class="container-fluid" >
 <nav class="navbar navbar-light" style="background-color:#eeffff">
     <div class="container-fluid">
-        <div class="navbar-header">
+        <div class="navbar-header" >
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar" >
                 <span class="icon-bar" style="background-color:#8aacc8"></span>
                 <span class="icon-bar"style="background-color: #8aacc8"></span>
@@ -51,16 +52,28 @@
             <a href="#" class="navbar-brand" title="Food Dispenser" style="color: black">Food Dispenser</a>
         </div>
 
-        <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center" >
+        <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center; position: sticky" >
 
             <ul class="nav navbar-nav">
-<!--
-                <li ><a href='http://localhost:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>
-                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0' title="Statistics" style="color: black; text-align: center">Statistics</a></li>
--->
+                <li><a href='http://localhost:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>
+
+                <!--                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0' title="Statistics" style="color: black; text-align: center">Statistics</a></li>-->
                 
-                <li ><a href='http://192.168.1.227:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>
+                
+<!--                <li ><a href='http://172.20.10.2:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>-->
+                
+                 <!--prove per risolvere il problema dei dati della settimana eventualmente mancanti -->
+                
+                <li> <a href="#" id="stat" style="color: black; text-align: center" >Statistics</a></li> <!-- onclick="dataAvailable()" 
+                
+
+<!--                <li ><a href='http://172.20.10.2:8000/dispenser/statistic/?id=0' title="Statistics" style="color: black; text-align: center">Statistics</a></li>-->
+
+                
+<!--
+                 <li ><a href='http://192.168.1.227:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>
                 <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=0' title="Statistics" style="color: black; text-align: center">Statistics</a></li>
+-->
 
             </ul>
         </div>
@@ -75,13 +88,68 @@
 
     <img src="{% static 'Progetto/Img/foto4_copia copia.png' %}" alt="immagine di sfondo" class="rounded mx-auto d-block">
 </div>
-
-
-
-
-
-
-
+    
+     <script type="text/javascript">
+        
+        $(document).ready(function (){
+          console.log("CIAO");
+        var ip = 'localhost'; // 172.20.10.2 
+           
+        
+        /* funzione per verificare la presenza di dati per la settimana piu' recente*/
+        
+        function dataAvailable(){
+            console.log("dentro la funzione"); 
+            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=0"; // di default voglio sapere se ci sono dati per l'ultima settimana 
+            
+            $.get(requestUrl, function (data) {
+                console.log('DATI RICEVUTI: ' + data);
+                if(data[0] == 0){
+                    console.log("alert a tutta pagina");
+                    // mi sposto sulla pagina /statistic cmq
+                    
+                    
+                    
+                    
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0&noData=1";  
+                    
+                }
+                else{ // renderizzo i dati che ci sono normalmente 
+                    
+                    // recupero la data di inizio e di fine del periodo
+                    var start = new Date(data[1]); // passato 
+                    var end = new Date(data[2]); // oggi 
+                    
+                    var yearS = start.getFullYear();
+                    var monthS = start.getMonth() + 1; 
+                    var dayS = start.getDate(); 
+                    
+                    var yearE = end.getFullYear();
+                    var monthE = end.getMonth() + 1;
+                    var dayE = end.getDate();
+                    
+                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
+                    
+                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
+                    
+                    
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + '0' + dayE + "";
+                }
+            }); 
+        }
+        
+        $("#stat").click(dataAvailable); 
+            
+        
+        
+        });
+    
+    
+    
+    
+    
+    
+    </script>
 
 
 
