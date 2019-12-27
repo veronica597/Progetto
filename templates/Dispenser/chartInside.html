@@ -50,6 +50,9 @@
     </style>
 
 <script>
+    
+    var ip = 'localhost'; // indirizzo ip server 172.20.10.2
+    
     function pippo(aDiv1,) {
             var e = document.getElementById(aDiv1);
 
@@ -104,16 +107,19 @@
                                 console.log(month);
                                 console.log(year);
 
-                                //requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                var requestUrl = "http://" + ip + ":8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                //requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                
+                                //var requestUrl = "http://172.20.10.2:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                     $.get(requestUrl, function (data) {
                                         console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
                                             var l= document.getElementById('mioAlert');
                                             l.style.display='block';
                                         } else {
-                                            window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                            //window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            //window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            window.location.href = "http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            //window.location.href="http://172.20.10.2:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                         }
 
                                     });
@@ -165,38 +171,129 @@
                            function caricamento() {
                                 if(year == yearF && month== monthF && day == dayF) {
                                     console.log(" Mostro giorno scelto dal primo cal");
-                                   //requestUrl = "http://localhost:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    
+                                   requestUrl = "http://" + ip + ":8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    //requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    //requestUrl = "http://172.20.10.2:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                     $.get(requestUrl, function (data) {
                                         console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
                                             var l= document.getElementById('mioAlert2');
                                             l.style.display='block';
                                         } else {
-                                            window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                            //window.location.href = "http://localhost:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            //window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                             //window.location.href="http://172.20.10.2:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                            window.location.href = "http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                         }
 
                                     });
 
                                 } else{
                                     console.log(" Ho sel anche sul sec calendario. Mostro periodo selezionato! ");
-                                    //requestUrl = "http://localhost:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                    requestUrl = "http://192.168.1.227:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                    requestUrl = "http://" + ip + ":8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                    //requestUrl = "http://172.20.10.2:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
                                     $.get(requestUrl, function (data) {
                                          console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
                                             var l= document.getElementById('mioAlert2');
                                             l.style.display='block';
                                         }else {
-                                            //window.location.href = "http://localhost:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                            window.location.href = "http://192.168.1.227:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                            window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                            //window.location.href = "http://192.168.1.227:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                            //window.location.href = "http://172.20.10.2:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
                                         }
                                      });
 
 
                                 }
                             }
+    
+    
+    
+    
+     // funzione per verificare la presenza di dati per la SETTIMANA piu' recente
+        
+        function dataAvailableS(){
+
+            console.log("dentro la funzione"); 
+            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=0"; // di default voglio sapere se ci sono dati per l'ultima settimana 
+            
+            $.get(requestUrl, function (data) {
+                console.log('DATI RICEVUTI: ' + data);
+                if(data[0] == 0){
+                    console.log("alert a tutta pagina");
+                    // mi sposto sulla pagina /statistic cmq
+                    
+                    
+                    
+                    
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0&noData=1";  
+                    
+                }
+                else{ // renderizzo i dati che ci sono normalmente 
+                    
+                    // recupero la data di inizio e di fine del periodo
+                    var start = new Date(data[1]); // passato 
+                    var end = new Date(data[2]); // oggi 
+                    
+                    var yearS = start.getFullYear();
+                    var monthS = start.getMonth() + 1; 
+                    var dayS = start.getDate(); 
+                    
+                    var yearE = end.getFullYear();
+                    var monthE = end.getMonth() + 1;
+                    var dayE = end.getDate();
+                    
+                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
+                    
+                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
+                    
+                    
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + '0' + dayE + "";
+                }
+            }); 
+        }
+        
+        //funzione per verificare la presenza di dati per la MESE piu' recente
+        
+        function dataAvailableM(){
+
+            console.log("dentro la funzione"); 
+            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=1"; 
+            
+            $.get(requestUrl, function (data) {
+                console.log('DATI RICEVUTI: ' + data);
+                if(data[0] == 0){
+                    console.log("alert a tutta pagina");
+                    // mi sposto sulla pagina /statistic cmq
+                    
+                    
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1&noData=1";  
+                    
+                }
+                else{ // renderizzo i dati che ci sono normalmente 
+                    
+                    // recupero la data di inizio e di fine del periodo
+                    var start = new Date(data[1]); // passato 
+                    var end = new Date(data[2]); // oggi 
+                    
+                    var yearS = start.getFullYear();
+                    var monthS = start.getMonth() + 1; 
+                    var dayS = start.getDate(); 
+                    
+                    var yearE = end.getFullYear();
+                    var monthE = end.getMonth() + 1;
+                    var dayE = end.getDate();
+                    
+                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
+                    
+                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
+                    
+                    
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + '0' + dayE + "";
+                }
+            }); 
+        }
 
 
 
@@ -331,7 +428,11 @@
                             title: {
                                 text: 'Erogazioni 22 Ottobre 2019'
                             },
-
+                            
+                            credits: {
+                                enabled: false
+                            },
+                            
                             // sistemare xAxis
 
                             xAxis: {
@@ -402,12 +503,34 @@
         <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center" >
 
             <ul class="nav navbar-nav">
+                <!-- localhost --> 
+                
 <!--                <li ><a href='http://localhost:8000'style="color: black; text-align: center">Home</a></li>-->
-                <li ><a href='http://192.168.1.227:8000'style="color: black; text-align: center">Home</a></li>
-<!--                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>  E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
-                <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>
-<!--                <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>-->
-                 <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
+<!--                E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
+                
+                <!-- hotspot Vero -->
+                <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>
+<!--
+                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>  
+                <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
+-->
+                <!-- last week e last month modificati -->
+                
+                <li ><a href='#' id="lastWeek" style="color: black; text-align: center" onclick="dataAvailableS()">Last Week</a></li>  
+                <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableM()">Last Month</a></li>
+                
+                
+                
+                
+                <!--                <li ><a href='http://172.20.10.2:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>-->
+                <!--                <li ><a href='http://172.20.10.2:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>-->
+                
+                <!-- casa Chiara -->
+                
+<!--                <li ><a href='http://192.168.1.227:8000'style="color: black; text-align: center">Home</a></li>-->
+<!--                <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>-->
+<!--                 <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>-->
+
                 <li>
                     <nav class="navbar navbar-expand-lg has-megamenu">
 
@@ -537,10 +660,17 @@
         title: {
             text:''
         },
+        
+        credits: {
+            enabled: false // disabilito la scritta Highcharts.com
+        },
 
         // sistemare xAxis
 
         xAxis: {
+            accessibility: {
+                description: '' + {{Giorno|safe}} + ''
+            },
             categories: [{{Giorno|safe}}]
         },
 
@@ -548,6 +678,9 @@
             name: 'Erogazioni automatiche',
             color: '#ff0000',
             data: [{{erogA}}],
+            accessibility: {
+                description: 'This is the number of automatic erogations for the day selected' 
+            }
 
         }
 
@@ -555,6 +688,9 @@
                 name: 'Erogazioni utente',
                 color: '#3cb371',
                 data: [{{erogU}}],
+                accessibility: {
+                    description: "This is the number of user erogations for the day selected",
+                }
 
             }
         ],
@@ -580,10 +716,18 @@
         title: {
             text:''
         },
+        
+        credits: {
+            enabled: false
+        },
+        
 
         // sistemare xAxis
 
         xAxis: {
+            accessibility: {
+                description: '' + {{Giorno|safe}} + ''
+            },
             categories: [{{Giorno|safe}}]
         },
 
@@ -591,6 +735,9 @@
             name: 'Erogazioni',
             color: '#ff00ff',
             data: [{{erog}}],
+            accessibility: {
+                description: 'This is the number of erogations for the day selected'
+            }
 
         }
 
@@ -598,6 +745,9 @@
                 name: 'No erogazioni',
                 color: '#00bfff',
                 data: [{{noErog}}],
+                accessibility: {
+                    description: 'This is the number of passages without erogation for the day selected'
+                }
 
             }
         ],
@@ -626,10 +776,17 @@
         title: {
             text:''
         },
+        
+        credits: {
+            enabled: false
+        },
 
         // sistemare xAxis
 
         xAxis: {
+            accessibility: {
+                description: '' + {{Giorno|safe}} + ''
+            },
             categories: [{{Giorno|safe}}]
         },
 
@@ -637,6 +794,9 @@
             name: 'Erogazioni modalità giorno',
             color: '#ffd700',
             data: [{{erogG}}],
+            accessibility: {
+                description: "This is the number of day's mode erogations for the day selected",
+            }
 
         }
 
@@ -644,6 +804,10 @@
                 name: 'Erogazioni modalità notte',
                 color: '#4169e1',
                 data: [{{erogN}}],
+                accessibility: {
+                    description: "This is the number of night's mode erogations for the day selected",
+                }
+                
 
             }
         ],
