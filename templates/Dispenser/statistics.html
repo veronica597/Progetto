@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +25,9 @@
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+    
+    <!-- favicon -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'Progetto/favicon.ico/favicon-96x96.png' %}"/> 
 
     <style>
         .nav > li > a:focus,
@@ -114,14 +118,14 @@
                             daysOfWeekHighlighted: "6,0",
                             autoclose: true,
                             todayHighlight: true,
-                        });
+        });
 
                         $(function() {
                             $('#datepickerI').datepicker();
                             $('#datepickerF').datepicker();
                             $('#datepickerI1').datepicker();
 
-                            $("#datepickerI1").on("change", function () {
+                            $("#datepickerI1").on("change", function () {  // per selezione giorno singolo 
                                 day = $(this).datepicker('getDate').getDate();
                                 month = $(this).datepicker('getDate').getMonth() + 1;
                                 year = $(this).datepicker('getDate').getFullYear();
@@ -130,8 +134,7 @@
                                 console.log(year);
 
                                 requestUrl = "http://" + ip + ":8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                //requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                //requestUrl = "http://172.20.10.2:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                
                                 
                                 $.get(requestUrl, function (data) {
                                     console.log('DATI RICEVUTI: ' + data);
@@ -140,17 +143,16 @@
                                         l.style.display='block';
                                     } 
                                     else {
+                                        window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
                                            
-                                        if(day < 10){
-                                            window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
-                                            //window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
-                                             //window.location.href="http://172.20.10.2:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
-                                        }
-                                        else{
-                                            window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                            //window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                            //window.location.href="http://172.20.10.2:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                        }
+//                                        if(day < 10){
+//                                            window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
+
+//                                        }
+//                                        else{
+//                                            window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+
+//                                        }
                                     }
 
                                     });
@@ -200,11 +202,10 @@
         });
 
                            function caricamento() {
-                                if(year == yearF && month== monthF && day == dayF) {
+                                if(year == yearF && month== monthF && day == dayF) {  // caso in cui seleziono la stessa data nelle due celle 
                                     console.log(" Mostro giorno scelto dal primo cal");
                                     requestUrl = "http://" + ip + ":8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    //requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    //requestUrl = "http://172.20.10.2:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                                    
                                     $.get(requestUrl, function (data) {
                                         console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
@@ -214,16 +215,15 @@
                                         }
                                         
                                         else {
-                                            if(day < 10){
-                                                window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
-                                                //window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
-                                                //window.location.href="http://172.20.10.2:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
-                                           }
-                                           else{
-                                               window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                               //window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                               //window.location.href="http://172.20.10.2:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                           }
+                                            window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+//                                            if(day < 10){
+//                                                window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
+//                                               
+//                                           }
+//                                           else{
+//                                               window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+//                                               
+//                                           }
                                         }
 
                                     });
@@ -233,8 +233,7 @@
                                else{
                                     console.log(" Ho sel anche sul sec calendario. Mostro periodo selezionato! ");
                                     requestUrl = "http://" + ip +":8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                   //requestUrl = "http://192.168.1.227:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                   //requestUrl = "http://172.20.10.2:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+                                   
                                     $.get(requestUrl, function (data) {
                                          console.log('DATI RICEVUTI: ' + data);
                                         if (data == 0) {
@@ -242,23 +241,34 @@
                                             l.style.display='block';
 
                                         }else {
-                                            if(day < 10){
-                                                window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + '0' + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                                //window.location.href = "http://192.168.1.227:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + '0' + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                                //window.location.href = "http://172.20.10.2:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + '0' + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                            }
-                                            
-                                            if(dayF < 10){
-                                                window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + '0' + dayF + "";
-                                                //window.location.href = "http://192.168.1.227:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + '0' + dayF + "";
-                                                 //window.location.href = "http://172.20.10.2:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + '0' + dayF + "";
-                                            }
-                                            
-                                            else{
-                                                window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                                //window.location.href = "http://192.168.1.227:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                                //window.location.href = "http://172.20.10.2:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                            }
+                                             window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+//                                            
+//                                            if(day < 10){
+//                                                // controllo il valore di dayF
+//                                                if(dayF < 10){
+//                                                    window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + '0' + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + '0' + dayF + "";
+//                                                }
+//                                                else{
+//                                                    window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + '0' + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+//                                                }
+//                                                
+//                                            }
+//                                            else if(dayF < 10){
+//                                                // controllo il valore di day
+//                                                if(day < 10){
+//                                                    window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + '0' + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + '0' + dayF + "";
+//                                                }
+//                                                else{
+//                                                    window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + '0' + dayF + "";
+//                                                }
+//                                                
+//                                            }
+//                                            
+//                                            
+//                                            else{
+//                                                window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
+//                                              
+//                                            }
                                             
                                            
                                         }
@@ -308,7 +318,7 @@
                     console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
                     
                     
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + '0' + dayE + "";
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + dayE + "";
                 }
             }); 
         }
@@ -349,7 +359,7 @@
                     console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
                     
                     
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + '0' + dayE + "";
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + dayE + "";
                 }
             }); 
         }
@@ -415,42 +425,66 @@
         
         var count = start.getDate(); 
         var countMese = (start.getMonth() + 1)%13; 
+            console.log("count meseeee: ", countMese);
         var countAnno = start.getFullYear(); 
         var endMese = (end.getMonth() + 1)%13;
+            console.log("end meseeee: ", endMese);
+        
+        
         if(count < 10){
-            startString = "0" + count + "-" + countMese + "-" + countAnno;
+            if(countMese < 10){
+                startString = "0" + count + "-0" + countMese + "-" + countAnno;
+            }
+            else{
+                startString = "0" + count + "-" + countMese + "-" + countAnno;
+            }
+            
         }
         else{
-            startString = count + "-" + countMese + "-" + countAnno; 
+            
+            if(countMese < 10){
+                startString = count + "-0" + countMese + "-" + countAnno;
+            }
+            else{
+                startString = count + "-" + countMese + "-" + countAnno;
+            }
         }
+            
+        //startString = count + "-" + countMese + "-" + countAnno;
         
         console.log("START STRING: ", startString);
         arrayGiorni.push(startString); 
         
-        while( (count < end.getDate() - 1) || ((count > end.getDate() - 1) && (countMese != endMese))){
+        while( (count <= end.getDate() - 1) || ((count > end.getDate() - 1) && (countMese != endMese))){
            
               if(countMese == endMese){
                 count++; 
                 //console.log("PRIMO IF"); 
               }
         
-              else if(countMese < endMese || (countMese == 12 && endMese == 1)){
+              else if(countMese < endMese || countMese > endMese){  // (countMese == 12 && endMese == 1)
                   // verificare che tipo di mese e' -- se un mese che ha 30 giorni o 31 giorni 
                   if(giorniDelMese(countMese) == true && count == 30){ // se il mese ha 30 giorni e il giorno in esame e' il 30
                       count = 1;
-                      countMese = endMese; 
+                      if(countMese == 11){
+                          countMese = 12; 
+                      }
+                      else{
+                          countMese = (countMese + 1)%12; // endMese 
+                      }
+                     
                       //console.log("SECONDO IF"); 
                   }
                   else{
                       if(countMese == 2 && count == 28){
                           count = 1; 
-                          countMese = endMese; 
+                          countMese = (countMese + 1)%12; 
                           //console.log("TERZO IF"); 
                       }
                       
                       else if(count == 31){ // il mese non ha 30 giorni e non e' febbraio --> ha 31 giorni 
                           count = 1;  
-                          countMese = endMese;
+                          countMese = (countMese + 1)%12; // endMese
                           if(countAnno != end.getFullYear()){
                               countAnno = end.getFullYear(); 
                               //console.log("QUARTO IF"); 
@@ -458,7 +492,7 @@
                       }
                       else{
                           count++; 
-                          //console.log("QUINTO IF"); 
+                          //console.log("QUINTO IF");  
                       }
                       
                   }
@@ -466,12 +500,26 @@
                
         
               dataCount = new Date(countAnno, countMese, count); 
+              
+             
               if(count < 10){
-                  dataCountString = "0" + count + "-" + countMese + "-" + countAnno;
+                  if(countMese < 10){
+                      dataCountString = "0" + count + "-0" + countMese + "-" + countAnno;
+                  }
+                  else{
+                      dataCountString = "0" + count + "-" + countMese + "-" + countAnno;
+                  }
+                 
               }
               else{
-                  dataCountString = count + "-" + countMese + "-" + countAnno; 
+                  if(countMese < 10){
+                      dataCountString = count + "-0" + countMese + "-" + countAnno;
+                  }
+                  else{
+                      dataCountString = count + "-" + countMese + "-" + countAnno;
+                  }
               }
+            
              
               //console.log("DATA PROCESSATA: ", dataCount);
               
@@ -481,14 +529,27 @@
               
         }
          
-        if(end.getDate() < 10){
-            endString = "0" + end.getDate() + "-" + endMese + "-" + end.getFullYear();
-        }
-        else{
-            endString = end.getDate() + "-" + endMese + "-" + end.getFullYear();
-        }
-        
-        arrayGiorni.push(endString); 
+          
+//        if(end.getDate() < 10){
+//            if(end.getMonth() < 10){
+//                endString = "0" + end.getDate() + "-0" + endMese + "-" + end.getFullYear();
+//            }
+//            else{
+//                endString = "0" + end.getDate() + "-" + endMese + "-" + end.getFullYear();
+//            }
+//            
+//        }
+//        else{
+//            if(end.getMonth() < 10){
+//                endString = end.getDate() + "-0" + endMese + "-" + end.getFullYear();
+//            }
+//            else{
+//                endString = end.getDate() + "-" + endMese + "-" + end.getFullYear();
+//            }
+//        }
+//        
+//        
+//        arrayGiorni.push(endString); 
         console.log("ARRAY GIORNI: " , arrayGiorni); // costituisce l'asse x dell'istogramma 
         
         var arrayY = []; 
@@ -499,6 +560,8 @@
         console.log("EROGAZIONI: ", erogazioni); 
         console.log("DATE EROGAZIONI: ", dateErog);
         console.log("DIM: ", arrayGiorni.length);
+        
+        
         while(i < arrayGiorni.length && j < dateErog.length){
             while(arrayGiorni[i] != dateErog[j]){
                 arrayY[i] = 0; 
@@ -517,10 +580,6 @@
         }
         
         console.log("ARRAY PER ASSE Y: ", arrayY);
-            
-            
-            
-            
             
             
             

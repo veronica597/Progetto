@@ -19,6 +19,11 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+<!-- favicon -->
+<link rel="shortcut icon" type="image/png" href="{% static 'Progetto/favicon.ico/favicon-96x96.png' %}"/> 
+    
+    
 
 <style>
 .nav > li > a:focus,
@@ -132,8 +137,8 @@
                     
                     console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
                     
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + '0' + dayE + "";
+                
+                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + dayE + "";
                 }
             }); 
         }

@@ -22,7 +22,7 @@ def profile(request):
 
 
 @csrf_exempt
-def sensor(request):  # processa i dati da inserire nel database
+def sensor(request):  # processa i dati da inserire nel database -- e' la view a cui fa la post l'esp8266
 
     if request.method == 'POST':
         print('post')
@@ -44,7 +44,7 @@ def sensor(request):  # processa i dati da inserire nel database
 
 
 @csrf_exempt
-def client(request):  # processa i dati inviati a seguito del click dell'utente
+def client(request):  # processa i dati del giorno corrente
 
     if request.method == 'GET':
         print('get')
@@ -76,16 +76,20 @@ def client(request):  # processa i dati inviati a seguito del click dell'utente
 
 
 @csrf_exempt
-def sendData(request):  # view che invia i dati per costruire il CHART erogazioni utente/automatiche lato html
+def sendData(request):  # view che invia i dati per costruire i CHART lato html per i singoli giorni
 
     anno = request.GET.__getitem__('anno')
     mese = request.GET.__getitem__('mese')
     giorno = request.GET.__getitem__('giorno')
 
-    stringa = anno + "-" + mese + "-" + giorno
-    stringaI = giorno + "-" + mese + "-" + anno  # per categories grafico -- vedere come togliere lo zero davanti
+    if int(giorno) < 10:  # pensare di mettere lo zero per il mese
+        stringa = anno + "-" + mese + "-" + "0" + giorno  # l'aggiunta dello 0 e' per contains
+        stringaI = "0" + giorno + "-" + mese + "-" + anno  # per il titolo della pagina html
+    else:
+        stringa = anno + "-" + mese + "-" + giorno
+        stringaI = giorno + "-" + mese + "-" + anno  # per il titolo della pagina html
 
-    print(stringa)
+    print("STRINGA filtraggio: ", stringa)
 
     eA = DatiRaccolti.objects.values('date').filter(date__contains=stringa, erogation=True, userMod=False).order_by(
         'date').count()
@@ -112,9 +116,8 @@ def sendData(request):  # view che invia i dati per costruire il CHART erogazion
     print("eN: " + str(eN))
 
     context = {'righe': DatiRaccolti.objects.values().filter(date__contains=stringa).order_by('date'),
-               # sistemare contains
-               'giorno': stringaI, 'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG,
-               'erogN': eN, 'Giorno': json.dumps(stringaI),
+               'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG, 'erogN': eN,
+               'giorno': stringaI, 'Giorno': json.dumps(stringaI),  # stringaI
                'Righe': DatiRaccolti.objects.values().filter(date__contains=stringa)[:20]
                }
 
@@ -122,13 +125,13 @@ def sendData(request):  # view che invia i dati per costruire il CHART erogazion
 
 
 @csrf_exempt
-def absentData(request):
+def absentData(request):  # per controllare la presenza di dati per un giorno singolo selezionato dall'utente
     anno = request.GET.__getitem__('anno')
     mese = request.GET.__getitem__('mese')
     giorno = request.GET.__getitem__('giorno')
 
-    if int(giorno) < 10:
-        stringa = anno + "-" + mese + "-" + '0' + giorno
+    if int(giorno) < 10:   # pensare di mettere lo 0 per il mese
+        stringa = anno + "-" + mese + "-" + '0' + giorno  # lo 0 e' per contains
     else:
         stringa = anno + "-" + mese + "-" + giorno
 
@@ -143,9 +146,13 @@ def absentData(request):
 @csrf_exempt
 def absentDataPeriod(request):  # per periodo scelto da utente
 
+    print("view absentDataPeriod")
+
     anno = request.GET.__getitem__('anno')
     mese = request.GET.__getitem__('mese')
     giorno = request.GET.__getitem__('giorno')
+
+    # in questo caso non mi serve aggiungere lo 0 perche' non utilizzo contains
 
     stringaI = anno + "-" + mese + "-" + giorno
 
@@ -163,6 +170,7 @@ def absentDataPeriod(request):  # per periodo scelto da utente
             giornoF = 1
             if meseF == 12:
                 meseF = 1  # gennaio
+                annoF = annoF + 1
             else:
                 meseF = meseF + 1
 
@@ -195,26 +203,21 @@ def absentDataPeriod(request):  # per periodo scelto da utente
 
 
 @csrf_exempt
-def absentDataSM(request):
+def absentDataSM(request):  # per verificare la presenza di dati nell'ultima settimana e nell'ultimo mese
+    print("view absentDataSM")
     id = request.GET.__getitem__('id')
     print('id: ' + id)
 
     oggi = datetime.today()
-    Oggi = datetime.today().isoformat(' ')
-
     # per provare il caso di dati assenti per l'ultima settimana
 
-    # oggi = datetime(2019, 12, 12)
-    # Oggi = datetime(2019, 12, 12).isoformat(' ')
+    # oggi = datetime(2019, 12, 4)
 
     meseC = oggi.month
     giornoC = oggi.day
     annoC = oggi.year
 
-    if giornoC < 10:
-        giornoC = int('0' + str(giornoC))
-
-    # fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)  # intesa come stringa della data finale del periodo
+    fine = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
 
     print("oggi: " + str(oggi))
 
@@ -232,11 +235,10 @@ def absentDataSM(request):
             meseP = meseC - 1
             annoP = annoC
 
-        if giornoP < 10:
-            giornoP = int('0' + str(giornoP))
+        # if giornoP < 10:
+        #     giornoP = int('0' + str(giornoP))
 
-        # inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)  # intesa come stringa della data finale del periodo
-        passato = datetime(annoP, meseP, giornoP).isoformat(' ')
+        passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
 
     elif id == '0':  # settimana
         print("settimana")
@@ -265,19 +267,19 @@ def absentDataSM(request):
             giornoP = giornoC - 7
             annoP = annoC
 
-        if giornoC < 10:
-            # inizio = '0' + str(giornoP) + "-" + str(meseP) + "-" + str(annoP)  # intesa come stringa della data finale del periodo
-            giornoP = int('0' + str(giornoP))
+        # if giornoC < 10:
+        #     # inizio = '0' + str(giornoP) + "-" + str(meseP) + "-" + str(annoP)  # intesa come stringa della data finale del periodo
+        #     giornoP = int('0' + str(giornoP))
 
-        # inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)  # intesa come stringa della data finale del periodo
-        passato = datetime(annoP, meseP, giornoP).isoformat(' ')
+        passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
 
-    print("Il periodo selezionato e': ", passato, Oggi)
+    print("Il periodo selezionato e': ", passato, fine)  # Oggi con isoform..
 
-    f = DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi).order_by('date')
+    f = DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=fine).order_by('date')
     lu = len(f)
+    print("lunghezza: ", lu)
 
-    dataToSend = [lu, passato, Oggi]
+    dataToSend = [lu, passato, fine]  # Oggi
 
     return JsonResponse(dataToSend, safe=False)
 
@@ -309,8 +311,6 @@ def ultimoDato(request):  # per aggiornamento tabella e chart
 
     return JsonResponse(f, safe=False)
 
-# devo giocare con la combinazione di parametri id e noData -- del tipo
-# se id == 0 e noData == 1 --> return render(.., context= {}) in modo da avere un messaggio di testo che posso inserire nell'alert
 
 @csrf_exempt
 def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utente -- versione che si combina con absentDataSM
@@ -320,17 +320,17 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
     id = request.GET.__getitem__('id')
     print('id: ' + id)
 
-    if id == '0' or id == '1':  # and noData == '1':  # se ho richiesto i dati dell'ultima settimana e NON ci sono
+    if id == '0' or id == '1':
         noData = request.GET.__getitem__('noData')
         print('noData: ' + noData)
 
-        if id == '0' and noData == '1':
+        if id == '0' and noData == '1':  # se ho richiesto i dati dell'ultima settimana e NON ci sono
             print("non ci sono dati per l'ultima settimana !!")
             messaggio = "There are no data for last week"
             context = {"mess": messaggio}
             return render(request, 'statistics.html', context)
 
-        elif id == '1' and noData == '1':
+        elif id == '1' and noData == '1':  # se ho richiesto i dati dell'ultimo mese e NON ci sono
             print("non ci sono dati per l'ultimo mese !!")
             messaggio = "There are no data for last month"
             context = {"mess": messaggio}
@@ -344,18 +344,37 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
             giornoC = int(request.GET.__getitem__('giornoF'))
             annoC = int(request.GET.__getitem__('annoF'))
 
-            # oggi = datetime(annoC, meseC, giornoC)
-            Oggi = datetime(annoC, meseC, giornoC).isoformat(' ')
-            fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
-            end = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+            Oggi = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+
+            if giornoC < 10:
+                if meseC < 10:
+                    fine = "0" + str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+                else:
+                    fine = "0" + str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+            else:
+                if meseC < 10:
+                    fine = str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+                else:
+                    fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+
+            # end = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)  # per ultima data istogramma
 
             meseP = int(request.GET.__getitem__('mese'))
             giornoP = int(request.GET.__getitem__('giorno'))
             annoP = int(request.GET.__getitem__('anno'))
 
-            inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)  # intesa come stringa della data finale del periodo
-            passato = datetime(annoP, meseP, giornoP).isoformat(' ')
-            start = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
+            passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
+
+            if giornoP < 10:
+                if meseP < 10:
+                    inizio = "0" + str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+                else:
+                    inizio = "0" + str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+            else:
+                if meseP < 10:
+                    inizio = str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+                else:
+                    inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
 
             print("Il periodo selezionato e': ", passato, Oggi)
 
@@ -411,7 +430,7 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
                 print("x: ", x)
                 print("")
                 arrayDate.append(x)
-                formatList.append(x.strftime("%d-%m-%Y"))
+                formatList.append(x.strftime("%d-%m-%Y"))  # giorni e mesi < 10 hanno lo zero davanti
                 j = i + 1
 
                 while (j < len(listDb)) and (listDb[j].year == x.year) and (listDb[j].month == x.month) and (listDb[j].day == x.day):
@@ -442,29 +461,49 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
                        'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi).order_by('date'),
                        'Righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi)[:20],
                        'arrayDate': json.dumps(formatList), 'arrayErog': arrayErog,
-                       'inizio': json.dumps(formatList[0]), 'fine': json.dumps(formatList[len(formatList) - 1]),  # per istogramma titolo
+                       # 'inizio': json.dumps(formatList[0]), 'fine': json.dumps(formatList[len(formatList) - 1]),  # per istogramma titolo
                        'Inizio': json.dumps(inizio), 'Fine': json.dumps(fine),  # per grafici
-                       'start': json.dumps(start), 'end': json.dumps(end),
+                       'start': json.dumps(passato), 'end': json.dumps(Oggi),
                        }
 
             return render(request, 'statistics.html', context)
 
     else:  # id == 2
+
         print("periodo scelto dall'utente")
         meseP = int(request.GET.__getitem__('mese'))
         giornoP = int(request.GET.__getitem__('giorno'))
         annoP = int(request.GET.__getitem__('anno'))
 
-        inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)  # intesa come stringa della data iniziale del periodo
-        start = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
-        passato = datetime(annoP, meseP, giornoP).isoformat(' ')
+        passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
+
+        if giornoP < 10:
+            if meseP < 10:
+                inizio = "0" + str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+            else:
+                inizio = "0" + str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+        else:
+            if meseP < 10:
+                inizio = str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+            else:
+                inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
 
         meseC = int(request.GET.__getitem__('meseF'))
         giornoC = int(request.GET.__getitem__('giornoF'))
         annoC = int(request.GET.__getitem__('annoF'))
 
-        fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)  # intesa come stringa della data finale del periodo
-        end = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+        if giornoC < 10:
+            if meseC < 10:
+                fine = "0" + str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+            else:
+                fine = "0" + str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+        else:
+            if meseC < 10:
+                fine = str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+            else:
+                fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+
+        end = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)  # per ultima data istogramma
 
         # logica del 'giorno in più' per ovviare al problema della selezione del periodo
 
@@ -476,6 +515,7 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
                 giornoC = 1
                 if meseC == 12:
                     meseC = 1  # gennaio
+                    annoC = annoC + 1  # aggiorno l'anno
                 else:
                     meseC = meseC + 1
 
@@ -497,7 +537,7 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
             else:
                 giornoC = giornoC + 1
 
-        Oggi = datetime(annoC, meseC, giornoC).isoformat(' ')
+        Oggi = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
         print("Oggi cambiato: ", Oggi)
 
         print("Il periodo selezionato e': ", passato, Oggi)
@@ -585,29 +625,15 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
                    'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi).order_by('date'),
                    'Righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi)[:20],
                    'arrayDate': json.dumps(formatList), 'arrayErog': arrayErog,
-                   'inizio': json.dumps(formatList[0]), 'fine': json.dumps(formatList[len(formatList) - 1]),  # per istogramma
+                   # 'inizio': json.dumps(formatList[0]), 'fine': json.dumps(formatList[len(formatList) - 1]),  # per istogramma
                    'Inizio': json.dumps(inizio), 'Fine': json.dumps(fine),  # per grafici
-                   'start': json.dumps(start), 'end': json.dumps(end),  # per ase x istogramma con tutti giorni
+                   'start': json.dumps(passato), 'end': json.dumps(end),  # per asse x istogramma con tutti giorni
                    }
 
         return render(request, 'statistics.html', context)
 
 
 
-
-
-    # elif id == '1'
-
-    # oggi = datetime.today()
-    # Oggi = datetime.today().isoformat(' ')
-    #
-    # meseC = oggi.month
-    # giornoC = oggi.day
-    # annoC = oggi.year
-
-    # fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)  # intesa come stringa della data finale del periodo
-
-    # print("oggi: " + str(oggi))
 
 
 
