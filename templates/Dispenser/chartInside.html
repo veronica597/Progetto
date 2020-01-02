@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +21,9 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+    
+    <!-- favicon -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'Progetto/favicon.ico/favicon-96x96.png' %}"/> 
 
     <style>
         .nav > li > a:focus,
@@ -470,18 +474,6 @@
     </script>
 
 
-{#    <script language="JavaScript" type="text/javascript"> // per tasto che mostra tabella!#}
-{##}
-{#    function pippo(aDiv1, aDiv2) {#}
-{#        var e= document.getElementById(aDiv1);#}
-{#        var e2= document.getElementById(aDiv2);#}
-{##}
-{#        if (e.style.display=="block"){#}
-{#            e.style.display="none";#}
-{#            e2.style.display="block";#}
-{#        }#}
-{#    }#}
-{#    </script>#}
 
 
 </head>
@@ -675,7 +667,7 @@
         },
 
         series: [{
-            name: 'Erogazioni automatiche',
+            name: 'Automatic dispensing',
             color: '#ff0000',
             data: [{{erogA}}],
             accessibility: {
@@ -685,7 +677,7 @@
         }
 
             , {
-                name: 'Erogazioni utente',
+                name: 'User dispensing',
                 color: '#3cb371',
                 data: [{{erogU}}],
                 accessibility: {
@@ -732,7 +724,7 @@
         },
 
         series: [{
-            name: 'Erogazioni',
+            name: 'Disbursements',
             color: '#ff00ff',
             data: [{{erog}}],
             accessibility: {
@@ -742,7 +734,7 @@
         }
 
             , {
-                name: 'No erogazioni',
+                name: 'No disbursements',
                 color: '#00bfff',
                 data: [{{noErog}}],
                 accessibility: {
@@ -791,7 +783,7 @@
         },
 
         series: [{
-            name: 'Erogazioni modalità giorno',
+            name: 'Day mode dispensing',
             color: '#ffd700',
             data: [{{erogG}}],
             accessibility: {
@@ -801,7 +793,7 @@
         }
 
             , {
-                name: 'Erogazioni modalità notte',
+                name: 'Night mode dispensing',
                 color: '#4169e1',
                 data: [{{erogN}}],
                 accessibility: {
