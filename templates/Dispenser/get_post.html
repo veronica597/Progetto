@@ -232,39 +232,18 @@
 
             <ul class="nav navbar-nav">
                 
-                <li ><a href='http://localhost:8000'style="color: black; text-align: center">Home</a></li>
+                <li ><a href='http://localhost:8000'style="color: black; text-align: center" title="Home">Home</a></li>
                 
 <!--                <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>-->
                 
                 
                 <!-- last week e last month modificati -->
                 
-                <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableS()">Last Week</a></li>
-                <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableM()">Last Month</a></li>
+                <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableS()" title="Last Week">Last Week</a></li>
+                <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableM()" title="Last Month">Last Month</a></li>
                     
-                
-<!--
-                {#                <li>#}
-                {#                    <main class="container-fluid">#}
-                {#                        <div class="row" style="padding: 10px">#}
-                {#                            <div class="col"><p style="color:black">Date:<input data-date-format="dd/mm/yyyy" id="datepickerI"></p>#}
-                {#                            </div>#}
-                {#                        </div>#}
-                {#                    </main>#}
-                {#                    <div class="row" style="padding: 10px">#}
-                {#                    <div class="alert alert-danger" id="mioAlert">No data available!</div>#}
-                {#                    <script>$('#mioAlert').hide()</script>#}
-                {#                </div>#}
-                {#                </li>#}
-                {#                <li>#}
-                {#                    <main class="container-fluid">#}
-                {#                        <div class="row" style="padding: 10px">#}
-                {#                            <div class="col"><p style="color:black">to:<input data-date-format="dd/mm/yyyy" id="datepickerF"></p>#}
-                {#                            </div>#}
-                {#                        </div>#}
-                {#                    </main>#}
-                {#                </li>#}
--->
+
+
             </ul>
         </div>
     </div>
@@ -273,9 +252,11 @@
 
 
 <h1 style=" text-align: center; color:cornflowerblue">Today's data </h1>
-<p class="lead">In this page we can see all the informations about about the use of the dispenser on the current day </p>
-<p class="lead" id="tit"> If you want to erogate food press the following button:
+<p class="lead" style="margin-left: 5px;">In this page we can see all the informations about about the use of the dispenser on the current day </p>
+<p class="lead" id="tit" style="margin-left: 5px;"> If you want to erogate food press the following button:
     <button id="on" type="button" class="btn btn-default"> Erogation </button></p>
+<p class="text-center" style="font-style: oblique; font-weight: bold; font-size: medium; color: #eeffff; padding-left: 5px;"> Please remember that you can only deliver food through the button once every hour</p>
+
 
 
 <!--   grafico e tabella -->
@@ -303,18 +284,18 @@
 </div>
 
 
-<div id ="p1" class="container" style="display: block">
+<div id ="p1" class="container-fluid" style="display: block">
     <div id="row" class="row justify-content-md-center" style="margin-top: 20px">
         <div class="col align-self-center"> <!-- colonna centrale-->
             <table id="oggi" class="table table-hover table-bordered-costum"> <!-- style="display: none" -->
                 <thead>
                 <tr id="prova" style="background-color: #eeffff">
 
-                    {#                       <th>Id</th>#}
+                    {# <th>Id</th>#}
                     <th style="font-weight: bold; color: cornflowerblue">Data</th>
                     <th style="font-weight: bold; color: cornflowerblue">Erogation</th>
-                    {#                       <th>UserMode</th>#}
-                    {#                       <th>TimeMode</th>#}
+                    {#<th>UserMode</th>#}
+                    {# <th>TimeMode</th>#}
                 </tr>
 
                 <tbody style="border-bottom-color: white">
@@ -323,8 +304,8 @@
                         <td id="id" style="display: none">{{riga.id}} </td>
                         <td id="date">{{riga.date}} </td>
                         <td id="erogation">{{riga.erogation}} </td>
-                        {#                           <td id="userMod">{{riga.userMod}} </td>#}
-                        {#                            <td id="timeMod">{{riga.timeMod}} </td>#}
+                        {#<td id="userMod">{{riga.userMod}} </td>#}
+                        {#<td id="timeMod">{{riga.timeMod}} </td>#}
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -366,8 +347,8 @@
 </div>
 
 
-<div class="text-center">
-    <button id="tasto" type= "button" class="btn btn-link" style="color: cornflowerblue; margin-left: 40%; display: none;" onclick="pippo2('p1','p2')">Show the table</button>
+<div class="container-fluid">
+    <button id="tasto" type= "button" class="btn btn-link" style="color: cornflowerblue; margin-left: 45%; display: none;" onclick="pippo2('p1','p2')">Show the table</button>
 </div>
 
 
@@ -631,7 +612,7 @@
         },
 
         series: [{
-            name: 'Erogazioni',
+            name: 'Disbursements',
             color: '#ff00ff',
             data: [{{erog}}],
             accessibility: {
@@ -641,7 +622,7 @@
         }
 
             , {
-                name: 'No erogazioni',
+                name: 'No Disbursements',
                 color: '#00bfff',
                 data: [{{noErog}}],
                 accessibility: {

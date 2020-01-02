@@ -614,7 +614,7 @@
                 },
 
                 series: [{
-                    name: 'Erogazioni automatiche',
+                    name: 'Automatic dispensing',
                     color: 'green',
                     data: [{{erogA}}],
                     accessibility: {
@@ -624,7 +624,7 @@
                 }
 
                     , {
-                        name: 'Erogazioni utente',
+                        name: 'User dispensing',
                         color: 'orange',
                         data: [{{erogU}}],
                         accessibility: {
@@ -676,7 +676,7 @@
                 },
 
                 series: [{
-                    name: 'Erogazioni',
+                    name: 'Disbursements',
                     color: '#ff00ff',
                     data: [{{erog}}],
                     accessibility: {
@@ -686,7 +686,7 @@
                 }
 
                     , {
-                        name: 'No erogazioni',
+                        name: 'No disbursements',
                         color: '#00bfff',
                         data: [{{noErog}}],
                         accessibility: {
@@ -734,7 +734,7 @@
                 },
 
                 series: [{
-                    name: 'Erogazioni modalità giorno',
+                    name: 'Day mode dispensing',
                     color: '#ffd700',
                     data: [{{erogG}}],
                     accessibility: {
@@ -744,7 +744,7 @@
                 }
 
                     , {
-                        name: 'Erogazioni modalità notte',
+                        name: 'Night mode dispensing',
                         color: '#4169e1',
                         data: [{{erogN}}],
                         accessibility: {
@@ -883,7 +883,7 @@
         },
 
         series: [{
-            name: 'Erogazioni',
+            name: 'Disbursements',
             color: 'blue',
             //data: {{arrayErog}},
             data: arrayY,
@@ -942,8 +942,8 @@
 
             <ul class="nav navbar-nav">
                 
-                <li ><a href='http://localhost:8000'style="color: black; text-align: center">Home</a></li>
-                <!-- E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME  -->
+                <li ><a href='http://localhost:8000'style="color: black; text-align: center" title="Home">Home</a></li>
+
                 
                 
 <!--                 <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>-->
@@ -953,8 +953,8 @@
                 
                 <!-- last week e last month con noData-->
                 
-                <li ><a href='#' id="lastWeek" style="color: black; text-align: center" onclick="dataAvailableS()">Last Week</a></li>  
-                <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableM()">Last Month</a></li>
+                <li ><a href='#' id="lastWeek" style="color: black; text-align: center" onclick="dataAvailableS()" title="Last Week">Last Week</a></li>
+                <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableM()" title="Last Month">Last Month</a></li>
                 
 <!--
                 <li ><a href='http://192.168.1.227:8000'style="color: black; text-align: center">Home</a></li>
@@ -974,37 +974,37 @@
                             <div class="menu-wrapper">
                               <ul class="nav navbar-nav">
                                 <li class="nav-item dropdown megamenu">
-                                  <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false" style="color: black" ><span>Choose period to show data</span></a>
+                                  <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false" style="color: black" title="Choose Period"><span>Choose period to show data</span></a>
                                   <div id="dpm" class="dropdown-menu" >
                                     <div class="row">
                                         <div class="container-fluid"></div>
                                       <div class="col-sm-12">
                                         <div class="link-list-wrapper">
                                           <ul class="link-list">
-                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="Pippo('t1','dpm','mioAlert2','t2')">Day </button> </span></a>
+                                            <li><a class="list-item" href="#" title="Day"><span><button id="B1" type="button" class="btn btn-link" onclick="Pippo('t1','dpm','mioAlert2','t2')">Day </button> </span></a>
                                             </li>
-                                              <li><a class="list-item" href="#"><span><button id="B2" type="button" class="btn btn-default" onclick="Pippo('t2','dpm','mioAlert','t1')">Period </button></span></a>
+                                              <li><a class="list-item" href="#" title="Period"><span><button id="B2" type="button" class="btn btn-link" onclick="Pippo('t2','dpm','mioAlert','t1')">Period </button></span></a>
                                               </li>
                                           </ul>
                                         </div>
                                         <div class="col-sm-12">
                                         <div class="link-list-wrapper">
                                           <ul class="link-list">
-                                            <li style="display: none" id="t1"><a class="list-item" href="#"><span><p style="color:black">Date:<input data-date-format="dd/mm/yyyy" id="datepickerI1"></p> </span></a>
+                                            <li style="display: none" id="t1"><a class="list-item" href="#" title="Insert a Date"><span><p style="color:black">Date:<input data-date-format="dd/mm/yyyy" id="datepickerI1"></p> </span></a>
 
                                                 <div class="row" style="padding: 10px">
                                                     <div class="col-lg-12">
                                                    <div style="display: none" class="alert alert-info" id="mioAlert">No data available!</div>
-{#                                                       <script>$('#mioAlert').hide()</script>#}
+
 
                                                  </div>
                                                 </div>
                                             </li>
-                                            <li style="display: none" id="t2"><a class="list-item" href="#"><span><p style="color:black">From:<input data-date-format="dd/mm/yyyy" id="datepickerI"> to: <input data-date-format="dd/mm/yyyy" id="datepickerF" disabled></p></span></a>
+                                            <li style="display: none" id="t2"><a class="list-item" href="#" title="Insert a Period"><span><p style="color:black">From:<input data-date-format="dd/mm/yyyy" id="datepickerI"> to: <input data-date-format="dd/mm/yyyy" id="datepickerF" disabled></p></span></a>
                                                 <div class="row" style="padding: 10px">
                                                     <div class="col-lg-12">
                                                    <div style="display: none" class="alert alert-info" id="mioAlert2">No data available!</div>
-{#                                                       <script>$('#mioAlert2').hide()</script>#}
+
 
                                                  </div>
                                                 </div>
@@ -1044,7 +1044,7 @@
 
 
 <div class="container-fluid">
-<h1 style= "color:cornflowerblue; text-align: center" >Statistics </h1>
+<h1 style= "color:cornflowerblue; text-align: center" >Statistics from: {{ Inizio1 }} to: {{ Fine1 }} </h1>
 </div>
 
 <div class="container-fluid">
