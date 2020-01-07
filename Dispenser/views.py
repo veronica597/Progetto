@@ -251,6 +251,7 @@ def absentDataSM(request):  # per verificare la presenza di dati nell'ultima set
             meseP = meseC - 1
 
             if meseC == 1:
+                meseP = 12
                 annoP = annoC - 1
 
             if meseP in mesi31:
@@ -261,6 +262,8 @@ def absentDataSM(request):  # per verificare la presenza di dati nell'ultima set
 
             elif meseP == 2:
                 giornoP = 28 + (giornoC - 7)
+
+            print("meseP : ", meseP)
 
         else:
             meseP = meseC  # mantengo il mese

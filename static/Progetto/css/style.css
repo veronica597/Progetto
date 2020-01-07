@@ -1,0 +1,29 @@
+/*
+body{
+    background-color: red;
+}
+*/
+
+    .nav > li > a:focus,
+    .nav > li > a:hover
+    {
+        text-decoration: underline;
+        background-color:#bbdefb ;
+        text-align: center;
+    }
+
+     .table-bordered-costum{
+       border-style: solid;
+       border-color: cornflowerblue;
+   }
+
+    .table > tbody,thead,tr,td,th{
+       border-style: inherit;
+       border-color: cornflowerblue;
+       font-weight: normal;
+    }
+
+    .btn-default{
+        border-style:dot-dash ; 
+        border-color: cornflowerblue ;
+    }
