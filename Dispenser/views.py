@@ -251,7 +251,7 @@ def absentDataSM(request):  # per verificare la presenza di dati nell'ultima set
             meseP = meseC - 1
 
             if meseC == 1:
-                meseP = 12
+                meseP=12
                 annoP = annoC - 1
 
             if meseP in mesi31:
@@ -276,7 +276,7 @@ def absentDataSM(request):  # per verificare la presenza di dati nell'ultima set
 
         passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
 
-    print("Il periodo selezionato e': ", passato, fine)  # Oggi con isoform..
+    print("Il periodo selezionato e': ", passato, fine)
 
     f = DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=fine).order_by('date')
     lu = len(f)
@@ -466,6 +466,7 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
                        'arrayDate': json.dumps(formatList), 'arrayErog': arrayErog,
                        # 'inizio': json.dumps(formatList[0]), 'fine': json.dumps(formatList[len(formatList) - 1]),  # per istogramma titolo
                        'Inizio': json.dumps(inizio), 'Fine': json.dumps(fine),  # per grafici
+                       'Inizio1': inizio, 'Fine1':fine,
                        'start': json.dumps(passato), 'end': json.dumps(Oggi),
                        }
 
