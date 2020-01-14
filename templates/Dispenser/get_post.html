@@ -11,7 +11,9 @@
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-
+    <link rel="stylesheet" type="text/css" href="{% static 'Progetto/css/style.css' %}" media="screen"/>
+     <!-- favicon -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'Progetto/favicon.ico/favicon-96x96.png' %}"/> 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
@@ -19,197 +21,255 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{% static 'Progetto/js/main_get_post.js' %}"></script>
+
+    <script type="text/javascript">
+        
+        $(document).ready(function (){
+            var ip = '192.168.1.67'; //172.20.10.2, localhost, 192.168.1.67
+
+            // formatta data in ingresso
+
+            function formatDate(date){
+                var mesi = ['Gen.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
+                var i = 0;
+
+                while(i < mesi.length){
+                    if(date.getMonth() == i){
+                        var month = mesi[i];
+                    }
+                    i++;
+
+                }
+
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                var ampm = hours >= 12 ? 'p.m.' : 'a.m.';
+
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                minutes = minutes < 10 ?  '0' + minutes : minutes;
+                var strTime = month + ' ' + date.getDate() + ', ' + date.getFullYear() + ', ' + hours + ':' + minutes + ' ' + ampm;
+                return strTime;
+            }
+
+
+
+
+            // Grafico
+
+            var chart = Highcharts.chart('container', {
+                chart: {
+                    type: 'column', // column
+                    borderColor: 'cornflowerblue',
+                    borderRadius: 20, // per riquadro tondeggiante 
+                    borderWidth: 2,
+                    backgroundColor: 'rgb(238, 255, 255)',
+
+                    events: {
+                        load: function () {
+                            setInterval(function () {
+                                console.log("aggiornamento");
+
+                                $.ajax({
+                                    type: 'GET',
+                                    url: "http://" + ip + ":8000/dispenser/giorno/",
+
+                                    success: function(data){
+                                        console.log("dati ricevuti");
+
+
+                                        var series0 = chart.series[0]; // erogazioni
+
+                                        var series1 = chart.series[1]; // no erogazioni
+
+
+                                        /* controllo la tabella che attualmente e' visibile */
+
+
+                                        var displayTab1 = $('#p1').css("display"); // se style contiene piu' proprieta' rivedere 
+                                        console.log("TAB 1: " + displayTab1); 
+
+
+                                        //var displayTab2 = $('#p2').attr('style');
+                                        var displayTab2 = $('#p2').css('display');
+                                        console.log("TAB 2: " + displayTab2); 
+
+                                        var tab; // variabile che associo alla tabella attualmente visibile 
+
+                                        if(displayTab1 == 'block'){
+                                           console.log("La tabella con CINQUE righe e' attualmente visibile"); 
+
+                                            var lastId = $('#old').find('#id').html(); 
+                                            console.log("ID: " + lastId);
+
+                                            var lastDate = $('#old').find('#date').html();
+                                            console.log(lastDate);
+
+                                            var lastErog = $('#old').find('#erogation').html();
+                                            console.log(lastErog);
+
+                                            tab = 1; 
+
+
+
+                                        }
+                                        else{
+                                            console.log("La tabella con TUTTE le righe e' attualmente visibile");
+
+                                            var lastId = $('#old2').find('#id').html();  // last
+                                            console.log("ID: " + lastId);
+
+                                            var lastDate = $('#old2').find('#date').html();
+                                            console.log(lastDate);
+
+                                            var lastErog = $('#old2').find('#erogation').html();
+                                            console.log(lastErog);
+
+                                            tab = 2; 
+
+                                        }
+
+
+                                        if(typeof(data) === 'string'){ // se nn ci sono dati
+                                            pippo('cont');
+
+                                        }
+
+                                        else{
+                                            pippo3('cont'); // tolgo alert
+
+                                            pippo('p0');
+
+                                            pippo('oggi');
+
+                                            pippo('tasto');
+                                            pippo('container');
+
+
+
+                                            var d = new Date(data['date']);
+
+
+                                            var formatData = formatDate(d);
+                                            console.log("DATA: " + formatData);
+
+
+
+                                            var e = data['erogation'].toString();
+                                            var E = e.substr(0,1).toUpperCase() + e.substr(1); // trasformo true/false in True/False
+                                            console.log("E: " + E);
+
+
+
+                                             /* separiamo i casi */
+
+                                             if((typeof lastId === 'undefined' && typeof lastDate === 'undefined' && typeof lastErog === 'undefined') || (lastId != data['id'])){
+                                                 console.log("CASO 1: tipi undefined"); 
+
+
+                                                 if(tab == 1){ // se la tabella con 5 righe e' attualmente viibile --> aggiungo in testa il nuovo dato in arrivo 
+                                                     $('#prova').after("<tr id='old'>" + "<td id='id' style='display:none'>" + data['id'] + "</td>" + "<td id='date'>" + formatData + "</td>" +
+                                                    "<td id='erogation'>" + E + "</td>" + "</tr>");  // ho messo l'id dell'elemento della tabella cosi' non ho problemi per la selezione 
+                                                 }
+                                                 else{ // tab == 2
+                                                     $('#prova2').after("<tr id='old2'>" + "<td id='id' style='display:none'>" + data['id'] + "</td>" + "<td id='date'>" + formatData + "</td>" +
+                                                    "<td id='erogation'>" + E + "</td>" + "</tr>");  // ho messo l'id dell'elemento della tabella cosi' non ho problemi per la selezione 
+                                                 }
+
+
+
+                                                if(data['erogation'] == true){
+
+                                                    series0.setData([series0.yData[0] + 1]);
+                                                }
+
+                                                else{ // no erogazioni
+
+                                                    series1.setData([series1.yData[0] + 1]);
+                                                }
+                                             }
+
+
+                                            else {  
+                                                console.log("CASO 3: i dati sono gia' stati stampati");
+
+
+                                            }
+
+
+                                        } // chiude l'else di controllo sui dati
+
+
+
+                                    } // chiude success
+
+                                }); // chiude ajax
+
+
+
+                            }, 1000);
+
+
+                        }  // chiude load
+                    }, // chiude events
+
+                }, // chiude chart
+
+
+                title: {
+                    text: ''
+                },
+
+                credits: {
+                    enabled: false  // disabilito la scitta Highcharts.com
+                },
+
+
+                xAxis: {
+                    accessibility: {
+                        description: '' + {{Giorno|safe}} + ''
+                    },
+                    categories: ["Today"] 
+                },
+
+                series: [{
+                    name: 'Disbursements',
+                    color: '#ff00ff',
+                    data: [{{erog}}],
+                    accessibility: {
+                        description: "This is the number of erogations for today"
+                    }
+
+                }, 
+                {
+                    name: 'No Disbursements',
+                    color: '#00bfff',
+                    data: [{{noErog}}],
+                    accessibility: {
+                        description: "This is the number of passages without erogation for today"
+                    }
+
+
+                }
+
+                ],
+
+
+
+
+
+
+            });
+            
+            
+        });
+   
+</script>
+
+   
     
-    <!-- favicon -->
-    <link rel="shortcut icon" type="image/png" href="{% static 'Progetto/favicon.ico/favicon-96x96.png' %}"/> 
-
-
-    <style>
-        .nav > li > a:focus,
-        .nav > li > a:hover
-        {
-            text-decoration: underline;
-            background-color:#bbdefb ;
-            text-align: center;
-        }
-
-       .table-bordered-costum{
-           border-style: solid;
-           border-color: cornflowerblue;
-       }
-
-        .table > tbody,thead,tr,td,th{
-           border-style: inherit;
-           border-color: cornflowerblue;
-           font-weight: normal;
-        }
-
-        .btn-default{
-            border-style:dot-dash ;
-            border-color: cornflowerblue ;
-        }
-    </style>
-
-
-
-    <script>
-        function pippo(aDiv1,) {
-            var e = document.getElementById(aDiv1);
-
-            if (e.style.display == "none") {
-                e.style.display = "block"
-            }
-        }
-
-        function pippo2(aDiv1,aDiv2) {
-            var e = document.getElementById(aDiv1);
-            var e2 = document.getElementById(aDiv2);
-            if (e.style.display == "block") {
-                e.style.display = "none";
-                e2.style.display = "block";
-            }
-        }
-
-
-        function pippo3(aDiv1,) {
-            var e = document.getElementById(aDiv1);
-
-            if (e.style.display == "block") {
-                e.style.display = "none"
-            }
-        }
-    </script>
-
-    <script type="text/javascript" >
-
-        //$(document).ready(function (){
-            console.log("pronti alla get");
-
-            console.log({{ righe.lenght }});
-            var ip = "localhost"; // 172.20.10.2
-
-
-            //var INDIRIZZO_IP = "192.168.1.105"; // indirizzo IP del computer
-            //var urlHome = "http://192.168.1.105:8000/dispenser/";
-
-            // Casa Chiara
-            //var DEVICE_IP = '192.168.1.128'; // indirizzo IP della scheda ESP8266
-            
-            var DEVICE_IP = '172.20.10.5'; // indirizzo IP della scheda ESP8266
-
-            // MICC
-            //var DEVICE_IP = '192.168.0.134';
-           
-
-            // HUAWEI P30 lite -- 192.168.43.37
-            //var DEVICE_IP = '192.168.43.128';
-
-            // RIGUARDARE 
-
-            function attivaServo(){
-                console.log("click sul bottone 'Ruota il servo'");
-                var requestUrl = "http://" + DEVICE_IP + "/servoOpen";
-                $.get(requestUrl, function(){
-                    //alert("sto facendo una get all'ESP8266");
-                    console.log("sto facendo una get all'ESP8266"); 
-                });
-
-            }
-
-
-            $("#on").click(attivaServo);
-            
-            
-            // funzione per verificare la presenza di dati per la SETTIMANA piu' recente
-        
-        function dataAvailableS(){
-
-            console.log("dentro la funzione"); 
-            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=0"; 
-            
-            $.get(requestUrl, function (data) {
-                console.log('DATI RICEVUTI: ' + data);
-                if(data[0] == 0){
-                    console.log("alert a tutta pagina");
-                    // mi sposto sulla pagina /statistic cmq
-                
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0&noData=1";  
-                    
-                }
-                else{ // renderizzo i dati che ci sono normalmente 
-                    
-                    // recupero la data di inizio e di fine del periodo
-                    var start = new Date(data[1]); // passato 
-                    var end = new Date(data[2]); // oggi 
-                    
-                    var yearS = start.getFullYear();
-                    var monthS = start.getMonth() + 1; 
-                    var dayS = start.getDate(); 
-                    
-                    var yearE = end.getFullYear();
-                    var monthE = end.getMonth() + 1;
-                    var dayE = end.getDate();
-                    
-                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
-                    
-                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + dayE + "";
-                }
-            }); 
-        }
-        
-        //funzione per verificare la presenza di dati per la MESE piu' recente
-        
-        function dataAvailableM(){
-
-            console.log("dentro la funzione"); 
-            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=1"; 
-            
-            $.get(requestUrl, function (data) {
-                console.log('DATI RICEVUTI: ' + data);
-                if(data[0] == 0){
-                    console.log("alert a tutta pagina");
-                    // mi sposto sulla pagina /statistic cmq
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1&noData=1";  
-                    
-                }
-                else{ // renderizzo i dati che ci sono normalmente 
-                    
-                    // recupero la data di inizio e di fine del periodo
-                    var start = new Date(data[1]); // passato 
-                    var end = new Date(data[2]); // oggi 
-                    
-                    var yearS = start.getFullYear();
-                    var monthS = start.getMonth() + 1; 
-                    var dayS = start.getDate(); 
-                    
-                    var yearE = end.getFullYear();
-                    var monthE = end.getMonth() + 1;
-                    var dayE = end.getDate();
-                    
-                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
-                    
-                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + dayE + "";
-                }
-            }); 
-        }
-            
-            
-            
-
-
-
-       // });
-
-
-    </script>
+    
 
 
 </head>
@@ -232,12 +292,11 @@
 
             <ul class="nav navbar-nav">
                 
-                <li ><a href='http://localhost:8000'style="color: black; text-align: center" title="Home">Home</a></li>
+                <li ><a href='http://192.168.1.67:8000'style="color: black; text-align: center" title="Home">Home</a></li>
+
                 
 <!--                <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>-->
                 
-                
-                <!-- last week e last month modificati -->
                 
                 <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableS()" title="Last Week">Last Week</a></li>
                 <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableM()" title="Last Month">Last Month</a></li>
@@ -254,7 +313,7 @@
 <h1 style=" text-align: center; color:cornflowerblue">Today's data </h1>
 <p class="lead" style="margin-left: 5px;">In this page we can see all the informations about about the use of the dispenser on the current day </p>
 <p class="lead" id="tit" style="margin-left: 5px;"> If you want to erogate food press the following button:
-    <button id="on" type="button" class="btn btn-default"> Erogation </button></p>
+    <button id="on" type="button" onclick="attivaServo()" class="btn btn-default"> Erogation </button></p>
 <p class="text-center" style="font-style: oblique; font-weight: bold; font-size: medium; color: #eeffff; padding-left: 5px;"> Please remember that you can only deliver food through the button once every hour</p>
 
 
@@ -350,297 +409,6 @@
 <div class="container-fluid">
     <button id="tasto" type= "button" class="btn btn-link" style="color: cornflowerblue; margin-left: 45%; display: none;" onclick="pippo2('p1','p2')">Show the table</button>
 </div>
-
-
-
-
-<script type="text/javascript">
-
-    //$(document).ready(function (){
-
-    var ip = 'localhost'; 
-
-    // formatta data in ingresso
-
-    function formatDate(date){
-        var mesi = ['Gen.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
-        var i = 0;
-
-        while(i < mesi.length){
-            if(date.getMonth() == i){
-                var month = mesi[i];
-            }
-            i++;
-
-        }
-
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var ampm = hours >= 12 ? 'p.m.' : 'a.m.';
-
-        hours = hours % 12;
-        hours = hours ? hours : 12;
-        minutes = minutes < 10 ?  '0' + minutes : minutes;
-        var strTime = month + ' ' + date.getDate() + ', ' + date.getFullYear() + ', ' + hours + ':' + minutes + ' ' + ampm;
-        //var strTime = hours + ':' + minutes + ' ' + ampm;
-        return strTime;
-    }
-
-
-
-
-    // grafico
-    var chart = Highcharts.chart('container', {
-        chart: {
-            type: 'column', // column
-            borderColor: 'cornflowerblue',
-            borderRadius: 20, // per riquadro tondeggiante 
-            borderWidth: 2,
-            backgroundColor: 'rgb(238, 255, 255)',
-            
-            events: {
-
-                load: function () {
-//                  console.log("dentro load");
-
-                    // POLLING
-
-                    setInterval(function () {
-                        console.log("aggiornamento");
-
-                        $.ajax({
-                            type: 'GET',
-                            url: "http://" + ip + ":8000/dispenser/giorno/",
-
-                            success: function(data){
-                                console.log("dati ricevuti");
-                                //console.log(typeof(data));
-
-                                var series0 = chart.series[0]; // erogazioni
-                                //console.log(series0.yData);
-                                var series1 = chart.series[1]; // no erogazioni
-
-                                
-                                /* controllo la tabella che attualmente e' visibile */
-                                
-                                
-                                var displayTab1 = $('#p1').css("display"); // se style contiene piu' proprieta' rivedere 
-                                console.log("TAB 1: " + displayTab1); 
-                            
-                                
-                                //var displayTab2 = $('#p2').attr('style');
-                                var displayTab2 = $('#p2').css('display');
-                                console.log("TAB 2: " + displayTab2); 
-                                
-                                var tab; // variabile che associo alla tabella attualmente visibile 
-                                
-                                if(displayTab1 == 'block'){
-                                   console.log("La tabella con CINQUE righe e' attualmente visibile"); 
-                                    
-                                    var lastId = $('#old').find('#id').html(); 
-                                    console.log("ID: " + lastId);
-
-                                    var lastDate = $('#old').find('#date').html();
-                                    console.log(lastDate);
-        
-                                    var lastErog = $('#old').find('#erogation').html();
-                                    console.log(lastErog);
-                                    
-                                    tab = 1; 
-
-                                   
-                                   
-                                }
-                                else{
-                                    console.log("La tabella con TUTTE le righe e' attualmente visibile");
-                                
-                                    //var lastId = $('#oggi2 tr:first').find('#id').html();  // last
-                                    var lastId = $('#old2').find('#id').html();  // last
-                                    console.log("ID: " + lastId);
-
-                                    var lastDate = $('#old2').find('#date').html();
-                                    console.log(lastDate);
-                                    //console.log("ZZZZZZZH: "+ typeof (lastDate));
-                                    var lastErog = $('#old2').find('#erogation').html();
-                                    console.log(lastErog);
-    //                                var lastUser = $('#oggi2 tr:last').find('#userMod').html();
-    //                                console.log(lastUser);
-    //                                var lastTime = $('#oggi2 tr:last').find('#timeMod').html();
-    //                                console.log(lastTime);
-                                    
-                                    tab = 2; 
-
-                                }
-                                
-                                
-                                
-
-                                if(typeof(data) === 'string'){ // se nn ci sono dati
-
-
-
-
-                                    pippo('cont');
-
-                                    //$('#no_erog').html(data).css({color:'red'});
-
-
-
-
-                                }
-
-                                else{
-                                    pippo3('cont'); // tolgo alert
-
-                                    pippo('p0');
-
-                                    pippo('oggi');
-
-                                    pippo('tasto');
-                                    pippo('container');
-
-
-//
-//
-//                                    {#pippo('container'); // mostro GRAFICO#}
-//                                    {#pippo('tasto'); // mostro tasto#}
-//                                    {#pippo('oggi');#}
-
-
-
-                                    var d = new Date(data['date']);
-                                    //console.log("DATAAAAAAAA: " + d);
-
-                                    var formatData = formatDate(d);
-                                    console.log("DATA: " + formatData);
-                                    //console.log("GENTIL: " + typeof formatData);
-
-                                    //console.log(typeof data['erogation']);
-                                    
-
-                                    var e = data['erogation'].toString();
-                                    var E = e.substr(0,1).toUpperCase() + e.substr(1); // trasformo true/false in True/False
-                                    console.log("E: " + E);
-
-//                                    var u = data['userMod'].toString();
-//                                    var U = u.substr(0,1).toUpperCase() + u.substr(1);
-//                                    console.log("U: " + U);
-
-//                                    var t = data['timeMod'].toString();
-//                                    var T = t.substr(0,1).toUpperCase() + t.substr(1);
-//                                    console.log("T: " + T);
-
-                                    //if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
-
-                                    ////CONTROLLARE PERCHE' AGGIUNGE A CASO!!!!!
-
-//                                    if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined') ||
-//                                            [(lastDate == formatData && lastErog != E) || (lastDate != formatData)]){
-                                     
-                                     /* separiamo i casi */
-                                     
-                                     if((typeof lastId === 'undefined' && typeof lastDate === 'undefined' && typeof lastErog === 'undefined') || (lastId != data['id'])){
-                                         console.log("CASO 1: tipi undefined"); 
-                                         
-                                        //$('#oggi2 tr:last').after("<tr id='last_insert'>" + "<td id='id' style='display:none'>" + data['id'] + "</td>" + "<td id='date'>" + formatData + "</td>" +
-                                           // "<td id='erogation'>" + E + "</td>" + "</tr>"); // riguardare  // + ' '
-                                         
-                                         if(tab == 1){ // se la tabella con 5 righe e' attualmente viibile --> aggiungo in testa il nuovo dato in arrivo 
-                                             $('#prova').after("<tr id='old'>" + "<td id='id' style='display:none'>" + data['id'] + "</td>" + "<td id='date'>" + formatData + "</td>" +
-                                            "<td id='erogation'>" + E + "</td>" + "</tr>");  // ho messo l'id dell'elemento della tabella cosi' non ho problemi per la selezione 
-                                         }
-                                         else{ // tab == 2
-                                             $('#prova2').after("<tr id='old2'>" + "<td id='id' style='display:none'>" + data['id'] + "</td>" + "<td id='date'>" + formatData + "</td>" +
-                                            "<td id='erogation'>" + E + "</td>" + "</tr>");  // ho messo l'id dell'elemento della tabella cosi' non ho problemi per la selezione 
-                                         }
-                                         
-                                        
-
-                                        if(data['erogation'] == true){
-
-                                            series0.setData([series0.yData[0] + 1]);
-                                        }
-
-                                        else{ // no erogazioni
-
-                                            series1.setData([series1.yData[0] + 1]);
-                                        }
-                                     }
-                                    
-                          
-                                    else {  
-                                        console.log("CASO 3: i dati sono gia' stati stampati");
-                                    
-                                       
-                                    }
-
-
-                                } // chiude l'else di controllo sui dati
-
-
-
-                            } // chiude success
-
-                        }); // chiude ajax
-
-
-
-                    }, 1000);
-
-
-                }  // chiude load
-            }, // chiude events
-
-        }, // chiude chart
-
-
-        title: {
-            text: ''
-        },
-        
-        credits: {
-            enabled: false  // disabilito la scitta Highcharts.com
-        },
-
-        // sistemare xAxis
-
-        xAxis: {
-            accessibility: {
-                description: '' + {{Giorno|safe}} + ''
-            },
-            //categories: [data[0]]
-        },
-
-        series: [{
-            name: 'Disbursements',
-            color: '#ff00ff',
-            data: [{{erog}}],
-            accessibility: {
-                description: "This is the number of erogations for today"
-            }
-
-        }
-
-            , {
-                name: 'No Disbursements',
-                color: '#00bfff',
-                data: [{{noErog}}],
-                accessibility: {
-                    description: "This is the number of passages without erogation for today"
-                }
-
-
-            }
-        ],
-
-
-
-
-
-
-    });
-    //});
-</script>
 
 </body>
 

@@ -6,19 +6,13 @@ from django.http import HttpResponse, HttpResponseForbidden, Http404
 from .models import DatiRaccolti
 from django.views.decorators.csrf import csrf_exempt
 import json
-# import datetime
 from datetime import datetime
 from django.http import JsonResponse
 
 
 @csrf_exempt
 def index(request):
-    # return HttpResponse("<p> Food Dispenser Application </p>")
     return render(request, 'index.html')
-
-
-def profile(request):
-    return HttpResponse("<p>Profile page of user </p>")
 
 
 @csrf_exempt
@@ -48,7 +42,6 @@ def client(request):  # processa i dati del giorno corrente
 
     if request.method == 'GET':
         print('get')
-        # oggi = datetime.date.today()
         oggi = datetime.today()
         meseC = oggi.month
         giornoC = oggi.day
@@ -82,7 +75,7 @@ def sendData(request):  # view che invia i dati per costruire i CHART lato html 
     mese = request.GET.__getitem__('mese')
     giorno = request.GET.__getitem__('giorno')
 
-    if int(giorno) < 10:  # pensare di mettere lo zero per il mese
+    if int(giorno) < 10:
         stringa = anno + "-" + mese + "-" + "0" + giorno  # l'aggiunta dello 0 e' per contains
         stringaI = "0" + giorno + "-" + mese + "-" + anno  # per il titolo della pagina html
     else:
@@ -137,7 +130,7 @@ def absentData(request):  # per controllare la presenza di dati per un giorno si
 
     print(stringa)
 
-    f = DatiRaccolti.objects.values().filter(date__contains=stringa)  # .order_by('date')
+    f = DatiRaccolti.objects.values().filter(date__contains=stringa)
     lu = len(f)
 
     return JsonResponse(lu, safe=False)
@@ -209,9 +202,6 @@ def absentDataSM(request):  # per verificare la presenza di dati nell'ultima set
     print('id: ' + id)
 
     oggi = datetime.today()
-    # per provare il caso di dati assenti per l'ultima settimana
-
-    # oggi = datetime(2019, 12, 4)
 
     meseC = oggi.month
     giornoC = oggi.day
@@ -234,9 +224,6 @@ def absentDataSM(request):  # per verificare la presenza di dati nell'ultima set
         else:
             meseP = meseC - 1
             annoP = annoC
-
-        # if giornoP < 10:
-        #     giornoP = int('0' + str(giornoP))
 
         passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
 
@@ -269,10 +256,6 @@ def absentDataSM(request):  # per verificare la presenza di dati nell'ultima set
             meseP = meseC  # mantengo il mese
             giornoP = giornoC - 7
             annoP = annoC
-
-        # if giornoC < 10:
-        #     # inizio = '0' + str(giornoP) + "-" + str(meseP) + "-" + str(annoP)  # intesa come stringa della data finale del periodo
-        #     giornoP = int('0' + str(giornoP))
 
         passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
 
@@ -329,14 +312,95 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
 
         if id == '0' and noData == '1':  # se ho richiesto i dati dell'ultima settimana e NON ci sono
             print("non ci sono dati per l'ultima settimana !!")
+
+            # se voglio che nel titolo ci siano le date devo fare così
+            meseC = int(request.GET.__getitem__('meseF'))
+            giornoC = int(request.GET.__getitem__('giornoF'))
+            annoC = int(request.GET.__getitem__('annoF'))
+
+            Oggi = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+
+            if giornoC < 10:
+                if meseC < 10:
+                    fine = "0" + str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+                else:
+                    fine = "0" + str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+            else:
+                if meseC < 10:
+                    fine = str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+                else:
+                    fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+
+            meseP = int(request.GET.__getitem__('mese'))
+            giornoP = int(request.GET.__getitem__('giorno'))
+            annoP = int(request.GET.__getitem__('anno'))
+
+            passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
+
+            if giornoP < 10:
+                if meseP < 10:
+                    inizio = "0" + str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+                else:
+                    inizio = "0" + str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+            else:
+                if meseP < 10:
+                    inizio = str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+                else:
+                    inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+
+            print("Il periodo selezionato e': ", passato, Oggi)
+
             messaggio = "There are no data for last week"
-            context = {"mess": messaggio}
+
+            context = {"mess": messaggio,
+                       'Inizio1': inizio, 'Fine1': fine  # per mettere nel titolo della pagina
+                       }
             return render(request, 'statistics.html', context)
 
         elif id == '1' and noData == '1':  # se ho richiesto i dati dell'ultimo mese e NON ci sono
             print("non ci sono dati per l'ultimo mese !!")
+
+            # se voglio che nel titolo ci siano le date devo fare così
+            meseC = int(request.GET.__getitem__('meseF'))
+            giornoC = int(request.GET.__getitem__('giornoF'))
+            annoC = int(request.GET.__getitem__('annoF'))
+
+            Oggi = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+
+            if giornoC < 10:
+                if meseC < 10:
+                    fine = "0" + str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+                else:
+                    fine = "0" + str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+            else:
+                if meseC < 10:
+                    fine = str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+                else:
+                    fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+
+            meseP = int(request.GET.__getitem__('mese'))
+            giornoP = int(request.GET.__getitem__('giorno'))
+            annoP = int(request.GET.__getitem__('anno'))
+
+            passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
+
+            if giornoP < 10:
+                if meseP < 10:
+                    inizio = "0" + str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+                else:
+                    inizio = "0" + str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+            else:
+                if meseP < 10:
+                    inizio = str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+                else:
+                    inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+
+            print("Il periodo selezionato e': ", passato, Oggi)
+
             messaggio = "There are no data for last month"
-            context = {"mess": messaggio}
+            context = {"mess": messaggio,
+                       'Inizio1': inizio, 'Fine1': fine  # per mettere nel titolo della pagina
+                       }
             return render(request, 'statistics.html', context)
 
         elif noData == '0':
@@ -464,9 +528,8 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
                        'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi).order_by('date'),
                        'Righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi)[:20],
                        'arrayDate': json.dumps(formatList), 'arrayErog': arrayErog,
-                       # 'inizio': json.dumps(formatList[0]), 'fine': json.dumps(formatList[len(formatList) - 1]),  # per istogramma titolo
                        'Inizio': json.dumps(inizio), 'Fine': json.dumps(fine),  # per grafici
-                       'Inizio1': inizio, 'Fine1':fine,
+                       'Inizio1': inizio, 'Fine1': fine,  # per titolo pagina
                        'start': json.dumps(passato), 'end': json.dumps(Oggi),
                        }
 
@@ -608,7 +671,6 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
 
             i = s
 
-        # print("arrayDate: ", arrayDate)
         print("formatList: ", formatList)
 
         # raccolgo i dati dell'asse y
@@ -629,291 +691,14 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
                    'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi).order_by('date'),
                    'Righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi)[:20],
                    'arrayDate': json.dumps(formatList), 'arrayErog': arrayErog,
-                   # 'inizio': json.dumps(formatList[0]), 'fine': json.dumps(formatList[len(formatList) - 1]),  # per istogramma
                    'Inizio': json.dumps(inizio), 'Fine': json.dumps(fine),  # per grafici
+                   'Inizio1': inizio, 'Fine1': fine,
                    'start': json.dumps(passato), 'end': json.dumps(end),  # per asse x istogramma con tutti giorni
                    }
 
         return render(request, 'statistics.html', context)
 
 
-
-
-
-
-
-
-
-
-# @csrf_exempt
-# def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utente
-#
-#     id = request.GET.__getitem__('id')
-#     print('id: ' + id)
-#
-#     oggi = datetime.today()
-#     Oggi = datetime.today().isoformat(' ')
-#
-#     meseC = oggi.month
-#     giornoC = oggi.day
-#     annoC = oggi.year
-#
-#     fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)  # intesa come stringa della data finale del periodo
-#
-#     print("oggi: " + str(oggi))
-#
-#     # in base al valore dell'id passato calcolo giorno mese scorso o giorno settimana scorsa o i giorni per il periodo scelto dall'utente
-#
-#     if id == '1':  # mese
-#         print("mesee")
-#         giornoP = giornoC  # mantengo il giorno
-#
-#         if meseC == 1:  # se e' gennaio cambio il mese ma anche l'anno
-#             meseP = 12
-#             annoP = annoC - 1
-#
-#         else:
-#             meseP = meseC - 1
-#             annoP = annoC
-#
-#         inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)  # intesa come stringa della data finale del periodo
-#         passato = datetime(annoP, meseP, giornoP).isoformat(' ')
-#
-#     elif id == '0':  # settimana
-#         print("settimana")
-#
-#         mesi31 = [1, 3, 5, 7, 8, 10, 12]
-#         mesi30 = [4, 6, 9, 11]
-#
-#         if giornoC <= 7:
-#             annoP = annoC
-#             meseP = meseC - 1
-#
-#             if meseC == 1:
-#                 annoP = annoC - 1
-#
-#             if meseP in mesi31:
-#                 giornoP = 31 + (giornoC - 7)
-#
-#             elif meseP in mesi30:
-#                 giornoP = 30 + (giornoC - 7)
-#
-#             elif meseP == 2:
-#                 giornoP = 28 + (giornoC - 7)
-#
-#         else:
-#             meseP = meseC  # mantengo il mese
-#             giornoP = giornoC - 7
-#             annoP = annoC
-#
-#         inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)  # intesa come stringa della data finale del periodo
-#         passato = datetime(annoP, meseP, giornoP).isoformat(' ')
-#
-#     elif id == '2':  # periodo scelto da utente
-#         print("periodo scelto dall'utente")
-#
-#         meseP = int(request.GET.__getitem__('mese'))
-#         giornoP = int(request.GET.__getitem__('giorno'))
-#         annoP = int(request.GET.__getitem__('anno'))
-#
-#         inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)  # intesa come stringa della data iniziale del periodo
-#         passato = datetime(annoP, meseP, giornoP).isoformat(' ')
-#
-#         meseC = int(request.GET.__getitem__('meseF'))
-#         giornoC = int(request.GET.__getitem__('giornoF'))
-#         annoC = int(request.GET.__getitem__('annoF'))
-#
-#         fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)  # intesa come stringa della data finale del periodo
-#
-#         # logica del 'giorno in più' per ovviare al problema della selezione del periodo
-#
-#         mesi31 = [1, 3, 5, 7, 8, 10, 12]
-#         mesi30 = [4, 6, 9, 11]
-#
-#         if meseC in mesi31:
-#             if giornoC == 31:
-#                 giornoC = 1
-#                 if meseC == 12:
-#                     meseC = 1  # gennaio
-#                 else:
-#                     meseC = meseC + 1
-#
-#             else:
-#                 giornoC = giornoC + 1
-#
-#         elif meseC in mesi30:
-#             if giornoC == 31:
-#                 giornoC = 1
-#                 meseC = meseC + 1
-#
-#             else:
-#                 giornoC = giornoC + 1
-#
-#         elif meseC == 2:  # febbraio
-#             if giornoC == 28:
-#                 giornoC = 1
-#                 meseC = 3
-#             else:
-#                 giornoC = giornoC + 1
-#
-#         Oggi = datetime(annoC, meseC, giornoC).isoformat(' ')
-#         print("Oggi cambiato: ", Oggi)
-#
-#     print("Il periodo selezionato e': ", passato, Oggi)
-#
-#     # grafici
-#
-#     eA = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
-#                                                     userMod=False).order_by('date').count()  # erogazioni modalita' automatica
-#     eU = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
-#                                                     userMod=True).order_by('date').count()  # erogazioni modalita' utente
-#
-#     e = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True).order_by(
-#         'date').count()  # erogazioni
-#     noE = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=False).order_by(
-#         'date').count()  # no erogazioni
-#
-#     eG = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
-#                                                     timeMod=True).order_by('date').count()  # giorno
-#     eN = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
-#                                                     timeMod=False).order_by('date').count()  # notte
-#
-#     print("eA: " + str(eA))
-#     print("eU: " + str(eU))
-#
-#     print("e: " + str(e))
-#     print("noE: " + str(noE))
-#
-#     print("eG: " + str(eG))
-#     print("eN: " + str(eN))
-#
-#     # istogramma
-#
-#     db = DatiRaccolti.objects.values('date').filter(date__gt=passato, date__lte=Oggi)
-#
-#     # rendo db un array
-#
-#     listDb = list()
-#     formatList = list()  # serve per renderizzare le date lato html
-#
-#     for entry in db:
-#         listDb.append(entry['date'])
-#
-#     # print("lista date: ", listDb)
-#     print(len(listDb))
-#
-#     arrayDate = []
-#     arrayErog = []
-#     i = 0
-#     s = 0
-#
-#     while i < len(listDb):
-#         x = listDb[i]
-#         print("i: ", i)
-#         print("x: ", x)
-#         print("")
-#         arrayDate.append(x)
-#         formatList.append(x.strftime("%d-%m-%Y"))
-#         j = i + 1
-#
-#         while (j < len(listDb)) and (listDb[j].year == x.year) and (listDb[j].month == x.month) and (listDb[j].day == x.day):
-#             j = j + 1
-#             s = j
-#             print("s: ", s)
-#
-#         i = s
-#
-#     # print("arrayDate: ", arrayDate)
-#     print("formatList: ", formatList)
-#
-#     # raccolgo i dati dell'asse y
-#
-#     for k in range(len(arrayDate)):
-#         if k == len(arrayDate) - 1:  # cambiare eventualmente con contains
-#             e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=Oggi, erogation=True).count()
-#
-#         else:
-#             e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=arrayDate[k+1], erogation=True).count()
-#
-#         print("Le erogazioni del giorno " + str(arrayDate[k]) + " sono: " + str(e))
-#         arrayErog.append(e)
-#
-#     print("arrayErog: ", arrayErog)
-#
-#     context = {'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG, 'erogN': eN,
-#                'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi).order_by('date'),
-#                'Righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi)[:20],
-#                'arrayDate': json.dumps(formatList), 'arrayErog': arrayErog,
-#                'inizio': json.dumps(formatList[0]), 'fine': json.dumps(formatList[len(formatList) - 1]),  # per istogramma
-#                'Inizio': json.dumps(inizio), 'Fine': json.dumps(fine),  # per grafici
-#                }
-#
-#     return render(request, 'statistics.html', context)
-
-
-
-
-
-
-# Da eliminare dopo integrazione
-
-
-def asseXIsto(request):
-    # recupero il periodo -- dovro' recuperarlo dai parametri in request.GET
-
-    inizio = datetime(2019, 11, 27).isoformat(' ')
-    fine = datetime(2019, 12, 5).isoformat(' ')
-    db = DatiRaccolti.objects.values('date').filter(date__range=(inizio, fine))
-
-    # rendo db un array
-
-    listDb = list()
-    formatList = list()  # serve per renderizzare le date lato html
-
-    for entry in db:
-        listDb.append(entry['date'])
-
-    # print("lista date: ", listDb)
-    print(len(listDb))
-
-    arrayDate = []
-    arrayErog = []
-    i = 0
-    s = 0
-
-    while i < len(listDb):
-        x = listDb.pop(i)
-        print("x: ", x)
-        arrayDate.append(x)
-        formatList.append(x.strftime("%d-%m-%y"))
-        j = i + 1
-
-        while (j < len(listDb)) and (listDb[j].year == x.year) and (listDb[j].month == x.month) and (listDb[j].day == x.day):
-            j = j + 1
-            s = j
-
-        i = s
-
-    print("arrayDate: ", arrayDate)
-
-    # raccolgo i dati dell'asse y
-
-    for k in range(len(arrayDate)):
-        if k == len(arrayDate) - 1:  # cambiare eventualmente con contains
-            e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=fine, erogation=True).count()
-
-        else:
-            e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=arrayDate[k+1], erogation=True).count()
-
-        print("Le erogazioni del giorno " + str(arrayDate[k]) + " sono: " + str(e))
-        arrayErog.append(e)
-
-    print("arrayErog: ", arrayErog)
-
-    context = {'arrayDate': json.dumps(formatList), 'arrayErog': arrayErog,
-               'inizio': json.dumps(formatList[0]), 'fine': json.dumps(formatList[len(formatList) - 1])}
-
-    return render(request, 'istog.html', context)
 
 
 

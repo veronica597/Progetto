@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<title> Home page </title>
 <meta name ="author" content="Veronica Pecchioli">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -11,68 +12,24 @@
 
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'Progetto/css/style_index.css' %}" media="screen"/>
+<!-- favicon -->
+<link rel="shortcut icon" type="image/png" href="{% static 'Progetto/favicon.ico/favicon-96x96.png' %}"/> 
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
 </script>
+    
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="{% static 'Progetto/js/main_index.js' %}"></script>
     
-<!-- favicon -->
-<link rel="shortcut icon" type="image/png" href="{% static 'Progetto/favicon.ico/favicon-96x96.png' %}"/> 
-    
-    
-
-<style>
-.nav > li > a:focus,
-.nav > li > a:hover
-{
-    text-decoration: underline;
-    background-color:#bbdefb ;
-    text-align: center;
-}
-
-@media (min-width: 320px)and (max-width:370px) {
-    #img{
-        width: 280px;
-        padding-top: 5px;
-
-    }
-}
-
-    @media (min-width: 375px)and (max-width:760px) {
-        #img{
-        width: 340px;
-        padding-top: 10px;
-
-    }
-    }
-
-    @media (min-height: 812px)and (max-height:900px) {
-        #img{
-            padding-top: 50px;
-            width: 350px;
-            height: 550px;
-
-        }
-    }
-    @media (min-width: 1024px)and (max-width:1060px) {
-        #img{
-            padding-top: 50px;
-             width:850px;
-            height: 1100px;
-        }
-    }
-
-
-</style>
-    
-    
-   
 
 </head>
+    
+    
 <body style="background-color: #bbdefb">
 
 
@@ -91,25 +48,15 @@
         <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center; position: sticky" >
 
             <ul class="nav navbar-nav">
-                <li><a href='http://localhost:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>
-
-                <!--                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0' title="Statistics" style="color: black; text-align: center">Statistics</a></li>-->
                 
+                <li><a href='http://192.168.1.67:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>
+
                 
 <!--                <li ><a href='http://172.20.10.2:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>-->
                 
-                 <!--prove per risolvere il problema dei dati della settimana eventualmente mancanti -->
                 
-                <li> <a href="#" id="stat" style="color: black; text-align: center" title="Statistics" >Statistics</a></li> <!-- onclick="dataAvailable()" -->
+                <li> <a href="#" id="stat" style="color: black; text-align: center" title="Statistics" onclick="dataAvailable()">Statistics</a></li> 
                 
-
- <!--  <li ><a href='http://172.20.10.2:8000/dispenser/statistic/?id=0' title="Statistics" style="color: black; text-align: center">Statistics</a></li>-->
-
-                
-<!--
-                 <li ><a href='http://192.168.1.227:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>
-                <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=0' title="Statistics" style="color: black; text-align: center">Statistics</a></li>
--->
 
             </ul>
         </div>
@@ -122,72 +69,11 @@
 
 <div class="text-center">
 
-    <img id="img" src="{% static 'Progetto/Img/foto4_copia copia.png' %}" alt="immagine che mostra il dispositivo" class="rounded mx-auto d-block">
+    <img id="img" src="{% static 'Progetto/Img/TigreRES2.png' %}" alt="immagine che mostra il dispositivo" class="rounded mx-auto d-block">
+    
 </div>
-    
-     <script type="text/javascript">
-        
-        $(document).ready(function (){
-          console.log("CIAO");
-        var ip = 'localhost'; // 172.20.10.2 
-           
-        
-        /* funzione per verificare la presenza di dati per la settimana piu' recente*/
-        
-        function dataAvailable(){
-            console.log("dentro la funzione"); 
-            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=0"; // di default voglio sapere se ci sono dati per l'ultima settimana 
-            
-            $.get(requestUrl, function (data) {
-                console.log('DATI RICEVUTI: ' + data);
-                if(data[0] == 0){
-                    console.log("alert a tutta pagina");
-                    // mi sposto sulla pagina /statistic cmq
-                    
-                    
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0&noData=1";  
-                    
-                }
-                else{ // renderizzo i dati che ci sono normalmente 
-                    
-                    // recupero la data di inizio e di fine del periodo
-                    var start = new Date(data[1]); // passato 
-                    var end = new Date(data[2]); // oggi 
-                    
-                    var yearS = start.getFullYear();
-                    var monthS = start.getMonth() + 1; 
-                    var dayS = start.getDate(); 
-                    
-                    var yearE = end.getFullYear();
-                    var monthE = end.getMonth() + 1;
-                    var dayE = end.getDate();
-                    
-                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
-                    
-                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
-                    
-                
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + dayE + "";
-                }
-            }); 
-        }
-        
-        $("#stat").click(dataAvailable); 
-            
-        
-        
-        });
-    
-    
-    
-    
-    
-    
-    </script>
-
 
 
 </body>
+    
 </html>

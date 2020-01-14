@@ -20,468 +20,193 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'Progetto/css/style.css' %}" media="screen"/>
-    <!--<link rel="stylesheet" type="text/css" href="static/Progetto/style.css" media="screen"/> --> 
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-    
     <!-- favicon -->
     <link rel="shortcut icon" type="image/png" href="{% static 'Progetto/favicon.ico/favicon-96x96.png' %}"/> 
-
-<!--
-    <style>
-        .nav > li > a:focus,
-        .nav > li > a:hover
-        {
-            text-decoration: underline;
-            background-color:#bbdefb ;
-            text-align: center;
-        }
-
-         .table-bordered-costum{
-           border-style: solid;
-           border-color: cornflowerblue;
-       }
-
-        .table > tbody,thead,tr,td,th{
-           border-style: inherit;
-           border-color: cornflowerblue;
-           font-weight: normal;
-        }
-
-        .btn-default{
-            border-style:dot-dash ;
-            border-color: cornflowerblue ;
-        }
-
-
-    </style>
--->
-
-<script>
     
-    var ip = 'localhost'; // indirizzo ip server 172.20.10.2
-    
-    function pippo(aDiv1,) {
-            var e = document.getElementById(aDiv1);
 
-            if (e.style.display == "none") {
-                e.style.display = "block"
-            }
-        }
-
-        function Pippo(aDiv1,aDiv2,aDiv3,aDiv4) {
-            var e = document.getElementById(aDiv1);
-            var b= document.getElementById(aDiv2);
-            var c= document.getElementById(aDiv3);
-            var v= document.getElementById(aDiv4);
-
-            b.style.display="inline"; // tengo bloccato menu tendina
-
-            if (v.style.display=="block" ){ // scompare input altro tasto
-                v.style.display="none";
-            }
-
-
-            if(c.style.display=="block" ){ // scomare alert
-                c.style.display="none";
-            }
-
-
-            if (e.style.display == "none") { //mostro input
-                e.style.display = "block"
-            }
-        }
-
-
-        // SCRIPT PER I DUE DATETIMEPICKER
-
-                $('#datepickerI'),$('#datepickerF'),$('#datepickerI1').datepicker({
-                            weekStart: 1,
-                            daysOfWeekHighlighted: "6,0",
-                            autoclose: true,
-                            todayHighlight: true,
-                        });
-
-                        $(function() {
-                            $('#datepickerI').datepicker();
-                            $('#datepickerF').datepicker();
-                            $('#datepickerI1').datepicker();
-
-                            $("#datepickerI1").on("change", function () {
-                                day = $(this).datepicker('getDate').getDate();
-                                month = $(this).datepicker('getDate').getMonth() + 1;
-                                year = $(this).datepicker('getDate').getFullYear();
-                                console.log(day);
-                                console.log(month);
-                                console.log(year);
-
-                                var requestUrl = "http://" + ip + ":8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                //requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                
-                                //var requestUrl = "http://172.20.10.2:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    $.get(requestUrl, function (data) {
-                                        console.log('DATI RICEVUTI: ' + data);
-                                        if (data == 0) {
-                                            var l= document.getElementById('mioAlert');
-                                            l.style.display='block';
-                                        } else {
-                                            //window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                            window.location.href = "http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                            //window.location.href="http://172.20.10.2:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                        }
-
-                                    });
-
-                            });
-
-
-                            $("#datepickerI").on("change", function () {
-                                day = $(this).datepicker('getDate').getDate();
-                                month = $(this).datepicker('getDate').getMonth() + 1;
-                                year = $(this).datepicker('getDate').getFullYear();
-                                console.log(day);
-                                console.log(month);
-                                console.log(year);
-
-                                $("#datepickerF").removeAttr("disabled"); // riattivo secondo calendario
-
-                                console.log("tipo yeaar" + " " + typeof year);
-
-                                console.log("tipo yearF" + " " + typeof yearF);
-
-
-                            });
-
-
-                            //caricamento(); // SE LO METTO QUI MI CARICA INDIPENDENTEMENTE IL GIORNO
-
-
-                            $("#datepickerF").on("change", function (){
-
-                               // caricamento(); // se lo metto qui il controllo poi mi chiama il giorno selezionato, MA SE IO VOGLIO UN PERIODO?? E CMQ NN VERREBBE NEMMENO IL GIORNO SELEZIONATO PERCHè NN CLICCO SU NIENTE
-                                dayF = $(this).datepicker('getDate').getDate();
-                                monthF = $(this).datepicker('getDate').getMonth() + 1;
-                                yearF = $(this).datepicker('getDate').getFullYear();
-
-                                console.log(dayF);
-                                console.log(monthF);
-                                console.log(yearF);
-
-                                console.log("tipo year2" +" "+ typeof year);
-                                console.log("tipo yearF2" +" "+ typeof yearF);
-                                caricamento();
-
-                        });
-
-
-        });
-
-                           function caricamento() {
-                                if(year == yearF && month== monthF && day == dayF) {
-                                    console.log(" Mostro giorno scelto dal primo cal");
-                                    
-                                   requestUrl = "http://" + ip + ":8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    //requestUrl = "http://192.168.1.227:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    //requestUrl = "http://172.20.10.2:8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    $.get(requestUrl, function (data) {
-                                        console.log('DATI RICEVUTI: ' + data);
-                                        if (data == 0) {
-                                            var l= document.getElementById('mioAlert2');
-                                            l.style.display='block';
-                                        } else {
-                                            //window.location.href="http://192.168.1.227:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                             //window.location.href="http://172.20.10.2:8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                            window.location.href = "http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                        }
-
-                                    });
-
-                                } else{
-                                    console.log(" Ho sel anche sul sec calendario. Mostro periodo selezionato! ");
-                                    requestUrl = "http://" + ip + ":8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                    //requestUrl = "http://172.20.10.2:8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                    $.get(requestUrl, function (data) {
-                                         console.log('DATI RICEVUTI: ' + data);
-                                        if (data == 0) {
-                                            var l= document.getElementById('mioAlert2');
-                                            l.style.display='block';
-                                        }else {
-                                            window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                            //window.location.href = "http://192.168.1.227:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                            //window.location.href = "http://172.20.10.2:8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                        }
-                                     });
-
-
-                                }
-                            }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+    <script src="{% static 'Progetto/js/main_chartInside.js' %}"></script>
     
     
-    
-    
-     // funzione per verificare la presenza di dati per la SETTIMANA piu' recente
-        
-        function dataAvailableS(){
+    <script type="text/javascript">
+         $(document).ready(function (){
+             
+             // Grafico erogazioni automatiche/utente
+             
+             var chart = Highcharts.chart('container1', { 
+                chart: {
+                    type: 'column',
 
-            console.log("dentro la funzione"); 
-            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=0"; // di default voglio sapere se ci sono dati per l'ultima settimana 
-            
-            $.get(requestUrl, function (data) {
-                console.log('DATI RICEVUTI: ' + data);
-                if(data[0] == 0){
-                    console.log("alert a tutta pagina");
-                    // mi sposto sulla pagina /statistic cmq
-                    
-                    
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0&noData=1";  
-                    
+                    borderColor: 'cornflowerblue',
+                    borderRadius: 20, // per riquadro tondeggiante 
+                    borderWidth: 2,
+                    backgroundColor: 'rgb(238, 255, 255)',
+
+
+                },
+
+                title: {
+                    text:''
+                },
+
+                credits: {
+                    enabled: false // disabilito la scritta Highcharts.com
+                },
+
+
+                xAxis: {
+                    accessibility: {
+                        description: '' + {{Giorno|safe}} + ''
+                    },
+                    categories: [{{Giorno|safe}}]
+                },
+
+                series: [{
+                    name: 'Automatic dispensing',
+                    color: '#ff0000',
+                    data: [{{erogA}}],
+                    accessibility: {
+                        description: 'This is the number of automatic erogations for the day selected' 
+                    }
+
+                }, 
+                {
+                    name: 'User dispensing',
+                    color: '#3cb371',
+                    data: [{{erogU}}],
+                    accessibility: {
+                        description: "This is the number of user erogations for the day selected",
+                    }
+
                 }
-                else{ // renderizzo i dati che ci sono normalmente 
-                    
-                    // recupero la data di inizio e di fine del periodo
-                    var start = new Date(data[1]); // passato 
-                    var end = new Date(data[2]); // oggi 
-                    
-                    var yearS = start.getFullYear();
-                    var monthS = start.getMonth() + 1; 
-                    var dayS = start.getDate(); 
-                    
-                    var yearE = end.getFullYear();
-                    var monthE = end.getMonth() + 1;
-                    var dayE = end.getDate();
-                    
-                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
-                    
-                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + '0' + dayE + "";
-                }
-            }); 
-        }
-        
-        //funzione per verificare la presenza di dati per la MESE piu' recente
-        
-        function dataAvailableM(){
-
-            console.log("dentro la funzione"); 
-            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=1"; 
-            
-            $.get(requestUrl, function (data) {
-                console.log('DATI RICEVUTI: ' + data);
-                if(data[0] == 0){
-                    console.log("alert a tutta pagina");
-                    // mi sposto sulla pagina /statistic cmq
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1&noData=1";  
-                    
-                }
-                else{ // renderizzo i dati che ci sono normalmente 
-                    
-                    // recupero la data di inizio e di fine del periodo
-                    var start = new Date(data[1]); // passato 
-                    var end = new Date(data[2]); // oggi 
-                    
-                    var yearS = start.getFullYear();
-                    var monthS = start.getMonth() + 1; 
-                    var dayS = start.getDate(); 
-                    
-                    var yearE = end.getFullYear();
-                    var monthE = end.getMonth() + 1;
-                    var dayE = end.getDate();
-                    
-                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
-                    
-                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + '0' + dayE + "";
-                }
-            }); 
-        }
+                ],
 
 
+
+            }); // chiude il chart
+
+
+            // Grafico erogazioni/no erogazioni
+
+            var chart = Highcharts.chart('container', {
+                chart: {
+                    type: 'column', // column
+
+                    borderColor: 'cornflowerblue',
+                    borderRadius: 20, // per riquadro tondeggiante 
+                    borderWidth: 2,
+                    backgroundColor: 'rgb(238, 255, 255)',
+
+
+                },
+                title: {
+                    text:''
+                },
+
+                credits: {
+                    enabled: false
+                },
+
+
+                xAxis: {
+                    accessibility: {
+                        description: '' + {{Giorno|safe}} + ''
+                    },
+                    categories: [{{Giorno|safe}}]
+                },
+
+                series: [{
+                    name: 'Disbursements',
+                    color: '#ff00ff',
+                    data: [{{erog}}],
+                    accessibility: {
+                        description: 'This is the number of erogations for the day selected'
+                    }
+
+                }, 
+                {
+                    name: 'No disbursements',
+                    color: '#00bfff',
+                    data: [{{noErog}}],
+                    accessibility: {
+                        description: 'This is the number of passages without erogation for the day selected'
+                    }
+
+                }
+                ],
+
+
+
+            }); // chiude il chart
+
+
+
+            // Grafico erogazioni giorno/notte
+
+            var chart = Highcharts.chart('container2', {  
+                chart: {
+                    type: 'column', // column
+
+                    borderColor: 'cornflowerblue',
+                    borderRadius: 20, // per riquadro tondeggiante 
+                    borderWidth: 2,
+                    backgroundColor: 'rgb(238, 255, 255)',
+
+
+                },
+
+                title: {
+                    text:''
+                },
+
+                credits: {
+                    enabled: false
+                },
+
+
+                xAxis: {
+                    accessibility: {
+                        description: '' + {{Giorno|safe}} + ''
+                    },
+                    categories: [{{Giorno|safe}}]
+                },
+
+                series: [{
+                    name: 'Day mode dispensing',
+                    color: '#ffd700',
+                    data: [{{erogG}}],
+                    accessibility: {
+                        description: "This is the number of day's mode erogations for the day selected",
+                    }
+
+                }, 
+                {
+                    name: 'Night mode dispensing',
+                    color: '#4169e1',
+                    data: [{{erogN}}],
+                    accessibility: {
+                        description: "This is the number of night's mode erogations for the day selected",
+                    }
+
+
+                }
+                ],
+
+
+
+            }); // chiude il chart
+             
+             
+         });
+    
+    
+    
 
 
 </script>
 
-    <script type="text/javascript">
-
-
-        $(document).ready(function (){
-            console.log("pronti alla get");
-
-
-            $("#button").click(function(){
-                // capire come estrapolo dal click sul calendario l'informazione circa quale giorno ho cliccato
-
-                var amg = {
-                    anno: '2019',
-                    mese: '10',
-                    giorno: '22'
-                };
-
-                //var jsonAMG = JSON.stringify(amg);
-                var datoStr = "anno=" + amg.anno + "&mese=" + amg.mese + "&giorno=" + amg.giorno + "";
-
-                //console.log(jsonAMG);
-
-                // GRAFICO EROGAZIONI/PASSAGGI
-
-                $.ajax({
-                    type: 'GET',
-                    //url: "http://192.168.1.105:8000/dispenser/erog/",
-                    //url: "http://192.168.6.86:8000/dispenser/erog/",
-                    url: "http://localhost:8000/dispenser/erog/",
-                    data: datoStr,
-                    success: function(data){
-                        console.log("dati ricevuti");
-                        console.log(data);
-
-
-
-                        // grafico
-                        var chart = Highcharts.chart('container', {
-                            chart: {
-                                type: 'column', // column
-
-//                        events: {
-//                            load: function () {
-//                                var series0 = this.series[0]; // erogazioni automatiche
-//                                var series1 = this.series[1]; // erogazioni utente
-//                                
-//                                var lastId = $('#oggi tr:last').find('#id').html(); 
-//                                console.log(lastId); 
-//                                var lastDate = $('#oggi tr:last').find('#date').html(); 
-//                                console.log(lastDate); 
-//                                var lastErog = $('#oggi tr:last').find('#erogation').html(); 
-//                                console.log(lastErog); 
-//                                var lastUser = $('#oggi tr:last').find('#userMod').html(); 
-//                                console.log(lastUser); 
-//                                var lastTime = $('#oggi tr:last').find('#timeMod').html(); 
-//                                console.log(lastTime); 
-//                                
-//                                if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
-//                                    // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
-//                                    // oppure i dati precedenti sono diversi dai dati appena ricevuti
-//                                    // allora li renderizzo
-//
-//                                    console.log("i dati sono undefined o sono diversi a quelli precedenti");
-//
-//                                    $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
-//                                    "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
-//                                    "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
-//                                    
-//                                    if(data['erogation'] == 1){
-//                                        if(data['userMod'] == true){ // erogazione utente
-//                                            series1.addPoint([1], true); 
-//                                        }
-//                                        else{ // erogazione automatica
-//                                            series0.addPoint([0,1], true); 
-//                                        }
-//                                    }
-//                                    
-//                                }
-//
-//                                else{
-//                                    console.log("dati già stampati");
-//                                }
-//                                
-//                              
-//                                
-//                                 POLLING 
-//                                
-//                                setInterval(function () {  
-//                                    console.log("aggiornamento");
-//                                     // confronto il contenuto delle variabili "vecchie" con i dati in arrivo e se sono diversi (o undefined) allora li aggiungo 
-//                                    
-//                                    if((typeof lastDate === 'undefined' && typeof lastErog === 'undefined' && typeof lastUser === 'undefined' && typeof lastTime === 'undefined') ||(lastId != data['id'])){
-//                                    // se i dati precedenti sono undefined, ovvero non esistono (es: primo dato della giornata)
-//                                    // oppure i dati precedenti sono diversi dai dati appena ricevuti
-//                                    // allora li renderizzo
-//
-//                                    console.log("i dati sono undefined o sono diversi a quelli precedenti");
-//
-//                                    $('#oggi tr:last').after("<tr id='last_insert'>" + "<td id='id'>" + data['id'] + "</td>" + "<td id='date'>" + ' ' + data['date'] + "</td>" +
-//                                    "<td id='erogation'>" + data['erogation'] + "</td>" + "<td id='userMod'>" + data['userMod'] + "</td>" +
-//                                    "<td id='timeMod'>" + data['timeMod'] + "</td>" + "</tr>"); // riguardare
-//                                    
-//                                    if(data['erogation'] == 1){
-//                                        if(data['userMod'] == true){ // erogazione utente
-//                                            series1.addPoint([0,1], true); 
-//                                        }
-//                                        else{ // erogazione automatica
-//                                            series0.addPoint([0,1], true); 
-//                                        }
-//                                    }
-//                                    
-//                                }
-//
-//                                else{
-//                                    console.log("dati già stampati");
-//                                }
-//        
-//                                        
-//                                }, 1000);
-//                                
-//                                
-//                                
-//                            }
-//                        } // chiude events 
-
-                            },
-                            title: {
-                                text: 'Erogazioni 22 Ottobre 2019'
-                            },
-                            
-                            credits: {
-                                enabled: false
-                            },
-                            
-                            // sistemare xAxis
-
-                            xAxis: {
-                                categories: [data[0]]
-                            },
-
-                            series: [{
-                                name: 'Erogazioni',
-                                color: '#ff00ff',
-                                data: [data[1]],
-
-                            }
-
-                                , {
-                                    name: 'No erogazioni',
-                                    color: '#00bfff',
-                                    data: [data[2]],
-
-                                }
-                            ],
-
-
-
-                        }); // chiude il chart
-                    } // chiude success
-
-                }) // chiude ajax
-
-
-
-            });
-        });
-
-
-    </script>
-
-
-
-
 </head>
+    
 
 <body style="background-color: #bbdefb">
 
@@ -500,33 +225,20 @@
         <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center" >
 
             <ul class="nav navbar-nav">
+                
                 <!-- localhost --> 
                 
-<!--                <li ><a href='http://localhost:8000'style="color: black; text-align: center">Home</a></li>-->
+                <li ><a href='http://192.168.1.67:8000'style="color: black; text-align: center">Home</a></li>
 <!--                E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
                 
                 <!-- hotspot Vero -->
-                <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>
-<!--
-                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>  
-                <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
--->
-                <!-- last week e last month modificati -->
+<!--                <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>-->
+            
                 
                 <li ><a href='#' id="lastWeek" style="color: black; text-align: center" onclick="dataAvailableS()">Last Week</a></li>  
                 <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableM()">Last Month</a></li>
                 
-                
-                
-                
-                <!--                <li ><a href='http://172.20.10.2:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>-->
-                <!--                <li ><a href='http://172.20.10.2:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>-->
-                
-                <!-- casa Chiara -->
-                
-<!--                <li ><a href='http://192.168.1.227:8000'style="color: black; text-align: center">Home</a></li>-->
-<!--                <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>-->
-<!--                 <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>-->
+            
 
                 <li>
                     <nav class="navbar navbar-expand-lg has-megamenu">
@@ -608,7 +320,6 @@
             <table id="oggi" class="table table-hover table-bordered-costum " >
                     <thead>
                     <tr id="prova" style="background-color: #eeffff">
-{#                       <th>Id</th>#}
                         <th style="font-weight: bold; color: cornflowerblue">Data</th>
                         <th style="font-weight: bold; color: cornflowerblue">Erogation</th>
                       <th style="font-weight: bold; color: cornflowerblue">UserMode</th>
@@ -618,7 +329,6 @@
                     <tbody>
                     {% for riga in righe %}
                         <tr id="old">
-{#                           <td id="id">{{riga.id}} </td>#}
                             <td id="date" >{{riga.date}} </td>
                             <td id="erogation">{{riga.erogation}} </td>
                           <td id="userMod" >{{riga.userMod}} </td>
@@ -638,189 +348,6 @@
     
     
 </div>
-
-<script>
-
-    // grafico erogazioni automatiche/utente
-    var chart = Highcharts.chart('container1', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
-        chart: {
-            type: 'column',
-            
-            borderColor: 'cornflowerblue',
-            borderRadius: 20, // per riquadro tondeggiante 
-            borderWidth: 2,
-            backgroundColor: 'rgb(238, 255, 255)',
-            
-
-        },
-
-        title: {
-            text:''
-        },
-        
-        credits: {
-            enabled: false // disabilito la scritta Highcharts.com
-        },
-
-        // sistemare xAxis
-
-        xAxis: {
-            accessibility: {
-                description: '' + {{Giorno|safe}} + ''
-            },
-            categories: [{{Giorno|safe}}]
-        },
-
-        series: [{
-            name: 'Automatic dispensing',
-            color: '#ff0000',
-            data: [{{erogA}}],
-            accessibility: {
-                description: 'This is the number of automatic erogations for the day selected' 
-            }
-
-        }
-
-            , {
-                name: 'User dispensing',
-                color: '#3cb371',
-                data: [{{erogU}}],
-                accessibility: {
-                    description: "This is the number of user erogations for the day selected",
-                }
-
-            }
-        ],
-
-
-
-    }); // chiude il chart
-
-
-    // grafico erogazioni/no erogazioni
-
-    var chart = Highcharts.chart('container', {
-        chart: {
-            type: 'column', // column
-            
-            borderColor: 'cornflowerblue',
-            borderRadius: 20, // per riquadro tondeggiante 
-            borderWidth: 2,
-            backgroundColor: 'rgb(238, 255, 255)',
-            
-
-        },
-        title: {
-            text:''
-        },
-        
-        credits: {
-            enabled: false
-        },
-        
-
-        // sistemare xAxis
-
-        xAxis: {
-            accessibility: {
-                description: '' + {{Giorno|safe}} + ''
-            },
-            categories: [{{Giorno|safe}}]
-        },
-
-        series: [{
-            name: 'Disbursements',
-            color: '#ff00ff',
-            data: [{{erog}}],
-            accessibility: {
-                description: 'This is the number of erogations for the day selected'
-            }
-
-        }
-
-            , {
-                name: 'No disbursements',
-                color: '#00bfff',
-                data: [{{noErog}}],
-                accessibility: {
-                    description: 'This is the number of passages without erogation for the day selected'
-                }
-
-            }
-        ],
-
-
-
-    }); // chiude il chart
-
-
-
-
-
-    // grafico erogazioni giorno/notte
-    var chart = Highcharts.chart('container2', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
-        chart: {
-            type: 'column', // column
-            
-            borderColor: 'cornflowerblue',
-            borderRadius: 20, // per riquadro tondeggiante 
-            borderWidth: 2,
-            backgroundColor: 'rgb(238, 255, 255)',
-            
-
-        },
-
-        title: {
-            text:''
-        },
-        
-        credits: {
-            enabled: false
-        },
-
-        // sistemare xAxis
-
-        xAxis: {
-            accessibility: {
-                description: '' + {{Giorno|safe}} + ''
-            },
-            categories: [{{Giorno|safe}}]
-        },
-
-        series: [{
-            name: 'Day mode dispensing',
-            color: '#ffd700',
-            data: [{{erogG}}],
-            accessibility: {
-                description: "This is the number of day's mode erogations for the day selected",
-            }
-
-        }
-
-            , {
-                name: 'Night mode dispensing',
-                color: '#4169e1',
-                data: [{{erogN}}],
-                accessibility: {
-                    description: "This is the number of night's mode erogations for the day selected",
-                }
-                
-
-            }
-        ],
-
-
-
-    }); // chiude il chart
-    
-    
-    
-
-
-
-</script>
-
-
 
 </body>
 </html>
