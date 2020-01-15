@@ -4,7 +4,6 @@
 <head>
 <meta charset="utf-8">
 <title> Home page </title>
-<meta name ="author" content="Veronica Pecchioli">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
@@ -12,7 +11,7 @@
 
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-<link rel="stylesheet" type="text/css" href="{% static 'Progetto/css/style_index.css' %}" media="screen"/>
+<link rel="stylesheet" type="text/css" href="{% static 'Progetto/css/index.css' %}" media="screen"/>
 <!-- favicon -->
 <link rel="shortcut icon" type="image/png" href="{% static 'Progetto/favicon.ico/favicon-96x96.png' %}"/> 
 
@@ -24,7 +23,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="{% static 'Progetto/js/main_index.js' %}"></script>
+<script src="{% static 'Progetto/js/index.js' %}"></script>
     
 
 </head>
@@ -48,8 +47,10 @@
         <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center; position: sticky" >
 
             <ul class="nav navbar-nav">
+
+                <li><a href='http://localhost:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>
                 
-                <li><a href='http://192.168.1.67:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>
+{#                <li><a href='http://192.168.1.67:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>#}
 
                 
 <!--                <li ><a href='http://172.20.10.2:8000/dispenser/client/' title="Today's data" style="color: black; text-align: center">Show today's data</a></li>-->
@@ -69,7 +70,7 @@
 
 <div class="text-center">
 
-    <img id="img" src="{% static 'Progetto/Img/TigreRES2.png' %}" alt="immagine che mostra il dispositivo" class="rounded mx-auto d-block">
+    <img id="img" src="{% static 'Progetto/Img/Tigre_resOK.png' %}" alt="immagine che mostra il dispositivo" class="rounded mx-auto d-block">
     
 </div>
 

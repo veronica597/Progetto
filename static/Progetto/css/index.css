@@ -17,10 +17,38 @@
     }
 }
 
+
+ @media (min-height: 568px)and (max-height:638px) {
+        #img{
+            padding-top:20px;
+
+            height: 350px;
+
+        }
+    }
+
+
+@media (min-height: 660px)and (max-height:668px) {
+        #img{
+            padding-top:20px;
+
+            height: 450px;
+
+        }
+    }
+
     @media (min-width: 375px)and (max-width:770px) {
         #img{
         width: 340px;
-        padding-top: 10px;
+        padding-top: 30px;
+
+    }
+    }
+
+ @media (width: 768px)and (height:1024px) {
+        #img{
+        width: 340px;
+        padding-top: 100px;
 
     }
     }

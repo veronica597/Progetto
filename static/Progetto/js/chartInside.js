@@ -5,13 +5,15 @@
 
 /* eslint no-console: 0*/  // per eliminare l'errore "no-console" localmente (per farlo in maniera globale dovrei modificare il file .eslintrc -- dovrei aver scaricato jquery ma io ho usato la CDN)
 
-// servono per eliminare gli errori relativi a $ o JQuery, derivanti dal fatto che $ e JQuery sono create da JQuery al momento del caricamento della pagina --> JSLint che fa code checking le trova non definite, ma il codice funziona lo stesso perche' poi queste variabili sono definite comunque al caricamento della pagina 
+// servono per eliminare gli errori relativi a $ o JQuery, derivanti dal fatto che $ e JQuery sono create da JQuery al momento del LoadDataSelected della pagina --> JSLint che fa code checking le trova non definite, ma il codice funziona lo stesso perche' poi queste variabili sono definite comunque al LoadDataSelected della pagina
 
 
 
-var ip = '192.168.1.67'; // indirizzo ip server 172.20.10.2, 192.168.1.67
+// var ip = '192.168.1.67'; // indirizzo ip server 172.20.10.2, 192.168.1.67
+var ip = 'localhost';
+
     
-function pippo(aDiv1) {
+function show(aDiv1) {
     var e = document.getElementById(aDiv1);
 
     if (e.style.display == "none") {
@@ -19,7 +21,7 @@ function pippo(aDiv1) {
     }
 }
 
-function Pippo(aDiv1,aDiv2,aDiv3,aDiv4) {
+function showForCalendar(aDiv1, aDiv2, aDiv3, aDiv4) {
     var e = document.getElementById(aDiv1);
     var b= document.getElementById(aDiv2);
     var c= document.getElementById(aDiv3);
@@ -69,12 +71,12 @@ $(function() {
         $.get(requestUrl, function (data) {
             console.log('DATI RICEVUTI: ' + data);
             if (data == 0) {
-                    var l= document.getElementById('mioAlert');
+                    var l= document.getElementById('Alert');
                     l.style.display='block';
                 } 
             else {
 
-                    window.location.href = "http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                    window.location.href = "http://" + ip + ":8000/dispenser/data/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
 
                 }
 
@@ -114,14 +116,14 @@ $(function() {
 
         console.log("tipo year2" +" "+ typeof year);
         console.log("tipo yearF2" +" "+ typeof yearF);
-        caricamento();
+        LoadDataSelected();
 
 });
 
 
 });
 
-function caricamento() {
+function LoadDataSelected() {
     
     if(year == yearF && month== monthF && day == dayF) {
         console.log(" Mostro giorno scelto dal primo cal");
@@ -131,11 +133,11 @@ function caricamento() {
         $.get(requestUrl, function (data) {
             console.log('DATI RICEVUTI: ' + data);
             if (data == 0) {
-                var l= document.getElementById('mioAlert2');
+                var l= document.getElementById('Alert2');
                 l.style.display='block';
             } else {
 
-                window.location.href = "http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
+                window.location.href = "http://" + ip + ":8000/dispenser/data/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
             }
 
         });
@@ -143,13 +145,13 @@ function caricamento() {
     } 
     
     else{
-        console.log(" Ho sel anche sul sec calendario. Mostro periodo selezionato! ");
+        console.log(" Ho sel anche sul sec calendario. Mostro Period selezionato! ");
         requestUrl = "http://" + ip + ":8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
 
         $.get(requestUrl, function (data) {
              console.log('DATI RICEVUTI: ' + data);
             if (data == 0) {
-                var l= document.getElementById('mioAlert2');
+                var l= document.getElementById('Alert2');
                 l.style.display='block';
             }else {
                 window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
@@ -166,17 +168,17 @@ function caricamento() {
     
 // funzione per verificare la presenza di dati per la SETTIMANA piu' recente
         
-function dataAvailableS(){
+function dataAvailableW(){
 
     console.log("dentro la funzione"); 
-    requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=0"; // di default voglio sapere se ci sono dati per l'ultima settimana 
+    requestUrl = "http://" + ip + ":8000/dispenser/fakeWM/?id=0"; // di default voglio sapere se ci sono dati per l'ultima settimana
 
     $.get(requestUrl, function (data) {
         console.log('DATI RICEVUTI: ' + data);
         if(data[0] == 0){
             console.log("alert a tutta pagina");
             
-            // recupero la data di inizio e di fine del periodo
+            // recupero la data di inizio e di fine del Period
             var start = new Date(data[1]); // passato 
             var end = new Date(data[2]); // oggi 
 
@@ -202,7 +204,7 @@ function dataAvailableS(){
         }
         else{ // renderizzo i dati che ci sono normalmente 
 
-            // recupero la data di inizio e di fine del periodo
+            // recupero la data di inizio e di fine del Period
             var start = new Date(data[1]); // passato 
             var end = new Date(data[2]); // oggi 
 
@@ -229,14 +231,14 @@ function dataAvailableS(){
 function dataAvailableM(){
 
     console.log("dentro la funzione"); 
-    requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=1"; 
+    requestUrl = "http://" + ip + ":8000/dispenser/fakeWM/?id=1";
 
     $.get(requestUrl, function (data) {
         console.log('DATI RICEVUTI: ' + data);
         if(data[0] == 0){
             console.log("alert a tutta pagina");
             
-            // recupero la data di inizio e di fine del periodo
+            // recupero la data di inizio e di fine del Period
             var start = new Date(data[1]); // passato 
             var end = new Date(data[2]); // oggi 
 
@@ -259,7 +261,7 @@ function dataAvailableM(){
         }
         else{ // renderizzo i dati che ci sono normalmente 
 
-            // recupero la data di inizio e di fine del periodo
+            // recupero la data di inizio e di fine del Period
             var start = new Date(data[1]); // passato 
             var end = new Date(data[2]); // oggi 
 

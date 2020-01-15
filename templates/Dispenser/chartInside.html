@@ -25,7 +25,7 @@
     
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-    <script src="{% static 'Progetto/js/main_chartInside.js' %}"></script>
+    <script src="{% static 'Progetto/js/chartInside.js' %}"></script>
     
     
     <script type="text/javascript">
@@ -226,16 +226,18 @@
 
             <ul class="nav navbar-nav">
                 
-                <!-- localhost --> 
+                <!-- localhost -->
+                <li ><a href='http://localhost:8000'style="color: black; text-align: center" title="Home">Home</a></li>
                 
-                <li ><a href='http://192.168.1.67:8000'style="color: black; text-align: center">Home</a></li>
-<!--                E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
+                <!--    CHIA
+             <li ><a href='http://192.168.1.67:8000'style="color: black; text-align: center">Home</a></li>
+               E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME -->
                 
                 <!-- hotspot Vero -->
-<!--                <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>-->
+{#               <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>#}
             
                 
-                <li ><a href='#' id="lastWeek" style="color: black; text-align: center" onclick="dataAvailableS()">Last Week</a></li>  
+                <li ><a href='#' id="lastWeek" style="color: black; text-align: center" onclick="dataAvailableW()">Last Week</a></li>
                 <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableM()">Last Month</a></li>
                 
             
@@ -253,9 +255,9 @@
                                       <div class="col-sm-12">
                                         <div class="link-list-wrapper">
                                           <ul class="link-list">
-                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="Pippo('t1','dpm','mioAlert2','t2')">Day </button> </span></a>
+                                            <li><a class="list-item" href="#"><span><button id="B1" type="button" class="btn btn-default" onclick="showForCalendar('t1','dpm','Alert2','t2')">Day </button> </span></a>
                                             </li>
-                                              <li><a class="list-item" href="#"><span><button id="B2" type="button" class="btn btn-default" onclick="Pippo('t2','dpm','mioAlert','t1')">Period </button></span></a>
+                                              <li><a class="list-item" href="#"><span><button id="B2" type="button" class="btn btn-default" onclick="showForCalendar('t2','dpm','Alert','t1')">Period </button></span></a>
                                               </li>
                                           </ul>
                                         </div>
@@ -266,7 +268,7 @@
 
                                                 <div class="row" style="padding: 10px">
                                                     <div class="col-lg-12">
-                                                   <div  style="display: none" class="alert alert-info" id="mioAlert">No data available!</div>
+                                                   <div  style="display: none" class="alert alert-info" id="Alert">No data available!</div>
 
 
                                                  </div>
@@ -275,7 +277,7 @@
                                             <li style="display: none" id="t2"><a class="list-item" href="#"><span><p style="color:black">From:<input data-date-format="dd/mm/yyyy" id="datepickerI"> to: <input data-date-format="dd/mm/yyyy" id="datepickerF" disabled></p></span></a>
                                                 <div class="row" style="padding: 10px">
                                                     <div class="col-lg-12">
-                                                   <div style="display: none" class="alert alert-info" id="mioAlert2">No data available!</div>
+                                                   <div style="display: none" class="alert alert-info" id="Alert2">No data available!</div>
 
                                                  </div>
                                                 </div>
@@ -343,7 +345,7 @@
 
 
 <div class="text-center">
-    <button type= "button" class="btn btn-link" style="color: cornflowerblue" onclick="pippo('d1')">Show the table</button>
+    <button type= "button" class="btn btn-link" style="color: cornflowerblue" onclick="show('d1')">Show the table</button>
 </div>
     
     

@@ -21,12 +21,12 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="{% static 'Progetto/js/main_get_post.js' %}"></script>
+    <script src="{% static 'Progetto/js/getPost.js' %}"></script>
 
     <script type="text/javascript">
         
         $(document).ready(function (){
-            var ip = '192.168.1.67'; //172.20.10.2, localhost, 192.168.1.67
+            var ip = 'localhost'; //172.20.10.2, localhost, 192.168.1.67
 
             // formatta data in ingresso
 
@@ -73,7 +73,7 @@
 
                                 $.ajax({
                                     type: 'GET',
-                                    url: "http://" + ip + ":8000/dispenser/giorno/",
+                                    url: "http://" + ip + ":8000/dispenser/day/",
 
                                     success: function(data){
                                         console.log("dati ricevuti");
@@ -132,19 +132,19 @@
 
 
                                         if(typeof(data) === 'string'){ // se nn ci sono dati
-                                            pippo('cont');
+                                            show('cont');
 
                                         }
 
                                         else{
-                                            pippo3('cont'); // tolgo alert
+                                            notShow('cont'); // tolgo alert
 
-                                            pippo('p0');
+                                            show('p0');
 
-                                            pippo('oggi');
+                                            show('oggi');
 
-                                            pippo('tasto');
-                                            pippo('container');
+                                            show('tasto');
+                                            show('container');
 
 
 
@@ -291,14 +291,16 @@
         <div class="collapse navbar-collapse" id="mainNavBar" style="text-align: center" >
 
             <ul class="nav navbar-nav">
+
+                <li ><a href='http://localhost:8000'style="color: black; text-align: center" title="Home">Home</a></li>
                 
-                <li ><a href='http://192.168.1.67:8000'style="color: black; text-align: center" title="Home">Home</a></li>
+ <!--                 <li ><a href='http://192.168.1.67:8000'style="color: black; text-align: center" title="Home">Home</a></li>-->
 
                 
-<!--                <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>-->
+{#              <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center" title="Home">Home</a></li>#}
                 
                 
-                <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableS()" title="Last Week">Last Week</a></li>
+                <li ><a href='#' style="color: black; text-align: center" onclick="dataAvailableW()" title="Last Week">Last Week</a></li>
                 <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableM()" title="Last Month">Last Month</a></li>
                     
 
@@ -313,7 +315,7 @@
 <h1 style=" text-align: center; color:cornflowerblue">Today's data </h1>
 <p class="lead" style="margin-left: 5px;">In this page we can see all the informations about about the use of the dispenser on the current day </p>
 <p class="lead" id="tit" style="margin-left: 5px;"> If you want to erogate food press the following button:
-    <button id="on" type="button" onclick="attivaServo()" class="btn btn-default"> Erogation </button></p>
+    <button id="on" type="button" onclick="servoOn()" class="btn btn-default"> Erogation </button></p>
 <p class="text-center" style="font-style: oblique; font-weight: bold; font-size: medium; color: #eeffff; padding-left: 5px;"> Please remember that you can only deliver food through the button once every hour</p>
 
 
@@ -407,7 +409,7 @@
 
 
 <div class="container-fluid">
-    <button id="tasto" type= "button" class="btn btn-link" style="color: cornflowerblue; margin-left: 45%; display: none;" onclick="pippo2('p1','p2')">Show the table</button>
+    <button id="tasto" type= "button" class="btn btn-link" style="color: cornflowerblue; margin-left: 45%; display: none;" onclick="showForTables('p1','p2')">Show the table</button>
 </div>
 
 </body>

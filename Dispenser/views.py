@@ -42,12 +42,12 @@ def client(request):  # processa i dati del giorno corrente
 
     if request.method == 'GET':
         print('get')
-        oggi = datetime.today()
-        meseC = oggi.month
-        giornoC = oggi.day
-        annoC = oggi.year
+        today = datetime.today()
+        monthC = today.month
+        dayC = today.day
+        yearC = today.year
 
-        stringa = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+        stringa = str(yearC) + "-" + str(monthC) + "-" + str(dayC)
         print("stringa: ", stringa)
 
         e = DatiRaccolti.objects.values().filter(date__gte=stringa, erogation=True).order_by('date').count()
@@ -63,7 +63,7 @@ def client(request):  # processa i dati del giorno corrente
             'Righe': DatiRaccolti.objects.values().filter(date__gte=stringa).order_by('-date')
         }
 
-        return render(request, 'get_post.html', context)
+        return render(request, 'getPost.html', context)
 
     return HttpResponseForbidden
 
@@ -71,16 +71,16 @@ def client(request):  # processa i dati del giorno corrente
 @csrf_exempt
 def sendData(request):  # view che invia i dati per costruire i CHART lato html per i singoli giorni
 
-    anno = request.GET.__getitem__('anno')
-    mese = request.GET.__getitem__('mese')
-    giorno = request.GET.__getitem__('giorno')
+    year = request.GET.__getitem__('anno')
+    month = request.GET.__getitem__('mese')
+    day = request.GET.__getitem__('giorno')
 
-    if int(giorno) < 10:
-        stringa = anno + "-" + mese + "-" + "0" + giorno  # l'aggiunta dello 0 e' per contains
-        stringaI = "0" + giorno + "-" + mese + "-" + anno  # per il titolo della pagina html
+    if int(day) < 10:
+        stringa = year + "-" + month + "-" + "0" + day  # l'aggiunta dello 0 e' per contains
+        stringaI = "0" + day + "-" + month + "-" + year  # per il titolo della pagina html
     else:
-        stringa = anno + "-" + mese + "-" + giorno
-        stringaI = giorno + "-" + mese + "-" + anno  # per il titolo della pagina html
+        stringa = year + "-" + month + "-" + day
+        stringaI = day + "-" + month + "-" + year  # per il titolo della pagina html
 
     print("STRINGA filtraggio: ", stringa)
 
@@ -119,14 +119,14 @@ def sendData(request):  # view che invia i dati per costruire i CHART lato html 
 
 @csrf_exempt
 def absentData(request):  # per controllare la presenza di dati per un giorno singolo selezionato dall'utente
-    anno = request.GET.__getitem__('anno')
-    mese = request.GET.__getitem__('mese')
-    giorno = request.GET.__getitem__('giorno')
+    year = request.GET.__getitem__('anno')
+    month = request.GET.__getitem__('mese')
+    day = request.GET.__getitem__('giorno')
 
-    if int(giorno) < 10:   # pensare di mettere lo 0 per il mese
-        stringa = anno + "-" + mese + "-" + '0' + giorno  # lo 0 e' per contains
+    if int(day) < 10:   # pensare di mettere lo 0 per il mese
+        stringa = year + "-" + month + "-" + '0' + day  # lo 0 e' per contains
     else:
-        stringa = anno + "-" + mese + "-" + giorno
+        stringa = year + "-" + month + "-" + day
 
     print(stringa)
 
@@ -137,153 +137,153 @@ def absentData(request):  # per controllare la presenza di dati per un giorno si
 
 
 @csrf_exempt
-def absentDataPeriod(request):  # per periodo scelto da utente
+def absentDataPeriod(request):  # per Period scelto da utente
 
     print("view absentDataPeriod")
 
-    anno = request.GET.__getitem__('anno')
-    mese = request.GET.__getitem__('mese')
-    giorno = request.GET.__getitem__('giorno')
+    year = request.GET.__getitem__('anno')
+    month = request.GET.__getitem__('mese')
+    day = request.GET.__getitem__('giorno')
 
     # in questo caso non mi serve aggiungere lo 0 perche' non utilizzo contains
 
-    stringaI = anno + "-" + mese + "-" + giorno
+    stringI = year + "-" + month + "-" + day
 
-    annoF = int(request.GET.__getitem__('annoF'))
-    meseF = int(request.GET.__getitem__('meseF'))
-    giornoF = int(request.GET.__getitem__('giornoF'))
+    yearF = int(request.GET.__getitem__('annoF'))
+    monthF = int(request.GET.__getitem__('meseF'))
+    dayF = int(request.GET.__getitem__('giornoF'))
 
-    # logica del 'giorno in più' per ovviare al problema della selezione del periodo
+    # logica del 'giorno in più' per ovviare al problema della selezione del Period
 
-    mesi31 = [1, 3, 5, 7, 8, 10, 12]
-    mesi30 = [4, 6, 9, 11]
+    months31 = [1, 3, 5, 7, 8, 10, 12]
+    months30 = [4, 6, 9, 11]
 
-    if meseF in mesi31:
-        if giornoF == 31:
-            giornoF = 1
-            if meseF == 12:
-                meseF = 1  # gennaio
-                annoF = annoF + 1
+    if monthF in months31:
+        if dayF == 31:
+            dayF = 1
+            if monthF == 12:
+                monthF = 1  # gennaio
+                yearF = yearF + 1
             else:
-                meseF = meseF + 1
+                monthF = monthF + 1
 
         else:
-            giornoF = giornoF + 1
+            dayF = dayF + 1
 
-    elif meseF in mesi30:
-        if giornoF == 30:
-            giornoF = 1
-            meseF = meseF + 1
+    elif monthF in months30:
+        if dayF == 30:
+            dayF = 1
+            monthF = monthF + 1
 
         else:
-            giornoF = giornoF + 1
+            dayF = dayF + 1
 
-    elif meseF == 2:  # febbraio
-        if giornoF == 28:
-            giornoF = 1
-            meseF = 3
+    elif monthF == 2:  # febbraio
+        if dayF == 28:
+            dayF = 1
+            monthF = 3
         else:
-            giornoF = giornoF + 1
+            dayF = dayF + 1
 
-    stringaF = str(annoF) + "-" + str(meseF) + "-" + str(giornoF)
+    stringF = str(yearF) + "-" + str(monthF) + "-" + str(dayF)
 
-    print(stringaI, stringaF)
+    print(stringI, stringF)
 
-    f = DatiRaccolti.objects.values().filter(date__gte=stringaI, date__lte=stringaF).order_by('date')
+    f = DatiRaccolti.objects.values().filter(date__gte=stringI, date__lte=stringF).order_by('date')
     lu = len(f)
 
     return JsonResponse(lu, safe=False)
 
 
 @csrf_exempt
-def absentDataSM(request):  # per verificare la presenza di dati nell'ultima settimana e nell'ultimo mese
-    print("view absentDataSM")
+def absentDataWM(request):  # per verificare la presenza di dati nell'ultima settimana e nell'ultimo mese
+    print("view absentDataWM")
     id = request.GET.__getitem__('id')
     print('id: ' + id)
 
-    oggi = datetime.today()
+    today = datetime.today()
 
-    meseC = oggi.month
-    giornoC = oggi.day
-    annoC = oggi.year
+    monthC = today.month
+    dayC = today.day
+    yearC = today.year
 
-    fine = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+    end = str(yearC) + "-" + str(monthC) + "-" + str(dayC)
 
-    print("oggi: " + str(oggi))
+    print("oggi: " + str(today))
 
     # in base al valore dell'id passato calcolo giorno mese scorso o giorno settimana scorsa
 
     if id == '1':  # mese
         print("mesee")
-        giornoP = giornoC  # mantengo il giorno
+        dayP = dayC  # mantengo il giorno
 
-        if meseC == 1:  # se e' gennaio cambio il mese ma anche l'anno
-            meseP = 12
-            annoP = annoC - 1
+        if monthC == 1:  # se e' gennaio cambio il mese ma anche l'anno
+            monthP = 12
+            yearP = yearC - 1
 
         else:
-            meseP = meseC - 1
-            annoP = annoC
+            monthP = monthC - 1
+            yearP = yearC
 
-        passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
+        past = str(yearP) + "-" + str(monthP) + "-" + str(dayP)
 
     elif id == '0':  # settimana
         print("settimana")
 
-        mesi31 = [1, 3, 5, 7, 8, 10, 12]
-        mesi30 = [4, 6, 9, 11]
+        months31 = [1, 3, 5, 7, 8, 10, 12]
+        months30 = [4, 6, 9, 11]
 
-        if giornoC <= 7:
-            annoP = annoC
-            meseP = meseC - 1
+        if dayC <= 7:
+            yearP = yearC
+            monthP = monthC - 1
 
-            if meseC == 1:
-                meseP=12
-                annoP = annoC - 1
+            if monthC == 1:
+                monthP=12
+                yearP = yearC - 1
 
-            if meseP in mesi31:
-                giornoP = 31 + (giornoC - 7)
+            if monthP in months31:
+                dayP = 31 + (dayC - 7)
 
-            elif meseP in mesi30:
-                giornoP = 30 + (giornoC - 7)
+            elif monthP in months30:
+                dayP = 30 + (dayC - 7)
 
-            elif meseP == 2:
-                giornoP = 28 + (giornoC - 7)
+            elif monthP == 2:
+                dayP = 28 + (dayC - 7)
 
-            print("meseP : ", meseP)
+            print("meseP : ", monthP)
 
         else:
-            meseP = meseC  # mantengo il mese
-            giornoP = giornoC - 7
-            annoP = annoC
+            monthP = monthC  # mantengo il mese
+            dayP = dayC - 7
+            yearP = yearC
 
-        passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
+        past = str(yearP) + "-" + str(monthP) + "-" + str(dayP)
 
-    print("Il periodo selezionato e': ", passato, fine)
+    print("Il Periodo selezionato e': ", past, end)
 
-    f = DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=fine).order_by('date')
+    f = DatiRaccolti.objects.values().filter(date__gte=past, date__lte=end).order_by('date')
     lu = len(f)
     print("lunghezza: ", lu)
 
-    dataToSend = [lu, passato, fine]  # Oggi
+    dataToSend = [lu, past, end]  # Oggi
 
     return JsonResponse(dataToSend, safe=False)
 
 
 @csrf_exempt
-def ultimoDato(request):  # per aggiornamento tabella e chart
+def LastAdded(request):  # per aggiornamento tabella e chart
 
-    oggi = datetime.today()
+    today = datetime.today()
 
-    meseC = oggi.month
-    giornoC = oggi.day
-    annoC = oggi.year
+    monthC = today.month
+    dayC = today.day
+    yearC = today.year
 
-    stringa = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+    string = str(yearC) + "-" + str(monthC) + "-" + str(dayC)
 
-    print("stringa: ", stringa)
+    print("stringa: ", string)
 
-    elementi = DatiRaccolti.objects.values().filter(date__gte=stringa)
+    elementi = DatiRaccolti.objects.values().filter(date__gte=string)
 
     lu = len(elementi)
     print(lu)
@@ -299,9 +299,9 @@ def ultimoDato(request):  # per aggiornamento tabella e chart
 
 
 @csrf_exempt
-def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utente -- versione che si combina con absentDataSM
+def Period(request):  # per filtraggio mese/settimana/Period scelto dall'utente -- versione che si combina con absentDataWM
 
-    print("view periodo")
+    print("view Period")
 
     id = request.GET.__getitem__('id')
     print('id: ' + id)
@@ -314,46 +314,46 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
             print("non ci sono dati per l'ultima settimana !!")
 
             # se voglio che nel titolo ci siano le date devo fare così
-            meseC = int(request.GET.__getitem__('meseF'))
-            giornoC = int(request.GET.__getitem__('giornoF'))
-            annoC = int(request.GET.__getitem__('annoF'))
+            monthC = int(request.GET.__getitem__('meseF'))
+            dayC = int(request.GET.__getitem__('giornoF'))
+            yearC = int(request.GET.__getitem__('annoF'))
 
-            Oggi = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+            today = str(yearC) + "-" + str(monthC) + "-" + str(dayC)
 
-            if giornoC < 10:
-                if meseC < 10:
-                    fine = "0" + str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+            if dayC < 10:
+                if monthC < 10:
+                    end = "0" + str(dayC) + "-0" + str(monthC) + "-" + str(yearC)
                 else:
-                    fine = "0" + str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+                    end = "0" + str(dayC) + "-" + str(monthC) + "-" + str(yearC)
             else:
-                if meseC < 10:
-                    fine = str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+                if monthC < 10:
+                    end = str(dayC) + "-0" + str(monthC) + "-" + str(yearC)
                 else:
-                    fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+                    end = str(dayC) + "-" + str(monthC) + "-" + str(yearC)
 
-            meseP = int(request.GET.__getitem__('mese'))
-            giornoP = int(request.GET.__getitem__('giorno'))
-            annoP = int(request.GET.__getitem__('anno'))
+            monthP = int(request.GET.__getitem__('mese'))
+            dayP = int(request.GET.__getitem__('giorno'))
+            yearP = int(request.GET.__getitem__('anno'))
 
-            passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
+            past = str(yearP) + "-" + str(monthP) + "-" + str(dayP)
 
-            if giornoP < 10:
-                if meseP < 10:
-                    inizio = "0" + str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+            if dayP < 10:
+                if monthP < 10:
+                    beginning = "0" + str(dayP) + "-0" + str(monthP) + "-" + str(yearP)
                 else:
-                    inizio = "0" + str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+                    beginning = "0" + str(dayP) + "-" + str(monthP) + "-" + str(yearP)
             else:
-                if meseP < 10:
-                    inizio = str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+                if monthP < 10:
+                    beginning = str(dayP) + "-0" + str(monthP) + "-" + str(yearP)
                 else:
-                    inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+                    beginning = str(dayP) + "-" + str(monthP) + "-" + str(yearP)
 
-            print("Il periodo selezionato e': ", passato, Oggi)
+            print("Il Period selezionato e': ", past, today)
 
-            messaggio = "There are no data for last week"
+            mess = "There are no data for last week"
 
-            context = {"mess": messaggio,
-                       'Inizio1': inizio, 'Fine1': fine  # per mettere nel titolo della pagina
+            context = {"mess": mess,
+                       'Inizio1': beginning, 'Fine1': end  # per mettere nel titolo della pagina
                        }
             return render(request, 'statistics.html', context)
 
@@ -361,45 +361,45 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
             print("non ci sono dati per l'ultimo mese !!")
 
             # se voglio che nel titolo ci siano le date devo fare così
-            meseC = int(request.GET.__getitem__('meseF'))
-            giornoC = int(request.GET.__getitem__('giornoF'))
-            annoC = int(request.GET.__getitem__('annoF'))
+            monthC = int(request.GET.__getitem__('meseF'))
+            dayC = int(request.GET.__getitem__('giornoF'))
+            yearC = int(request.GET.__getitem__('annoF'))
 
-            Oggi = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+            today = str(yearC) + "-" + str(monthC) + "-" + str(dayC)
 
-            if giornoC < 10:
-                if meseC < 10:
-                    fine = "0" + str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+            if dayC < 10:
+                if monthC < 10:
+                    end = "0" + str(dayC) + "-0" + str(monthC) + "-" + str(yearC)
                 else:
-                    fine = "0" + str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+                    end = "0" + str(dayC) + "-" + str(monthC) + "-" + str(yearC)
             else:
-                if meseC < 10:
-                    fine = str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+                if monthC < 10:
+                    end = str(dayC) + "-0" + str(monthC) + "-" + str(yearC)
                 else:
-                    fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+                    end = str(dayC) + "-" + str(monthC) + "-" + str(yearC)
 
-            meseP = int(request.GET.__getitem__('mese'))
-            giornoP = int(request.GET.__getitem__('giorno'))
-            annoP = int(request.GET.__getitem__('anno'))
+            monthP = int(request.GET.__getitem__('mese'))
+            dayP = int(request.GET.__getitem__('giorno'))
+            yearP = int(request.GET.__getitem__('anno'))
 
-            passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
+            past = str(yearP) + "-" + str(monthP) + "-" + str(dayP)
 
-            if giornoP < 10:
-                if meseP < 10:
-                    inizio = "0" + str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+            if dayP < 10:
+                if monthP < 10:
+                    beginning = "0" + str(dayP) + "-0" + str(monthP) + "-" + str(yearP)
                 else:
-                    inizio = "0" + str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+                    beginning = "0" + str(dayP) + "-" + str(monthP) + "-" + str(yearP)
             else:
-                if meseP < 10:
-                    inizio = str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+                if monthP < 10:
+                    beginning = str(dayP) + "-0" + str(monthP) + "-" + str(yearP)
                 else:
-                    inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+                    beginning = str(dayP) + "-" + str(monthP) + "-" + str(yearP)
 
-            print("Il periodo selezionato e': ", passato, Oggi)
+            print("Il Period selezionato e': ", past, today)
 
-            messaggio = "There are no data for last month"
-            context = {"mess": messaggio,
-                       'Inizio1': inizio, 'Fine1': fine  # per mettere nel titolo della pagina
+            mess = "There are no data for last month"
+            context = {"mess": mess,
+                       'Inizio1': beginning, 'Fine1': end  # per mettere nel titolo della pagina
                        }
             return render(request, 'statistics.html', context)
 
@@ -407,59 +407,59 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
 
             print("settimana o mese")
 
-            meseC = int(request.GET.__getitem__('meseF'))
-            giornoC = int(request.GET.__getitem__('giornoF'))
-            annoC = int(request.GET.__getitem__('annoF'))
+            monthC = int(request.GET.__getitem__('meseF'))
+            dayC = int(request.GET.__getitem__('giornoF'))
+            yearC = int(request.GET.__getitem__('annoF'))
 
-            Oggi = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
+            today = str(yearC) + "-" + str(monthC) + "-" + str(dayC)
 
-            if giornoC < 10:
-                if meseC < 10:
-                    fine = "0" + str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+            if dayC < 10:
+                if monthC < 10:
+                    end = "0" + str(dayC) + "-0" + str(monthC) + "-" + str(yearC)
                 else:
-                    fine = "0" + str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+                    end = "0" + str(dayC) + "-" + str(monthC) + "-" + str(yearC)
             else:
-                if meseC < 10:
-                    fine = str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+                if monthC < 10:
+                    end = str(dayC) + "-0" + str(monthC) + "-" + str(yearC)
                 else:
-                    fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+                    end = str(dayC) + "-" + str(monthC) + "-" + str(yearC)
 
             # end = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)  # per ultima data istogramma
 
-            meseP = int(request.GET.__getitem__('mese'))
-            giornoP = int(request.GET.__getitem__('giorno'))
-            annoP = int(request.GET.__getitem__('anno'))
+            monthP = int(request.GET.__getitem__('mese'))
+            dayP = int(request.GET.__getitem__('giorno'))
+            yearP = int(request.GET.__getitem__('anno'))
 
-            passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
+            past = str(yearP) + "-" + str(monthP) + "-" + str(dayP)
 
-            if giornoP < 10:
-                if meseP < 10:
-                    inizio = "0" + str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+            if dayP < 10:
+                if monthP < 10:
+                    beginning = "0" + str(dayP) + "-0" + str(monthP) + "-" + str(yearP)
                 else:
-                    inizio = "0" + str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+                    beginning = "0" + str(dayP) + "-" + str(monthP) + "-" + str(yearP)
             else:
-                if meseP < 10:
-                    inizio = str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+                if monthP < 10:
+                    beginning = str(dayP) + "-0" + str(monthP) + "-" + str(yearP)
                 else:
-                    inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+                    beginning = str(dayP) + "-" + str(monthP) + "-" + str(yearP)
 
-            print("Il periodo selezionato e': ", passato, Oggi)
+            print("Il Period selezionato e': ", past, today)
 
             # grafici
 
-            eA = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
+            eA = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=True,
                                                             userMod=False).order_by('date').count()  # erogazioni modalita' automatica
-            eU = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
+            eU = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=True,
                                                             userMod=True).order_by('date').count()  # erogazioni modalita' utente
 
-            e = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True).order_by(
+            e = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=True).order_by(
                 'date').count()  # erogazioni
-            noE = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=False).order_by(
+            noE = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=False).order_by(
                 'date').count()  # no erogazioni
 
-            eG = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
+            eG = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=True,
                                                             timeMod=True).order_by('date').count()  # giorno
-            eN = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
+            eN = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=True,
                                                             timeMod=False).order_by('date').count()  # notte
 
             print("eA: " + str(eA))
@@ -473,7 +473,7 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
 
             # istogramma
 
-            db = DatiRaccolti.objects.values('date').filter(date__gt=passato, date__lte=Oggi)
+            db = DatiRaccolti.objects.values('date').filter(date__gt=past, date__lte=today)
 
             # rendo db un array
 
@@ -514,7 +514,7 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
 
             for k in range(len(arrayDate)):
                 if k == len(arrayDate) - 1:  # cambiare eventualmente con contains
-                    e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=Oggi, erogation=True).count()
+                    e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=today, erogation=True).count()
 
                 else:
                     e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=arrayDate[k+1], erogation=True).count()
@@ -525,105 +525,105 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
             print("arrayErog: ", arrayErog)
 
             context = {'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG, 'erogN': eN,
-                       'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi).order_by('date'),
-                       'Righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi)[:20],
+                       'righe': DatiRaccolti.objects.values().filter(date__gte=past, date__lte=today).order_by('date'),
+                       'Righe': DatiRaccolti.objects.values().filter(date__gte=past, date__lte=today)[:20],
                        'arrayDate': json.dumps(formatList), 'arrayErog': arrayErog,
-                       'Inizio': json.dumps(inizio), 'Fine': json.dumps(fine),  # per grafici
-                       'Inizio1': inizio, 'Fine1': fine,  # per titolo pagina
-                       'start': json.dumps(passato), 'end': json.dumps(Oggi),
+                       'Inizio': json.dumps(beginning), 'Fine': json.dumps(end),  # per grafici
+                       'Inizio1': beginning, 'Fine1': end,  # per titolo pagina
+                       'start': json.dumps(past), 'end': json.dumps(today),
                        }
 
             return render(request, 'statistics.html', context)
 
     else:  # id == 2
 
-        print("periodo scelto dall'utente")
-        meseP = int(request.GET.__getitem__('mese'))
-        giornoP = int(request.GET.__getitem__('giorno'))
-        annoP = int(request.GET.__getitem__('anno'))
+        print("Period scelto dall'utente")
+        monthP = int(request.GET.__getitem__('mese'))
+        dayP = int(request.GET.__getitem__('giorno'))
+        yearP = int(request.GET.__getitem__('anno'))
 
-        passato = str(annoP) + "-" + str(meseP) + "-" + str(giornoP)
+        past = str(yearP) + "-" + str(monthP) + "-" + str(dayP)
 
-        if giornoP < 10:
-            if meseP < 10:
-                inizio = "0" + str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+        if dayP < 10:
+            if monthP < 10:
+                beginning = "0" + str(dayP) + "-0" + str(monthP) + "-" + str(yearP)
             else:
-                inizio = "0" + str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+                beginning = "0" + str(dayP) + "-" + str(monthP) + "-" + str(yearP)
         else:
-            if meseP < 10:
-                inizio = str(giornoP) + "-0" + str(meseP) + "-" + str(annoP)
+            if monthP < 10:
+                beginning = str(dayP) + "-0" + str(monthP) + "-" + str(yearP)
             else:
-                inizio = str(giornoP) + "-" + str(meseP) + "-" + str(annoP)
+                beginning = str(dayP) + "-" + str(monthP) + "-" + str(yearP)
 
-        meseC = int(request.GET.__getitem__('meseF'))
-        giornoC = int(request.GET.__getitem__('giornoF'))
-        annoC = int(request.GET.__getitem__('annoF'))
+        monthC = int(request.GET.__getitem__('meseF'))
+        dayC = int(request.GET.__getitem__('giornoF'))
+        yearC = int(request.GET.__getitem__('annoF'))
 
-        if giornoC < 10:
-            if meseC < 10:
-                fine = "0" + str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+        if dayC < 10:
+            if monthC < 10:
+                end = "0" + str(dayC) + "-0" + str(monthC) + "-" + str(yearC)
             else:
-                fine = "0" + str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+                end = "0" + str(dayC) + "-" + str(monthC) + "-" + str(yearC)
         else:
-            if meseC < 10:
-                fine = str(giornoC) + "-0" + str(meseC) + "-" + str(annoC)
+            if monthC < 10:
+                end = str(dayC) + "-0" + str(monthC) + "-" + str(yearC)
             else:
-                fine = str(giornoC) + "-" + str(meseC) + "-" + str(annoC)
+                end = str(dayC) + "-" + str(monthC) + "-" + str(yearC)
 
-        end = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)  # per ultima data istogramma
+        end = str(yearC) + "-" + str(monthC) + "-" + str(dayC)  # per ultima data istogramma
 
-        # logica del 'giorno in più' per ovviare al problema della selezione del periodo
+        # logica del 'giorno in più' per ovviare al problema della selezione del Period
 
-        mesi31 = [1, 3, 5, 7, 8, 10, 12]
-        mesi30 = [4, 6, 9, 11]
+        months31 = [1, 3, 5, 7, 8, 10, 12]
+        months30 = [4, 6, 9, 11]
 
-        if meseC in mesi31:
-            if giornoC == 31:
-                giornoC = 1
-                if meseC == 12:
-                    meseC = 1  # gennaio
-                    annoC = annoC + 1  # aggiorno l'anno
+        if monthC in months31:
+            if dayC == 31:
+                dayC = 1
+                if monthC == 12:
+                    monthC = 1  # gennaio
+                    yearC = yearC + 1  # aggiorno l'anno
                 else:
-                    meseC = meseC + 1
+                    monthC = monthC + 1
 
             else:
-                giornoC = giornoC + 1
+                dayC = dayC + 1
 
-        elif meseC in mesi30:
-            if giornoC == 30:
-                giornoC = 1
-                meseC = meseC + 1
+        elif monthC in months30:
+            if dayC == 30:
+                dayC = 1
+                monthC = monthC + 1
 
             else:
-                giornoC = giornoC + 1
+                dayC = dayC + 1
 
-        elif meseC == 2:  # febbraio
-            if giornoC == 28:
-                giornoC = 1
-                meseC = 3
+        elif monthC == 2:  # febbraio
+            if dayC == 28:
+                dayC = 1
+                monthC = 3
             else:
-                giornoC = giornoC + 1
+                dayC = dayC + 1
 
-        Oggi = str(annoC) + "-" + str(meseC) + "-" + str(giornoC)
-        print("Oggi cambiato: ", Oggi)
+        today = str(yearC) + "-" + str(monthC) + "-" + str(dayC)
+        print("Oggi cambiato: ", today)
 
-        print("Il periodo selezionato e': ", passato, Oggi)
+        print("Il Period selezionato e': ", past, today)
 
         # grafici
 
-        eA = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
+        eA = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=True,
                                                         userMod=False).order_by('date').count()  # erogazioni modalita' automatica
-        eU = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
+        eU = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=True,
                                                         userMod=True).order_by('date').count()  # erogazioni modalita' utente
 
-        e = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True).order_by(
+        e = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=True).order_by(
             'date').count()  # erogazioni
-        noE = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=False).order_by(
+        noE = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=False).order_by(
             'date').count()  # no erogazioni
 
-        eG = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
+        eG = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=True,
                                                         timeMod=True).order_by('date').count()  # giorno
-        eN = DatiRaccolti.objects.values('date').filter(date__gte=passato, date__lte=Oggi, erogation=True,
+        eN = DatiRaccolti.objects.values('date').filter(date__gte=past, date__lte=today, erogation=True,
                                                         timeMod=False).order_by('date').count()  # notte
 
         print("eA: " + str(eA))
@@ -637,7 +637,7 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
 
         # istogramma
 
-        db = DatiRaccolti.objects.values('date').filter(date__gt=passato, date__lte=Oggi)
+        db = DatiRaccolti.objects.values('date').filter(date__gt=past, date__lte=today)
 
         # rendo db un array
 
@@ -677,7 +677,7 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
 
         for k in range(len(arrayDate)):
             if k == len(arrayDate) - 1:  # cambiare eventualmente con contains
-                e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=Oggi, erogation=True).count()
+                e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=today, erogation=True).count()
 
             else:
                 e = DatiRaccolti.objects.values().filter(date__gte=arrayDate[k], date__lt=arrayDate[k+1], erogation=True).count()
@@ -688,12 +688,12 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
         print("arrayErog: ", arrayErog)
 
         context = {'erogA': eA, 'erogU': eU, 'erog': e, 'noErog': noE, 'erogG': eG, 'erogN': eN,
-                   'righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi).order_by('date'),
-                   'Righe': DatiRaccolti.objects.values().filter(date__gte=passato, date__lte=Oggi)[:20],
+                   'righe': DatiRaccolti.objects.values().filter(date__gte=past, date__lte=today).order_by('date'),
+                   'Righe': DatiRaccolti.objects.values().filter(date__gte=past, date__lte=today)[:20],
                    'arrayDate': json.dumps(formatList), 'arrayErog': arrayErog,
-                   'Inizio': json.dumps(inizio), 'Fine': json.dumps(fine),  # per grafici
-                   'Inizio1': inizio, 'Fine1': fine,
-                   'start': json.dumps(passato), 'end': json.dumps(end),  # per asse x istogramma con tutti giorni
+                   'Inizio': json.dumps(beginning), 'Fine': json.dumps(end),  # per grafici
+                   'Inizio1': beginning, 'Fine1': end,
+                   'start': json.dumps(past), 'end': json.dumps(end),  # per asse x istogramma con tutti giorni
                    }
 
         return render(request, 'statistics.html', context)
