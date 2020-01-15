@@ -629,6 +629,7 @@ def periodo(request):  # per filtraggio mese/settimana/periodo scelto dall'utent
                    'arrayDate': json.dumps(formatList), 'arrayErog': arrayErog,
                    # 'inizio': json.dumps(formatList[0]), 'fine': json.dumps(formatList[len(formatList) - 1]),  # per istogramma
                    'Inizio': json.dumps(inizio), 'Fine': json.dumps(fine),  # per grafici
+                   'Inizio1': inizio, 'Fine1': fine,
                    'start': json.dumps(passato), 'end': json.dumps(end),  # per asse x istogramma con tutti giorni
                    }
 
