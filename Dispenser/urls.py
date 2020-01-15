@@ -1,10 +1,8 @@
 
-from django.conf.urls import url, include
+from django.conf.urls import url
 from Dispenser import views
 
 urlpatterns = [
-
-    url(r'^profile/', views.profile, name='profile'),
 
     url(r'^sensor/', views.sensor, name='sensor'),
 
@@ -15,15 +13,10 @@ urlpatterns = [
 
     url(r'^giorno/', views.ultimoDato, name='giorno'),  # per avere l'ultima riga -- aggiornamento
 
-    # url(r'^periodo/', views.periodo, name='periodo'), ## RITORNA PAG PER VECCHIE STATISTICHE SETTIM/MENSILI. PRE INCONTRO FEDERICO
     url(r'^statistic/', views.periodo, name='statistic'),  ## RITORNA PG STATISTIC
 
     url(r'^fakeP/', views.absentDataPeriod, name='fakeP'),  ## RITORNA PG STATISTIC
 
     url(r'^fakeSM/', views.absentDataSM, name='fakeSM'),  # per verificare se ci sono dati per la settimana/il mese piu' recente
-
-
-    # da eliminare
-    url(r'^asseX/', views.asseXIsto, name='asseX'),
 
 ]
