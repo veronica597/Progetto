@@ -1,0 +1,42 @@
+/* File css associato a index.html */
+
+.nav > li > a:focus,
+.nav > li > a:hover
+{
+    text-decoration: underline;
+    background-color:#bbdefb ;
+    text-align: center;
+}
+
+@media (min-width: 320px)and (max-width:370px) {
+    #img{
+        width: 280px;
+        padding-top: 5px;
+       
+
+    }
+}
+
+    @media (min-width: 375px)and (max-width:770px) {
+        #img{
+        width: 340px;
+        padding-top: 10px;
+
+    }
+    }
+
+    @media (min-height: 812px)and (max-height:900px) {
+        #img{
+            padding-top: 50px;
+            width: 350px;
+            height: 550px;
+
+        }
+    }
+    @media (min-width: 1024px)and (max-width:1060px) {
+        #img{
+            padding-top: 50px;
+             width:850px;
+            height: 1100px;
+        }
+    }

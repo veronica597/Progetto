@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-
+    <link rel="stylesheet" type="text/css" href="{% static 'Progetto/css/style.css' %}" media="screen"/>
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -25,605 +25,229 @@
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+    <script src="{% static 'Progetto/js/main_statistics.js' %}"></script>
     
     <!-- favicon -->
     <link rel="shortcut icon" type="image/png" href="{% static 'Progetto/favicon.ico/favicon-96x96.png' %}"/> 
 
-    <style>
-        .nav > li > a:focus,
-        .nav > li > a:hover
-        {
-            text-decoration: underline;
-            background-color:#bbdefb ;
-            text-align: center;
-        }
-
-         .table-bordered-costum{
-           border-style: solid;
-           border-color: cornflowerblue;
-       }
-
-        .table > tbody,thead,tr,td,th{
-           border-style: inherit;
-           border-color: cornflowerblue;
-           font-weight: normal;
-        }
-         .btn-default{
-            border-style:dot-dash ;
-            border-color: cornflowerblue ;
-        }
-
-
-
-    </style>
-
-    <script>
-        var day ;
-        var month ;
-        var year ;
-
-        var dayF  ;
-        var monthF ;
-        var yearF ;
-
-
-        var requestUrl;
-        var ip = 'localhost'; // indirizzo ip 172.20.10.2
-
-
-
-        console.log("tipo year:" +" "+ typeof year);
-        console.log("tipo month:" +" "+ typeof month);
-        console.log("tipo day:" +" "+ typeof day);
-
-        console.log("tipo yF:" +" "+ typeof yearF);
-        console.log("tipo mF:" +" "+ typeof monthF);
-        console.log("tipo dF:" +" "+ typeof dayF);
-
-
-        function pippo(aDiv1,) {
-            var e = document.getElementById(aDiv1);
-
-            if (e.style.display == "none") {
-                e.style.display = "block"
-            }
-        }
-
-        function Pippo(aDiv1,aDiv2,aDiv3,aDiv4) {
-            var e = document.getElementById(aDiv1);
-            var b= document.getElementById(aDiv2);
-            var c= document.getElementById(aDiv3);
-            var v= document.getElementById(aDiv4);
-
-            b.style.display="inline"; // tengo bloccato menu tendina
-
-            if (v.style.display=="block" ){ // scompare input altro tasto
-                v.style.display="none";
-            }
-
-
-            if(c.style.display=="block" ){ // scompare alert
-                c.style.display="none";
-            }
-
-
-            if (e.style.display == "none") { //mostro input
-                e.style.display = "block"
-            }
-        }
-
-        // SCRIPT PER I DUE DATETIMEPICKER
-        $('#datepickerI'),$('#datepickerF'),$('#datepickerI1').datepicker({
-                            weekStart: 1,
-                            daysOfWeekHighlighted: "6,0",
-                            autoclose: true,
-                            todayHighlight: true,
-        });
-
-                        $(function() {
-                            $('#datepickerI').datepicker();
-                            $('#datepickerF').datepicker();
-                            $('#datepickerI1').datepicker();
-
-                            $("#datepickerI1").on("change", function () {  // per selezione giorno singolo 
-                                day = $(this).datepicker('getDate').getDate();
-                                month = $(this).datepicker('getDate').getMonth() + 1;
-                                year = $(this).datepicker('getDate').getFullYear();
-                                console.log(day);
-                                console.log(month);
-                                console.log(year);
-
-                                requestUrl = "http://" + ip + ":8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                
-                                
-                                $.get(requestUrl, function (data) {
-                                    console.log('DATI RICEVUTI: ' + data);
-                                    if (data == 0) {
-                                        var l= document.getElementById('mioAlert');
-                                        l.style.display='block';
-                                    } 
-                                    else {
-                                        window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                           
-//                                        if(day < 10){
-//                                            window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
-
-//                                        }
-//                                        else{
-//                                            window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-
-//                                        }
-                                    }
-
-                                    });
-
-                            });
-
-
-                            $("#datepickerI").on("change", function () {
-                                day = $(this).datepicker('getDate').getDate();
-                                month = $(this).datepicker('getDate').getMonth() + 1;
-                                year = $(this).datepicker('getDate').getFullYear();
-                                console.log(day);
-                                console.log(month);
-                                console.log(year);
-
-                                $("#datepickerF").removeAttr("disabled"); // riattivo secondo calendario
-
-                                console.log("tipo yeaar" + " " + typeof year);
-
-                                console.log("tipo yearF" + " " + typeof yearF);
-
-
-                            });
-
-
-                            //caricamento(); // SE LO METTO QUI MI CARICA INDIPENDENTEMENTE IL GIORNO
-
-
-                            $("#datepickerF").on("change", function (){
-
-                               // caricamento(); // se lo metto qui il controllo poi mi chiama il giorno selezionato, MA SE IO VOGLIO UN PERIODO?? E CMQ NN VERREBBE NEMMENO IL GIORNO SELEZIONATO PERCHè NN CLICCO SU NIENTE
-                                dayF = $(this).datepicker('getDate').getDate();
-                                monthF = $(this).datepicker('getDate').getMonth() + 1;
-                                yearF = $(this).datepicker('getDate').getFullYear();
-
-                                console.log(dayF);
-                                console.log(monthF);
-                                console.log(yearF);
-
-                                console.log("tipo year2" +" "+ typeof year);
-                                console.log("tipo yearF2" +" "+ typeof yearF);
-                                caricamento();
-
-                        });
-
-
-        });
-
-                           function caricamento() {
-                                if(year == yearF && month== monthF && day == dayF) {  // caso in cui seleziono la stessa data nelle due celle 
-                                    console.log(" Mostro giorno scelto dal primo cal");
-                                    requestUrl = "http://" + ip + ":8000/dispenser/fake/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-                                    
-                                    $.get(requestUrl, function (data) {
-                                        console.log('DATI RICEVUTI: ' + data);
-                                        if (data == 0) {
-                                            var l= document.getElementById('mioAlert2');
-                                            l.style.display='block';
-
-                                        }
-                                        
-                                        else {
-                                            window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-//                                            if(day < 10){
-//                                                window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + "0" + day + "";
-//                                               
-//                                           }
-//                                           else{
-//                                               window.location.href="http://" + ip + ":8000/dispenser/dati/?anno=" + year + "&mese=" + month + "&giorno=" + day + "";
-//                                               
-//                                           }
-                                        }
-
-                                    });
-
-                                } 
-                               
-                               else{
-                                    console.log(" Ho sel anche sul sec calendario. Mostro periodo selezionato! ");
-                                    requestUrl = "http://" + ip +":8000/dispenser/fakeP/?anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-                                   
-                                    $.get(requestUrl, function (data) {
-                                         console.log('DATI RICEVUTI: ' + data);
-                                        if (data == 0) {
-                                            var l= document.getElementById('mioAlert2');
-                                            l.style.display='block';
-
-                                        }else {
-                                             window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-//                                            
-//                                            if(day < 10){
-//                                                // controllo il valore di dayF
-//                                                if(dayF < 10){
-//                                                    window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + '0' + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + '0' + dayF + "";
-//                                                }
-//                                                else{
-//                                                    window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + '0' + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-//                                                }
-//                                                
-//                                            }
-//                                            else if(dayF < 10){
-//                                                // controllo il valore di day
-//                                                if(day < 10){
-//                                                    window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + '0' + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + '0' + dayF + "";
-//                                                }
-//                                                else{
-//                                                    window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + '0' + dayF + "";
-//                                                }
-//                                                
-//                                            }
-//                                            
-//                                            
-//                                            else{
-//                                                window.location.href = "http://" + ip + ":8000/dispenser/statistic/?id=2" + "&anno=" + year + "&mese=" + month + "&giorno=" + day + "&annoF=" + yearF + "&meseF=" + monthF + "&giornoF=" + dayF + "";
-//                                              
-//                                            }
-                                            
-                                           
-                                        }
-                                     });
-
-
-                                }
-                            }
-        
-        
-        
-        // funzione per verificare la presenza di dati per la SETTIMANA piu' recente
-        
-        function dataAvailableS(){
-
-            console.log("dentro la funzione"); 
-            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=0"; // di default voglio sapere se ci sono dati per l'ultima settimana 
-            
-            $.get(requestUrl, function (data) {
-                console.log('DATI RICEVUTI: ' + data);
-                if(data[0] == 0){
-                    console.log("alert a tutta pagina");
-                    // mi sposto sulla pagina /statistic cmq
-                    
-                    
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0&noData=1";  
-                    
-                }
-                else{ // renderizzo i dati che ci sono normalmente 
-                    
-                    // recupero la data di inizio e di fine del periodo
-                    var start = new Date(data[1]); // passato 
-                    var end = new Date(data[2]); // oggi 
-                    
-                    var yearS = start.getFullYear();
-                    var monthS = start.getMonth() + 1; 
-                    var dayS = start.getDate(); 
-                    
-                    var yearE = end.getFullYear();
-                    var monthE = end.getMonth() + 1;
-                    var dayE = end.getDate();
-                    
-                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
-                    
-                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=0" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + dayE + "";
-                }
-            }); 
-        }
-        
-        //funzione per verificare la presenza di dati per la MESE piu' recente
-        
-        function dataAvailableM(){
-
-            console.log("dentro la funzione"); 
-            requestUrl = "http://" + ip + ":8000/dispenser/fakeSM/?id=1"; 
-            
-            $.get(requestUrl, function (data) {
-                console.log('DATI RICEVUTI: ' + data);
-                if(data[0] == 0){
-                    console.log("alert a tutta pagina");
-                    // mi sposto sulla pagina /statistic cmq
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1&noData=1";  
-                    
-                }
-                else{ // renderizzo i dati che ci sono normalmente 
-                    
-                    // recupero la data di inizio e di fine del periodo
-                    var start = new Date(data[1]); // passato 
-                    var end = new Date(data[2]); // oggi 
-                    
-                    var yearS = start.getFullYear();
-                    var monthS = start.getMonth() + 1; 
-                    var dayS = start.getDate(); 
-                    
-                    var yearE = end.getFullYear();
-                    var monthE = end.getMonth() + 1;
-                    var dayE = end.getDate();
-                    
-                    console.log("START: " + yearS + " " + monthS + " " + dayS + " "); 
-                    
-                    console.log("END: " + yearE + " " + monthE + " " + dayE + " "); 
-                    
-                    
-                    window.location.href="http://" + ip + ":8000/dispenser/statistic/?id=1" + "&noData=0" + "&anno=" + yearS + "&mese=" + monthS + "&giorno=" + dayS + "&annoF=" + yearE + "&meseF=" + monthE + "&giornoF=" + dayE + "";
-                }
-            }); 
-        }
-        
-        
-        
-      
-        
-        
-            
-
-
-
-
-
-
-    </script>
-
-     <!-- Mi serve per vedere i grafici di ultimo/a mese/settimana  -->
 
     <script type="text/javascript">
 
 
         $(document).ready(function (){
+            
             console.log("pronti alla get");
             
             
-        /* PARTE PER DATE ISTOGRAMMA -- Modellare come una funzione 
-        unica forse, in modo che se non ci sono dati possa non chiamarla come gli altri */
-        
-        // funzione che restiruisce false se il mese in ingresso non ha 30 giorni
-        
-        function giorniDelMese(month){ 
-            mesi30 = [4, 6, 9, 11];
-            mesi31 = [1, 3, 5, 7, 8, 10, 12]; 
-            var i = 0; 
-            while(i < mesi30.length){
-                if(month == mesi30[i]){
-                    console.log("Il mese ha 30 giorni !!");
-                    return true; // il mese ha 30 giorni 
+            /* PARTE PER DATE ISTOGRAMMA */
+
+            // funzione che restiruisce false se il mese in ingresso non ha 30 giorni
+
+            function giorniDelMese(month){ 
+                mesi30 = [4, 6, 9, 11];
+                mesi31 = [1, 3, 5, 7, 8, 10, 12]; 
+                var i = 0; 
+                while(i < mesi30.length){
+                    if(month == mesi30[i]){
+                        console.log("Il mese ha 30 giorni !!");
+                        return true; // il mese ha 30 giorni 
+                    }
+                    else{
+                        i++; 
+                    }
+                }
+
+                // il mese non ha 30 giorni  o ne ha 31 o e' febbraio 
+                console.log("Il mese non ha 30 giorni !"); 
+                return false; 
+
+            }
+
+            var start = new Date({{start|safe}});
+            var end = new Date({{end|safe}});
+            var arrayGiorni = [];
+
+            console.log("START: " + start); 
+            console.log("mese start: " + start.getMonth()); 
+            console.log("END: " + end); 
+            console.log("mese end: " + end.getMonth());
+
+            // voglio recuperare la lista di giorni compresi nel periodo scelto 
+
+            var count = start.getDate(); 
+            var countMese = (start.getMonth() + 1)%13; 
+                console.log("count meseeee: ", countMese);
+            var countAnno = start.getFullYear(); 
+            var endMese = (end.getMonth() + 1)%13;
+                console.log("end meseeee: ", endMese);
+
+
+            if(count < 10){
+                if(countMese < 10){
+                    startString = "0" + count + "-0" + countMese + "-" + countAnno;
                 }
                 else{
+                    startString = "0" + count + "-" + countMese + "-" + countAnno;
+                }
+
+            }
+            else{
+
+                if(countMese < 10){
+                    startString = count + "-0" + countMese + "-" + countAnno;
+                }
+                else{
+                    startString = count + "-" + countMese + "-" + countAnno;
+                }
+            }
+
+
+            console.log("START STRING: ", startString);
+            arrayGiorni.push(startString); 
+
+            while( (count <= end.getDate() - 1) || ((count > end.getDate() - 1) && (countMese != endMese))){
+
+                  if(countMese == endMese){
+                    count++; 
+                  }
+
+                  else if(countMese < endMese || countMese > endMese){  // (countMese == 12 && endMese == 1)
+                      // verificare che tipo di mese e' -- se un mese che ha 30 giorni o 31 giorni 
+                      if(giorniDelMese(countMese) == true && count == 30){ // se il mese ha 30 giorni e il giorno in esame e' il 30
+                          count = 1;
+                          if(countMese == 11){
+                              countMese = 12; 
+                          }
+                          else{
+                              countMese = (countMese + 1)%12; // endMese 
+                          }
+
+                      }
+                      else{
+                          if(countMese == 2 && count == 28){
+                              count = 1; 
+                              countMese = (countMese + 1)%12; 
+
+                          }
+
+                          else if(count == 31){ // il mese non ha 30 giorni e non e' febbraio --> ha 31 giorni 
+                              count = 1;  
+                              countMese = (countMese + 1)%12; // endMese
+                              if(countAnno != end.getFullYear()){
+                                  countAnno = end.getFullYear(); 
+
+                              }
+                          }
+                          else{
+                              count++; 
+
+                          }
+
+                      }
+                  }
+
+
+                  dataCount = new Date(countAnno, countMese, count); 
+
+
+                  if(count < 10){
+                      if(countMese < 10){
+                          dataCountString = "0" + count + "-0" + countMese + "-" + countAnno;
+                      }
+                      else{
+                          dataCountString = "0" + count + "-" + countMese + "-" + countAnno;
+                      }
+
+                  }
+                  else{
+                      if(countMese < 10){
+                          dataCountString = count + "-0" + countMese + "-" + countAnno;
+                      }
+                      else{
+                          dataCountString = count + "-" + countMese + "-" + countAnno;
+                      }
+                  }
+
+
+
+                  arrayGiorni.push(dataCountString); 
+
+
+            }
+
+
+
+            console.log("ARRAY GIORNI: " , arrayGiorni); // costituisce l'asse x dell'istogramma 
+
+            var arrayY = []; 
+            var i = 0;
+            var j = 0; 
+            var erogazioni = {{arrayErog}}; // se non ci sono dati mi da' errore per via del punto e virgola -- la pagina viene renderizzata in modo giusto con la scritta che mancano i dati pero' sarebbe meglio evitare questo errore 
+            var dateErog = {{arrayDate|safe}}; 
+            console.log("EROGAZIONI: ", erogazioni); 
+            console.log("DATE EROGAZIONI: ", dateErog);
+            console.log("DIM: ", arrayGiorni.length);
+
+
+            while(i < arrayGiorni.length && j < dateErog.length){
+                while(arrayGiorni[i] != dateErog[j]){
+                    arrayY[i] = 0; 
                     i++; 
                 }
-            }
-            
-            // il mese non ha 30 giorni --> o ne ha 31 o e' febbraio 
-            console.log("Il mese non ha 30 giorni !"); 
-            return false; 
-            
-        }
-        
-        var start = new Date({{start|safe}});
-        var end = new Date({{end|safe}});
-        var arrayGiorni = [];
-            
-        console.log("START: " + start); 
-        console.log("mese start: " + start.getMonth()); 
-        console.log("END: " + end); 
-        console.log("mese end: " + end.getMonth());
-        
-        // voglio recuperare la lista di giorni compresi nel periodo scelto 
-        
-        var count = start.getDate(); 
-        var countMese = (start.getMonth() + 1)%13; 
-            console.log("count meseeee: ", countMese);
-        var countAnno = start.getFullYear(); 
-        var endMese = (end.getMonth() + 1)%13;
-            console.log("end meseeee: ", endMese);
-        
-        
-        if(count < 10){
-            if(countMese < 10){
-                startString = "0" + count + "-0" + countMese + "-" + countAnno;
-            }
-            else{
-                startString = "0" + count + "-" + countMese + "-" + countAnno;
-            }
-            
-        }
-        else{
-            
-            if(countMese < 10){
-                startString = count + "-0" + countMese + "-" + countAnno;
-            }
-            else{
-                startString = count + "-" + countMese + "-" + countAnno;
-            }
-        }
-            
-        //startString = count + "-" + countMese + "-" + countAnno;
-        
-        console.log("START STRING: ", startString);
-        arrayGiorni.push(startString); 
-        
-        while( (count <= end.getDate() - 1) || ((count > end.getDate() - 1) && (countMese != endMese))){
-           
-              if(countMese == endMese){
-                count++; 
-                //console.log("PRIMO IF"); 
-              }
-        
-              else if(countMese < endMese || countMese > endMese){  // (countMese == 12 && endMese == 1)
-                  // verificare che tipo di mese e' -- se un mese che ha 30 giorni o 31 giorni 
-                  if(giorniDelMese(countMese) == true && count == 30){ // se il mese ha 30 giorni e il giorno in esame e' il 30
-                      count = 1;
-                      if(countMese == 11){
-                          countMese = 12; 
-                      }
-                      else{
-                          countMese = (countMese + 1)%12; // endMese 
-                      }
-                     
-                      //console.log("SECONDO IF"); 
-                  }
-                  else{
-                      if(countMese == 2 && count == 28){
-                          count = 1; 
-                          countMese = (countMese + 1)%12; 
-                          //console.log("TERZO IF"); 
-                      }
-                      
-                      else if(count == 31){ // il mese non ha 30 giorni e non e' febbraio --> ha 31 giorni 
-                          count = 1;  
-                          countMese = (countMese + 1)%12; // endMese
-                          if(countAnno != end.getFullYear()){
-                              countAnno = end.getFullYear(); 
-                              //console.log("QUARTO IF"); 
-                          }
-                      }
-                      else{
-                          count++; 
-                          //console.log("QUINTO IF");  
-                      }
-                      
-                  }
-              }
-               
-        
-              dataCount = new Date(countAnno, countMese, count); 
-              
-             
-              if(count < 10){
-                  if(countMese < 10){
-                      dataCountString = "0" + count + "-0" + countMese + "-" + countAnno;
-                  }
-                  else{
-                      dataCountString = "0" + count + "-" + countMese + "-" + countAnno;
-                  }
-                 
-              }
-              else{
-                  if(countMese < 10){
-                      dataCountString = count + "-0" + countMese + "-" + countAnno;
-                  }
-                  else{
-                      dataCountString = count + "-" + countMese + "-" + countAnno;
-                  }
-              }
-            
-             
-              //console.log("DATA PROCESSATA: ", dataCount);
-              
-              arrayGiorni.push(dataCountString); 
-              //console.log("DENTRO L'ARRAY: ", arrayGiorni);
-           
-              
-        }
-         
-          
-//        if(end.getDate() < 10){
-//            if(end.getMonth() < 10){
-//                endString = "0" + end.getDate() + "-0" + endMese + "-" + end.getFullYear();
-//            }
-//            else{
-//                endString = "0" + end.getDate() + "-" + endMese + "-" + end.getFullYear();
-//            }
-//            
-//        }
-//        else{
-//            if(end.getMonth() < 10){
-//                endString = end.getDate() + "-0" + endMese + "-" + end.getFullYear();
-//            }
-//            else{
-//                endString = end.getDate() + "-" + endMese + "-" + end.getFullYear();
-//            }
-//        }
-//        
-//        
-//        arrayGiorni.push(endString); 
-        console.log("ARRAY GIORNI: " , arrayGiorni); // costituisce l'asse x dell'istogramma 
-        
-        var arrayY = []; 
-        var i = 0;
-        var j = 0; 
-        var erogazioni = {{arrayErog}}; // se non ci sono dati mi da' errore per via del punto e virgola -- la pagina viene renderizzata in modo giusto con la scritta che mancano i dati pero' sarebbe meglio evitare questo errore 
-        var dateErog = {{arrayDate|safe}}; 
-        console.log("EROGAZIONI: ", erogazioni); 
-        console.log("DATE EROGAZIONI: ", dateErog);
-        console.log("DIM: ", arrayGiorni.length);
-        
-        
-        while(i < arrayGiorni.length && j < dateErog.length){
-            while(arrayGiorni[i] != dateErog[j]){
-                arrayY[i] = 0; 
+                arrayY[i] = erogazioni[j]; 
                 i++; 
+                j++; 
             }
-            arrayY[i] = erogazioni[j]; 
-            i++; 
-            j++; 
-        }
-        
-        console.log("I CON CUI ESCO DAL WHILE: ", i); 
-        
-        // aggiungo zero nelle restanti celle di arrayY
-        for(var k = 0; k < (arrayGiorni.length - i); k++){
-            arrayY[k + i] = 0; 
-        }
-        
-        console.log("ARRAY PER ASSE Y: ", arrayY);
-            
-            
-            
-            
-            
 
-            // grafico erogazioni automatiche/utente
-            var chart = Highcharts.chart('container1', {
-                chart: {
-                    type: 'column', // column
-                    borderColor: 'cornflowerblue',
-                    borderRadius: 20, // per riquadro tondeggiante 
-                    borderWidth: 2,
-                    backgroundColor: 'rgb(238, 255, 255)',
+            console.log("I CON CUI ESCO DAL WHILE: ", i); 
 
-                },
-                title: {
-                    text:''
-                },
-                
-                credits: {
-                    enabled: false // disabilito la scritta Highcharts.com
-                },
+            // aggiungo zero nelle restanti celle di arrayY
+            for(var k = 0; k < (arrayGiorni.length - i); k++){
+                arrayY[k + i] = 0; 
+            }
 
-                // sistemare xAxis
+            console.log("ARRAY PER ASSE Y: ", arrayY);
 
-                xAxis: {
-                    accessibility: {
-                        description: 'Time between ' + {{Inizio|safe}} + ' and ' + {{Fine|safe}}
+
+
+                // Grafico erogazioni automatiche/utente
+
+                var chart = Highcharts.chart('container1', {
+                    chart: {
+                        type: 'column', // column
+                        borderColor: 'cornflowerblue',
+                        borderRadius: 20, // per riquadro tondeggiante 
+                        borderWidth: 2,
+                        backgroundColor: 'rgb(238, 255, 255)',
+
                     },
-                    categories: [({{Inizio|safe}} + " to " + {{Fine|safe}})]
-                },
+                    title: {
+                        text:''
+                    },
 
-                series: [{
-                    name: 'Automatic dispensing',
-                    color: 'green',
-                    data: [{{erogA}}],
-                    accessibility: {
-                        description: 'This is the number of automatic erogations for the period selected',
-                    }
+                    credits: {
+                        enabled: false // disabilito la scritta Highcharts.com
+                    },
 
-                }
+                    // sistemare xAxis
 
-                    , {
+                    xAxis: {
+                        accessibility: {
+                            description: 'Time between ' + {{Inizio|safe}} + ' and ' + {{Fine|safe}}
+                        },
+                        categories: [({{Inizio|safe}} + " to " + {{Fine|safe}})]
+                    },
+
+                    series: [{
+                        name: 'Automatic dispensing',
+                        color: 'green',
+                        data: [{{erogA}}],
+                        accessibility: {
+                            description: 'This is the number of automatic erogations for the period selected',
+                        }
+
+                    }, 
+                    {
                         name: 'User dispensing',
                         color: 'orange',
                         data: [{{erogU}}],
@@ -633,59 +257,51 @@
 
 
                     }
-                ],
+                    ],
 
 
-            });
+                });
 
 
-            // grafico erogazioni/no erogazioni
+                // Grafico erogazioni/no erogazioni
 
-            var chart = Highcharts.chart('container', {
-                chart: {
-                    type: 'column', // column
-                    borderColor: 'cornflowerblue',
-                    borderRadius: 20, // per riquadro tondeggiante 
-                    borderWidth: 2,
-                    backgroundColor: 'rgb(238, 255, 255)',
-//                    backgroundColor: {  // con sfumatura 
-//                linearGradient: [0, 0, 0, 1], // 500
-//                stops: [
-//                    [0, 'rgb(255, 255, 255)'],
-//                    //[0.5, 'rgb(238, 255, 255)'],
-//                    [1, 'rgb(238, 255, 255)']  // rgb(200, 200, 255)  // rgb(238, 255, 255)
-//                ]
- //           },
+                var chart = Highcharts.chart('container', {
+                    chart: {
+                        type: 'column', 
+                        borderColor: 'cornflowerblue',
+                        borderRadius: 20, // per riquadro tondeggiante 
+                        borderWidth: 2,
+                        backgroundColor: 'rgb(238, 255, 255)',
 
-                },
-                title: {
-                    text: ''
-                },
-                
-                credits: {
-                    enabled: false
-                },
 
-                // sistemare xAxis
-
-                xAxis: {
-                    accessibility: {
-                        description: 'Time between ' + {{Inizio|safe}} + ' and ' + {{Fine|safe}}
                     },
-                    categories: [({{Inizio|safe}} + " to " + {{Fine|safe}})]
-                },
-
-                series: [{
-                    name: 'Disbursements',
-                    color: '#ff00ff',
-                    data: [{{erog}}],
-                    accessibility: {
-                         description: "This is the number of erogations for the period selected",
+                    title: {
+                        text: ''
                     },
 
-                }
+                    credits: {
+                        enabled: false
+                    },
 
-                    , {
+                    // sistemare xAxis
+
+                    xAxis: {
+                        accessibility: {
+                            description: 'Time between ' + {{Inizio|safe}} + ' and ' + {{Fine|safe}}
+                        },
+                        categories: [({{Inizio|safe}} + " to " + {{Fine|safe}})]
+                    },
+
+                    series: [{
+                        name: 'Disbursements',
+                        color: '#ff00ff',
+                        data: [{{erog}}],
+                        accessibility: {
+                             description: "This is the number of erogations for the period selected",
+                        },
+
+                    }, 
+                    {
                         name: 'No disbursements',
                         color: '#00bfff',
                         data: [{{noErog}}],
@@ -694,56 +310,54 @@
                         },
 
                     }
-                ],
+                    ],
 
 
 
-            }); // chiude il chart
+                }); // chiude il chart
 
 
 
+                // Grafico erogazioni giorno/notte
 
+                var chart = Highcharts.chart('container2', {  
+                    chart: {
+                        type: 'column', // column
 
-            // grafico erogazioni giorno/notte
-            var chart = Highcharts.chart('container2', {  // se metto container -- quando clicco sparisce l'altro grafico e compare quello per cui ho cliccato
-                chart: {
-                    type: 'column', // column
-                    
-                    borderColor: 'cornflowerblue',
-                    borderRadius: 20, // per riquadro tondeggiante 
-                    borderWidth: 2,
-                    backgroundColor: 'rgb(238, 255, 255)',
+                        borderColor: 'cornflowerblue',
+                        borderRadius: 20, // per riquadro tondeggiante 
+                        borderWidth: 2,
+                        backgroundColor: 'rgb(238, 255, 255)',
 
-                },
-
-                title: {
-                    text: ''
-                },
-                
-                credits: {
-                    enabled: false
-                },
-
-                // sistemare xAxis
-
-                xAxis: {
-                    accessibility: {
-                        description: 'Time between ' + {{Inizio|safe}} + ' and ' + {{Fine|safe}}
-                    },
-                    categories: [({{Inizio|safe}} + " to " + {{Fine|safe}})]
-                },
-
-                series: [{
-                    name: 'Day mode dispensing',
-                    color: '#ffd700',
-                    data: [{{erogG}}],
-                    accessibility: {
-                         description: "This is the number of day's mode erogations for the period selected",
                     },
 
-                }
+                    title: {
+                        text: ''
+                    },
 
-                    , {
+                    credits: {
+                        enabled: false
+                    },
+
+                    // sistemare xAxis
+
+                    xAxis: {
+                        accessibility: {
+                            description: 'Time between ' + {{Inizio|safe}} + ' and ' + {{Fine|safe}}
+                        },
+                        categories: [({{Inizio|safe}} + " to " + {{Fine|safe}})]
+                    },
+
+                    series: [{
+                        name: 'Day mode dispensing',
+                        color: '#ffd700',
+                        data: [{{erogG}}],
+                        accessibility: {
+                             description: "This is the number of day's mode erogations for the period selected",
+                        },
+
+                    }, 
+                    {
                         name: 'Night mode dispensing',
                         color: '#4169e1',
                         data: [{{erogN}}],
@@ -752,171 +366,71 @@
                         },
 
                     }
-                ],
+                    ],
 
 
 
-            }); // chiude il chart
-            
-            
-    // istogramma 
-    var chart = Highcharts.chart('container3', {  
-        chart: {
-            type: 'column',
-            //type: 'line',
-            
-            //backgroundColor: 'peachpuff', // senza sfumatura, monocromo
-            
-//            backgroundColor: {  // con sfumatura 
-//                linearGradient: [0, 0, 500, 500],
-//                stops: [
-//                    [0, 'rgb(255, 255, 255)'],
-//                    [1, 'rgb(200, 200, 255)']
-//                ]
-//            },
-            
-            borderColor: 'cornflowerblue',
-            borderRadius: 20, // per riquadro tondeggiante 
-            borderWidth: 2,
-            backgroundColor: 'rgb(238, 255, 255)',
-            
-            
-//            plotBackgroundColor: { // sfondo solo per la parte interna del grafico 
-//                linearGradient: [0, 0, 500, 500],
-//                stops: [
-//                    [0, 'rgb(255, 255, 255)'],
-//                    [1, 'rgb(200, 200, 255)']
-//                ]
-//            },
-//            plotBackgroundImage: 'https://www.highcharts.com/samples/graphics/skies.jpg',
+                }); // chiude il chart
 
 
-        },
+        // Istogramma 
         
-        accessibility: {
-            description: ''
-        },
-        
-        tooltip: {
-            // per fare scritte specifiche ... formatter: function(){}
-            
-//            formatter: function () {
-//                return 'The value for <b>' + this.x + '</b> is <b>' + this.y + '</b>';
-//            },
-//            backgroundColor: '#FCFFC5',
-//            borderColor: 'black',
-//            borderRadius: 10,
-//            borderWidth: 3,
-            
-//            backgroundColor: {
-//            linearGradient: [0, 0, 0, 60],
-//            stops: [
-//                [0, '#FFFFFF'],
-//                [1, '#E0E0E0']
-//            ]
-//            },
-//            borderWidth: 1,
-//            borderColor: '#AAA',
-            //crosshairs: true,
-            //shared:true, se avessi piu' linee
-            
-        },
+        var chart = Highcharts.chart('container3', {  
+            chart: {
+                type: 'column',
 
-        title: {
-            text:''
-        },
-        
-        credits: {
-            enabled: false
-        },
-     
 
-        xAxis: {
-            accessibility: {
-                description: 'Time between ' + {{Inizio|safe}} + ' and ' + {{Fine|safe}}
+                borderColor: 'cornflowerblue',
+                borderRadius: 20, // per riquadro tondeggiante 
+                borderWidth: 2,
+                backgroundColor: 'rgb(238, 255, 255)',
+
+
             },
-                                 
-            //categories: {{arrayDate|safe}},
-            categories: arrayGiorni,
-                                 
-            // per formato date asse x 
-//            type: 'datetime',
-//            dateTimeLabelFormats: {
-//                day: '%e of %b'
-//            },
-                                 
-        },
-        
-        yAxis: {
-//            title: {
-//                text: 'Erogazioni'
-//            },
-            //gridLineColor: '#197F07', // per il colore delle righe
-            //gridLineDashStyle: 'longdash',  // per linee tratteggiate 
-            //lineColor: '#FF0000',
-            //lineWidth: 1
-        },
-        
-        plotOptions: { //vedere 
-                                 
-//            line: {
-//                dataLabels: {
-//                    enabled: true
-//                },
-//                enableMouseTracking: false
-//            }
-              series: {
-                    label: {
-                        connectorAllowed: false
-                    },
-//                    marker: {
-//                        symbol: 'diamond' // dimantini nei punti noti 
-//                    },
-//                    marker: {
-//               
-//                        symbol: 'url(https://www.highcharts.com/samples/graphics/sun.png)'
-//                    }
-//              
-            }
-                                 
-                                 
-        },
 
-        series: [{
-            name: 'Disbursements',
-            color: 'blue',
-            //data: {{arrayErog}},
-            data: arrayY,
-            accessibility: {
-                description: "This is the number of erogations for the period selected"
-            }
+            title: {
+                text:''
+            },
 
-        },
+            credits: {
+                enabled: false
+            },
 
-//            , {
-//                name: 'Erogazioni utente',
-//                color: '#3cb371',
-//                data: [{{erogU}}],
-//
-//            }
-        ],
-                    
-        // per spiegazione grafico 
-//        caption: {
-//        text: '<b>The caption renders in the bottom, and is part of the exported chart.</b><br><em>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</em>'
-//    },
+
+            xAxis: {
+                accessibility: {
+                    description: 'Time between ' + {{Inizio|safe}} + ' and ' + {{Fine|safe}}
+                },
+
+                //categories: {{arrayDate|safe}},
+                categories: arrayGiorni,
+
+            },
+
+
+            series: [{  // le quadre servono !
+                name: 'Disbursements',
+                color: 'blue',
+
+                data: arrayY,
+                accessibility: {
+                    description: "This is the number of erogations for the period selected"
+                },
+                label: {
+                    connectorAllowed: false
+                },
+
+            }],
 
 
 
-    }); // chiude il chart
+        }); // chiude il chart
 
 
     });
 
 
     </script>
-
-
 
 
 
@@ -942,31 +456,16 @@
 
             <ul class="nav navbar-nav">
                 
-                <li ><a href='http://localhost:8000'style="color: black; text-align: center" title="Home">Home</a></li>
-
+                <li ><a href='http://192.168.1.67:8000'style="color: black; text-align: center" title="Home">Home</a></li>
                 
                 
 <!--                 <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>-->
-                
-<!--                <li ><a href='http://localhost:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>  -->
-<!--                <li ><a href='http://localhost:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>-->
-                
-                <!-- last week e last month con noData-->
+        
                 
                 <li ><a href='#' id="lastWeek" style="color: black; text-align: center" onclick="dataAvailableS()" title="Last Week">Last Week</a></li>
                 <li ><a href='#'style="color: black; text-align: center" onclick="dataAvailableM()" title="Last Month">Last Month</a></li>
                 
-<!--
-                <li ><a href='http://192.168.1.227:8000'style="color: black; text-align: center">Home</a></li>
-                <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>  E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME 
-                <li ><a href='http://192.168.1.227:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
--->
-                
-<!--
-                <li ><a href='http://172.20.10.2:8000'style="color: black; text-align: center">Home</a></li>
-                <li ><a href='http://172.20.10.2:8000/dispenser/statistic/?id=0'style="color: black; text-align: center">Last Week</a></li>  E' LA PAGINA CHE VIENE VISUALIZZATA PER DEFAULT DOPO ESSERE STATO REINDIRIZZATO DALLA HOME 
-                <li ><a href='http://172.20.10.2:8000/dispenser/statistic/?id=1'style="color: black; text-align: center">Last Month</a></li>
--->
+
                 
                 <li>
                     <nav class="navbar navbar-expand-lg has-megamenu">
